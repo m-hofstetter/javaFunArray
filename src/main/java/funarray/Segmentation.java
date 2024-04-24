@@ -48,40 +48,13 @@ public record Segmentation(List<Segment> segments) {
   }
 
   public Segmentation insert(Expression from, Expression to, Interval value) {
-    int greatestLowerBoundIndex = 0;
-    int leastUpperBoundIndex = segments.size() - 1;
-    var isLeftTouching = false;
-    var isRightTouching = false;
+    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(to);
 
-    for (int i = greatestLowerBoundIndex; i <= leastUpperBoundIndex; i++) {
-      if (segments.get(i)
-              .expressions().stream()
-              .anyMatch(e -> e.isLessEqualThan(from) == TRUE)) {
-        if (segments.get(i).expressions().stream().anyMatch(e -> e.equals(from))) {
-          isLeftTouching = true;
-          break;
-        }
-        greatestLowerBoundIndex = i;
-      }
-    }
+    var isLeftTouching = segments.get(greatestLowerBoundIndex).expressions().stream().anyMatch(e -> e.equals(from));
+    var isRightTouching = segments.get(leastUpperBoundIndex).expressions().stream().anyMatch(e -> e.equals(to));
 
-    for (int i = leastUpperBoundIndex; i >= greatestLowerBoundIndex; i--) {
-      if (segments.get(i)
-              .expressions().stream()
-              .anyMatch(e -> e.isGreaterEqualThan(to) == TRUE)) {
-        if (segments.get(i).expressions().stream().anyMatch(e -> e.equals(to))) {
-          isRightTouching = true;
-          break;
-        }
-        leastUpperBoundIndex = i;
-      }
-    }
-
-    var jointValue = Interval.UNREACHABLE;
-
-    for (int i = greatestLowerBoundIndex + 1; i <= leastUpperBoundIndex; i++) {
-      jointValue = jointValue.join(segments().get(i).value());
-    }
+    var jointValue = getJointValue(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
 
     var newSegments = new ArrayList<>(segments);
     var insertIndex = greatestLowerBoundIndex + 1;
@@ -102,6 +75,59 @@ public record Segmentation(List<Segment> segments) {
       newSegments.add(insertIndex, rightFill);
     }
     return new Segmentation(newSegments);
+  }
+
+  /**
+   * Gets the index of the rightmost segment s such that the trailing bound of the segment s
+   * contains an expression that is equal to or less than the given expression.
+   *
+   * @param expression the expression
+   * @return the calculated index
+   */
+  private int getRightmostLowerBoundIndex(Expression expression) {
+    int greatestLowerBoundIndex = 0;
+    for (int i = 0; i <= segments().size() - 1; i++) {
+      if (segments.get(i)
+              .expressions().stream()
+              .anyMatch(e -> e.isLessEqualThan(expression) == TRUE)) {
+        greatestLowerBoundIndex = i;
+      }
+    }
+    return greatestLowerBoundIndex;
+  }
+
+  /**
+   * Gets the index of the leftmost segment s such that the trailing bound of the segment s
+   * contains an expression that is greater than the given expression
+   *
+   * @param expression the expression
+   * @return the calculated index
+   */
+  private int getLeastUpperBoundIndex(Expression expression) {
+    int leastUpperBoundIndex = segments().size() - 1;
+    for (int i = 0; i >= segments().size() - 1; i--) {
+      if (segments.get(i)
+              .expressions().stream()
+              .anyMatch(e -> e.isGreaterEqualThan(expression) == TRUE)) {
+        leastUpperBoundIndex = i;
+      }
+    }
+    return leastUpperBoundIndex;
+  }
+
+  /**
+   * Returns the joint of the values from the given segments.
+   *
+   * @param from the index of the first segment.
+   * @param to   the index of the last segment (inclusive).
+   * @return the joint of all values.
+   */
+  private Interval getJointValue(int from, int to) {
+    var jointValue = Interval.UNREACHABLE;
+    for (int i = from; i <= to; i++) {
+      jointValue = jointValue.join(segments().get(i).value());
+    }
+    return jointValue;
   }
 
   /**
