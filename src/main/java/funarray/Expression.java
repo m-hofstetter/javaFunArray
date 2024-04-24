@@ -1,6 +1,9 @@
 package funarray;
 
 import base.IntegerWithInfinity;
+import base.TriBoolean;
+
+import static base.TriBoolean.*;
 
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
@@ -49,5 +52,45 @@ public record Expression(Variable variable, IntegerWithInfinity constant) {
       return new Expression(variable, new IntegerWithInfinity(constant().value() - value));
     }
     return this;
+  }
+
+  public Expression increase(int value) {
+    return new Expression(variable, new IntegerWithInfinity(constant.value() + value));
+  }
+
+  /**
+   * Syntactically compares two expressions.
+   *
+   * @param other the expression to compare this to.
+   * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
+   * than the other and UNKNOWN if it can't be determined
+   */
+  public TriBoolean isLessThan(Expression other) {
+    if (!this.variable().equals(other.variable())) {
+      return UNKNOWN;
+    }
+    return this.constant().isLessThan(other.constant()) ? TRUE : FALSE;
+  }
+
+  public TriBoolean isLessEqualThan(Expression other) {
+    return isGreaterThan(other).invert();
+  }
+
+  /**
+   * Syntactically compares two expressions.
+   *
+   * @param other the expression to compare this to.
+   * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
+   * greater than the other and UNKNOWN if it can't be determined
+   */
+  public TriBoolean isGreaterThan(Expression other) {
+    if (!this.variable().equals(other.variable())) {
+      return UNKNOWN;
+    }
+    return this.constant().isGreaterThan(other.constant()) ? TRUE : FALSE;
+  }
+
+  public TriBoolean isGreaterEqualThan(Expression other) {
+    return isLessThan(other).invert();
   }
 }
