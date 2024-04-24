@@ -1,5 +1,7 @@
 package funarray;
 
+import base.Interval;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,8 +21,8 @@ public record FunArray(Segmentation segmentation, List<Variable> variables) {
     variables = List.copyOf(variables);
   }
 
-  public FunArray(Variable length) {
-    this(new Segmentation(length, false), List.of(length));
+  public FunArray(Expression length) {
+    this(new Segmentation(length, false), List.of(length.variable()));
   }
 
   /**
@@ -37,6 +39,11 @@ public record FunArray(Segmentation segmentation, List<Variable> variables) {
     newVariables.add(newVariable);
     var newSegmentation = segmentation.addToVariable(variable, value);
     return new FunArray(newSegmentation, newVariables);
+  }
+
+  public FunArray insert(Expression index, Interval value) {
+    var modified = segmentation.insert(index, index.increase(1), value);
+    return new FunArray(modified, variables());
   }
 
   @Override
