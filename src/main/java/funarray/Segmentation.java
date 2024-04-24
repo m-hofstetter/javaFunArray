@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import static base.TriBoolean.TRUE;
 
+
 /**
  * The abstract segmentation for the {@link FunArray}.
  *
@@ -47,12 +48,17 @@ public record Segmentation(List<Segment> segments) {
     return new Segmentation(segments.stream().map(s -> s.addToVariable(variable, value)).toList());
   }
 
+  /**
+   * Inserts a value into the segmentation.
+   *
+   * @param from  the leading bound expression for the new value.
+   * @param to    the trailing bound expression for the new value.
+   * @param value the value to be inserted.
+   * @return the modified Segmentation.
+   */
   public Segmentation insert(Expression from, Expression to, Interval value) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(to);
-
-    var isLeftTouching = segments.get(greatestLowerBoundIndex).expressions().stream().anyMatch(e -> e.equals(from));
-    var isRightTouching = segments.get(leastUpperBoundIndex).expressions().stream().anyMatch(e -> e.equals(to));
 
     var jointValue = getJointValue(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
 
@@ -62,7 +68,8 @@ public record Segmentation(List<Segment> segments) {
     var rightBounds = segments.get(leastUpperBoundIndex).expressions();
     newSegments.subList(insertIndex, leastUpperBoundIndex + 1).clear();
 
-    if (!isRightTouching) {
+    if (segments.get(leastUpperBoundIndex).expressions().stream()
+            .noneMatch(e -> e.equals(to))) {
       var rightFill = new Segment(jointValue, true, rightBounds);
       newSegments.add(insertIndex, rightFill);
     }
@@ -70,7 +77,8 @@ public record Segmentation(List<Segment> segments) {
     var inserted = new Segment(value, false, List.of(to));
     newSegments.add(insertIndex, inserted);
 
-    if (!isLeftTouching) {
+    if (segments.get(greatestLowerBoundIndex).expressions().stream()
+            .noneMatch(e -> e.equals(from))) {
       var rightFill = new Segment(jointValue, true, List.of(from));
       newSegments.add(insertIndex, rightFill);
     }
@@ -98,7 +106,7 @@ public record Segmentation(List<Segment> segments) {
 
   /**
    * Gets the index of the leftmost segment s such that the trailing bound of the segment s
-   * contains an expression that is greater than the given expression
+   * contains an expression that is greater than the given expression.
    *
    * @param expression the expression
    * @return the calculated index

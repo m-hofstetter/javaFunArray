@@ -34,7 +34,9 @@ public record FunArray(Segmentation segmentation, List<Variable> variables) {
    */
   public FunArray addToVariable(Variable variable, int value) {
     var newVariable = new Variable(variable.value().add(value), variable.name());
+
     var newVariables = new ArrayList<>(variables);
+
     newVariables.remove(variable);
     newVariables.add(newVariable);
     var newSegmentation = segmentation.addToVariable(variable, value);

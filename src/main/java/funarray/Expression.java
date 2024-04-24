@@ -63,7 +63,7 @@ public record Expression(Variable variable, IntegerWithInfinity constant) {
    *
    * @param other the expression to compare this to.
    * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
-   * than the other and UNKNOWN if it can't be determined
+   *         than the other and UNKNOWN if it can't be determined
    */
   public TriBoolean isLessThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
@@ -81,7 +81,7 @@ public record Expression(Variable variable, IntegerWithInfinity constant) {
    *
    * @param other the expression to compare this to.
    * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
-   * greater than the other and UNKNOWN if it can't be determined
+   *         greater than the other and UNKNOWN if it can't be determined
    */
   public TriBoolean isGreaterThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
