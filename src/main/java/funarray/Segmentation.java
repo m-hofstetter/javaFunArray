@@ -29,7 +29,7 @@ public record Segmentation(List<Segment> segments) {
   public Segmentation(Expression length, boolean isPossiblyEmpty) {
     this(List.of(
         new Segment(null,
-            false, List.of(Expression.getZero())
+                false, List.of(Expression.getConstant(0))
         ),
         new Segment(Interval.getUnknown(),
                 isPossiblyEmpty, List.of(length))
@@ -146,7 +146,7 @@ public record Segmentation(List<Segment> segments) {
    * @param possiblyEmpty whether the segment might be empty.
    * @param expressions   the expressions contained in the trailing bound.
    */
-  private record Segment(Interval value, boolean possiblyEmpty, List<Expression> expressions) {
+  public record Segment(Interval value, boolean possiblyEmpty, List<Expression> expressions) {
 
     public Segment {
       expressions = List.copyOf(expressions);

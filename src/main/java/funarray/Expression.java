@@ -20,6 +20,10 @@ public record Expression(Variable variable, IntegerWithInfinity constant) {
     return new Expression(Variable.ZERO_VALUE, new IntegerWithInfinity(0));
   }
 
+  public static Expression getConstant(int constant) {
+    return new Expression(Variable.ZERO_VALUE, new IntegerWithInfinity(constant));
+  }
+
   @Override
   public String toString() {
     if (constant.equals(new IntegerWithInfinity(0))) {
