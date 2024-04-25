@@ -1,12 +1,16 @@
 package funarray;
 
-import base.IntegerWithInfinity;
+import static base.TriBoolean.*;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import base.*;
+import java.util.*;
+import java.util.stream.*;
 
-import static base.TriBoolean.TRUE;
-
+/**
+ * A segment bound in a {@link FunArray}.
+ *
+ * @param expressions the expressions contained within.
+ */
 public record Bound(Set<Expression> expressions) {
   public Bound {
     expressions = Set.copyOf(expressions);
@@ -24,7 +28,16 @@ public record Bound(Set<Expression> expressions) {
     return Bound.ofConstant(new IntegerWithInfinity(constant));
   }
 
-  public Bound addToVariable(Variable variable, int value) {
+  /**
+   * If a variable v changes reversibly to f(v), all occurrences of v in an FunArray have to be
+   * replaced by f^-1(v), so that it still represents the Array correctly. See Cousot et al. 2011.
+   * For adding to a variable v by an amount i, this means replacing alle occurrences of v by v-1.
+   *
+   * @param variable the variable v.
+   * @param value    the value by which it is being increased.
+   * @return the altered bound.
+   */
+  public Bound addToVariableInFunArray(Variable variable, int value) {
     return new Bound(
             expressions.stream()
                     .map(e -> e.addToVariableInFunArray(variable, value))

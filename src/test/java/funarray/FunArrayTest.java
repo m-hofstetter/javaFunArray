@@ -1,14 +1,11 @@
 package funarray;
 
-import base.IntegerWithInfinity;
-import base.Interval;
-import org.junit.jupiter.api.Test;
+import static base.IntegerWithInfinity.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static base.IntegerWithInfinity.NEGATIVE_INFINITY;
-import static base.IntegerWithInfinity.POSITIVE_INFINITY;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import base.*;
+import org.junit.jupiter.api.*;
 
 public class FunArrayTest {
 
@@ -16,7 +13,7 @@ public class FunArrayTest {
   void instantiateTest() {
     var interval = new Interval(0, 10);
     var length = new Expression(new Variable(interval, "A.length"), new IntegerWithInfinity(0));
-    var funArray = new FunArray(length);
+    var funArray = new FunArrayEnvironment(length);
 
     assertEquals("A: {0} [-∞, ∞] {A.length}\nA.length: [0, 10]", funArray.toString());
   }
@@ -25,7 +22,7 @@ public class FunArrayTest {
   void addToVariableTest() {
     var interval = new Interval(0, 10);
     var length = new Expression(new Variable(interval, "A.length"), new IntegerWithInfinity(0));
-    var funArray = new FunArray(length);
+    var funArray = new FunArrayEnvironment(length);
 
     var modified = funArray.addToVariable(length.variable(), 3);
 
@@ -36,28 +33,30 @@ public class FunArrayTest {
   void insertTest() {
     var interval = new Interval(0, 0);
     var length = new Expression(new Variable(interval, "A.length"), new IntegerWithInfinity(0));
-    var funArray = new FunArray(length);
+    var funArray = new FunArrayEnvironment(length);
 
-    assertThat(funArray.segmentation().bounds()).hasSize(2);
-    assertThat(funArray.segmentation().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    System.out.println();
 
-    funArray = funArray.insert(Expression.getZero(), new Interval(0, 0));
+    assertThat(funArray.funArray().bounds()).hasSize(2);
+    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
 
-    assertThat(funArray.segmentation().bounds()).hasSize(3);
-    assertThat(funArray.segmentation().values().get(0)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.segmentation().values().get(1)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    funArray = funArray.assignArrayElement(Expression.getZero(), new Interval(0, 0));
 
-    funArray = funArray.insert(Expression.getConstant(1), new Interval(0, 0));
+    assertThat(funArray.funArray().bounds()).hasSize(3);
+    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(0, 0));
+    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
 
-    assertThat(funArray.segmentation().bounds()).hasSize(4);
-    assertThat(funArray.segmentation().values().get(0)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.segmentation().values().get(1)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.segmentation().values().get(2)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    funArray = funArray.assignArrayElement(Expression.getConstant(1), new Interval(0, 0));
 
-    funArray = funArray.insert(length.increase(-1), new Interval(0, 0));
+    assertThat(funArray.funArray().bounds()).hasSize(4);
+    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(0, 0));
+    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(0, 0));
+    assertThat(funArray.funArray().values().get(2)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
 
-    assertThat(funArray.segmentation().bounds()).hasSize(3);
-    assertThat(funArray.segmentation().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
-    assertThat(funArray.segmentation().values().get(1)).isEqualTo(new Interval(0, 0));
+    funArray = funArray.assignArrayElement(length.increase(-1), new Interval(0, 0));
+
+    assertThat(funArray.funArray().bounds()).hasSize(3);
+    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(0, 0));
   }
 }

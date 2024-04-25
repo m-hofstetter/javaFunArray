@@ -1,10 +1,9 @@
 package funarray;
 
-import base.Interval;
+import base.*;
+import java.util.*;
+import java.util.stream.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A FunArray to represent an Array in abstract interpretation static analysis. See Patrick Cousot,
@@ -12,48 +11,160 @@ import java.util.stream.Collectors;
  * and scalable array content analysis. SIGPLAN Not. 46, 1 (January 2011), 105–118. <a
  * href="https://doi.org/10.1145/1925844.1926399">https://doi.org/10.1145/1925844.1926399</a>
  *
- * @param segmentation the FunArray's segmentation
- * @param variables    the FunArray's variables
+ * @param bounds the FunArray's segment bounds.
+ * @param values the FunArray's values.
+ * @param emptiness a list determining whether a segment might be empty.
  */
-public record FunArray(Segmentation segmentation, List<Variable> variables) {
+public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
 
+  /**
+   * Constructor for FunArray.
+   *
+   * @param bounds    the FunArray's segment bounds.
+   * @param values    the FunArray's values.
+   * @param emptiness a list determining whether a segment might be empty.
+   */
   public FunArray {
-    variables = List.copyOf(variables);
-  }
-
-  public FunArray(Expression length) {
-    this(new Segmentation(length, false), List.of(length.variable()));
+    bounds = List.copyOf(bounds);
+    values = List.copyOf(values);
+    emptiness = List.copyOf(emptiness);
   }
 
   /**
-   * Adds to a variable. See Cousot et al. 2011, Chapter 11.6.
+   * Constructor for a FunArray consisting of a single value and its bounds.
    *
-   * @param variable the variable
-   * @param value    the amount by which to increase it
-   * @return the altered FunArray
+   * @param length          the length of the segment.
+   * @param isPossiblyEmpty whether the single segment might be empty.
    */
-  public FunArray addToVariable(Variable variable, int value) {
-    var newVariable = new Variable(variable.value().add(value), variable.name());
-
-    var newVariables = new ArrayList<>(variables);
-
-    newVariables.remove(variable);
-    newVariables.add(newVariable);
-    var newSegmentation = segmentation.addToVariable(variable, value);
-    return new FunArray(newSegmentation, newVariables);
-  }
-
-  public FunArray insert(Expression index, Interval value) {
-    var modified = segmentation.insert(index, index.increase(1), value);
-    return new FunArray(modified, variables());
+  public FunArray(Expression length, boolean isPossiblyEmpty) {
+    this(List.of(Bound.ofConstant(0), Bound.of(length)),
+            List.of(Interval.getUnknown()),
+            List.of(isPossiblyEmpty)
+    );
   }
 
   @Override
   public String toString() {
-    var variablesString = variables.stream()
-        .map(Variable::toStringWithValue)
-        .collect(Collectors.joining(" "));
+    return IntStream.range(0, bounds.size())
+            .mapToObj(i -> {
+              if (values().size() <= i || emptiness().size() <= i) {
+                return bounds.get(i).toString();
+              }
+              return "%s%s %s".formatted(
+                      bounds.get(i),
+                      emptiness.get(i) ? "?" : "",
+                      values.get(i)
+              );
+            })
+            .collect(Collectors.joining(" "));
+  }
 
-    return "A: %s\n%s".formatted(segmentation, variablesString);
+  /**
+   * Adapt FunArray to a changed variable value.
+   *
+   * @param variable the variable.
+   * @param value    the value.
+   * @return the altered FunArray.
+   */
+  public FunArray addToVariable(Variable variable, int value) {
+    var newBounds = bounds.stream()
+            .map(s -> s.addToVariableInFunArray(variable, value))
+            .toList();
+    return new FunArray(newBounds, values, emptiness);
+  }
+
+  /**
+   * Inserts a value into the FunArray.
+   *
+   * @param from  the leading bound expression for the new value.
+   * @param to    the trailing bound expression for the new value.
+   * @param value the value to be inserted.
+   * @return the modified Segmentation.
+   */
+  public FunArray insert(Expression from, Expression to, Interval value) {
+    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(to);
+
+    var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
+
+    var newBounds = new ArrayList<>(bounds);
+    var newValues = new ArrayList<>(values);
+    var newPossiblyEmpty = new ArrayList<>(emptiness);
+
+    var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
+    var valuesSubList = newValues.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
+    var emptinessSubList = newPossiblyEmpty.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
+
+    boundsSubList.clear();
+    valuesSubList.clear();
+    emptinessSubList.clear();
+
+    //no left touching
+    if (!bounds.get(greatestLowerBoundIndex).expressionEquals(from)) {
+      emptinessSubList.add(true);
+      valuesSubList.add(jointValue);
+      boundsSubList.add(Bound.of(from));
+    }
+
+    emptinessSubList.add(false);
+    valuesSubList.add(value);
+
+    // no right touching
+    if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
+      emptinessSubList.add(true);
+      valuesSubList.add(jointValue);
+      boundsSubList.add(Bound.of(to));
+    }
+
+    return new FunArray(newBounds, newValues, newPossiblyEmpty);
+  }
+
+  /**
+   * Gets the index of the rightmost segment s such that the trailing bound of the segment s
+   * contains an expression that is equal to or less than the given expression.
+   *
+   * @param expression the expression
+   * @return the calculated index
+   */
+  private int getRightmostLowerBoundIndex(Expression expression) {
+    int greatestLowerBoundIndex = 0;
+    for (int i = 0; i <= bounds.size() - 1; i++) {
+      if (bounds.get(i).expressionIsLessEqualThan(expression)) {
+        greatestLowerBoundIndex = i;
+      }
+    }
+    return greatestLowerBoundIndex;
+  }
+
+  /**
+   * Gets the index of the leftmost segment s such that the trailing bound of the segment s
+   * contains an expression that is greater than the given expression.
+   *
+   * @param expression the expression
+   * @return the calculated index
+   */
+  private int getLeastUpperBoundIndex(Expression expression) {
+    int leastUpperBoundIndex = bounds.size() - 1;
+    for (int i = 0; i >= bounds.size() - 1; i--) {
+      if (bounds.get(i).expressionIsGreaterEqualThan(expression)) {
+        leastUpperBoundIndex = i;
+      }
+    }
+    return leastUpperBoundIndex;
+  }
+
+  /**
+   * Returns the joint of the values from the given segments.
+   *
+   * @param from the index of the first segment.
+   * @param to   the index of the last segment (inclusive).
+   * @return the joint of all values.
+   */
+  private Interval getJointValue(int from, int to) {
+    var jointValue = Interval.UNREACHABLE;
+    for (int i = from; i <= to; i++) {
+      jointValue = jointValue.join(values.get(i));
+    }
+    return jointValue;
   }
 }
