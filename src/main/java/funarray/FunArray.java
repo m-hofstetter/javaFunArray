@@ -48,11 +48,20 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return IntStream.range(0, bounds.size())
             .mapToObj(i -> {
               if (values().size() <= i || emptiness().size() <= i) {
-                return bounds.get(i).toString();
+                return "%s%s".formatted(
+                        bounds.get(i),
+                        emptiness.get(i - 1) ? "?" : ""
+                );
+              }
+              if (i == 0) {
+                return "%s %s".formatted(
+                        bounds.get(i),
+                        values.get(i)
+                );
               }
               return "%s%s %s".formatted(
                       bounds.get(i),
-                      emptiness.get(i) ? "?" : "",
+                      emptiness.get(i - 1) ? "?" : "",
                       values.get(i)
               );
             })
