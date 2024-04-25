@@ -6,8 +6,47 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import base.*;
 import org.junit.jupiter.api.*;
+import java.util.*;
 
 public class FunArrayTest {
+
+  static final Bound END_BOUND = Bound.of(new Expression(
+          new Variable(new Interval(0, 0), "A.length"),
+          new IntegerWithInfinity(0)
+  ));
+
+  static final Bound END_MINUS_ONE_BOUND = Bound.of(new Expression(
+          new Variable(new Interval(0, 0), "A.length"),
+          new IntegerWithInfinity(-1)
+  ));
+
+  //A: {0} [-∞, ∞] {A.length}
+  static final FunArray FUN_ARRAY_NEWLY_INSTANTIATED = new FunArray(
+          List.of(Bound.ofConstant(0), END_BOUND),
+          List.of(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY)),
+          List.of(false)
+  );
+
+  //A: {0} [0, 0] {1}? [-∞, ∞] {A.length}
+  static final FunArray FUN_ARRAY_AFTER_SINGLE_INSERTION = new FunArray(
+          List.of(Bound.ofConstant(0), Bound.ofConstant(1), END_BOUND),
+          List.of(new Interval(0, 0), new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY)),
+          List.of(false, true)
+  );
+
+  //A: {0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {A.length}?
+  static final FunArray FUN_ARRAY_AFTER_TWO_INSERTIONS = new FunArray(
+          List.of(Bound.ofConstant(0), Bound.ofConstant(1), Bound.ofConstant(2), END_BOUND),
+          List.of(new Interval(0, 0), new Interval(0, 0), new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY)),
+          List.of(false, false, true)
+  );
+
+  //A: {0} [-∞, ∞] {A.length-1}? [0, 0] {A.length}
+  static final FunArray FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION = new FunArray(
+          List.of(Bound.ofConstant(0), END_MINUS_ONE_BOUND, END_BOUND),
+          List.of(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY), new Interval(0, 0)),
+          List.of(true, false)
+  );
 
   @Test
   void instantiateTest() {
@@ -34,29 +73,15 @@ public class FunArrayTest {
     var interval = new Interval(0, 0);
     var length = new Expression(new Variable(interval, "A.length"), new IntegerWithInfinity(0));
     var funArray = new FunArrayEnvironment(length);
-
-    System.out.println();
-
-    assertThat(funArray.funArray().bounds()).hasSize(2);
-    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_NEWLY_INSTANTIATED);
 
     funArray = funArray.assignArrayElement(Expression.getZero(), new Interval(0, 0));
-
-    assertThat(funArray.funArray().bounds()).hasSize(3);
-    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_SINGLE_INSERTION);
 
     funArray = funArray.assignArrayElement(Expression.getConstant(1), new Interval(0, 0));
-
-    assertThat(funArray.funArray().bounds()).hasSize(4);
-    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(0, 0));
-    assertThat(funArray.funArray().values().get(2)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
+    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_TWO_INSERTIONS);
 
     funArray = funArray.assignArrayElement(length.increase(-1), new Interval(0, 0));
-
-    assertThat(funArray.funArray().bounds()).hasSize(3);
-    assertThat(funArray.funArray().values().get(0)).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
-    assertThat(funArray.funArray().values().get(1)).isEqualTo(new Interval(0, 0));
+    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION);
   }
 }
