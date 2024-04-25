@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static base.TriBoolean.TRUE;
-
 
 /**
  * The abstract segmentation for the {@link FunArray}.
@@ -29,12 +27,12 @@ public record Segmentation(List<Segment> segments) {
   public Segmentation(Expression length, boolean isPossiblyEmpty) {
     this(List.of(
         new Segment(null,
-                false, List.of(Expression.getConstant(0))
+                false, Bound.ofConstant(0)
         ),
         new Segment(Interval.getUnknown(),
-                isPossiblyEmpty, List.of(length))
+                isPossiblyEmpty, Bound.of(length)
         )
-    );
+    ));
   }
 
   @Override
@@ -65,21 +63,19 @@ public record Segmentation(List<Segment> segments) {
     var newSegments = new ArrayList<>(segments);
     var insertIndex = greatestLowerBoundIndex + 1;
 
-    var rightBounds = segments.get(leastUpperBoundIndex).expressions();
+    var rightBound = segments.get(leastUpperBoundIndex).bound();
     newSegments.subList(insertIndex, leastUpperBoundIndex + 1).clear();
 
-    if (segments.get(leastUpperBoundIndex).expressions().stream()
-            .noneMatch(e -> e.equals(to))) {
-      var rightFill = new Segment(jointValue, true, rightBounds);
+    if (!segments.get(leastUpperBoundIndex).bound.expressionEquals(to)) {
+      var rightFill = new Segment(jointValue, true, rightBound);
       newSegments.add(insertIndex, rightFill);
     }
 
-    var inserted = new Segment(value, false, List.of(to));
+    var inserted = new Segment(value, false, Bound.of(to));
     newSegments.add(insertIndex, inserted);
 
-    if (segments.get(greatestLowerBoundIndex).expressions().stream()
-            .noneMatch(e -> e.equals(from))) {
-      var rightFill = new Segment(jointValue, true, List.of(from));
+    if (!segments.get(greatestLowerBoundIndex).bound.expressionEquals(from)) {
+      var rightFill = new Segment(jointValue, true, Bound.of(from));
       newSegments.add(insertIndex, rightFill);
     }
     return new Segmentation(newSegments);
@@ -95,9 +91,7 @@ public record Segmentation(List<Segment> segments) {
   private int getRightmostLowerBoundIndex(Expression expression) {
     int greatestLowerBoundIndex = 0;
     for (int i = 0; i <= segments().size() - 1; i++) {
-      if (segments.get(i)
-              .expressions().stream()
-              .anyMatch(e -> e.isLessEqualThan(expression) == TRUE)) {
+      if (segments.get(i).bound.expressionIsLessEqualThan(expression)) {
         greatestLowerBoundIndex = i;
       }
     }
@@ -114,9 +108,7 @@ public record Segmentation(List<Segment> segments) {
   private int getLeastUpperBoundIndex(Expression expression) {
     int leastUpperBoundIndex = segments().size() - 1;
     for (int i = 0; i >= segments().size() - 1; i--) {
-      if (segments.get(i)
-              .expressions().stream()
-              .anyMatch(e -> e.isGreaterEqualThan(expression) == TRUE)) {
+      if (segments.get(i).bound.expressionIsGreaterEqualThan(expression)) {
         leastUpperBoundIndex = i;
       }
     }
@@ -144,36 +136,20 @@ public record Segmentation(List<Segment> segments) {
    *
    * @param value         the value.
    * @param possiblyEmpty whether the segment might be empty.
-   * @param expressions   the expressions contained in the trailing bound.
+   * @param bound         the  trailing bound.
    */
-  public record Segment(Interval value, boolean possiblyEmpty, List<Expression> expressions) {
-
-    public Segment {
-      expressions = List.copyOf(expressions);
-    }
+  public record Segment(Interval value, boolean possiblyEmpty, Bound bound) {
 
     @Override
     public String toString() {
-      var trailingBound = "{%s}".formatted(
-          String.join(" ", expressions.stream().map(Expression::toString).toList()));
-
       if (value == null) {
-        return trailingBound;
+        return bound.toString();
       }
-      return " %s %s%s".formatted(value, trailingBound, possiblyEmpty ? "?" : "");
+      return " %s %s%s".formatted(value, bound.toString(), possiblyEmpty ? "?" : "");
     }
 
     public Segment addToVariable(Variable variable, int value) {
-      return new Segment(this.value, possiblyEmpty,
-          expressions.stream().map(e -> e.addToVariableInFunArray(variable, value)).toList());
-    }
-
-    List<Expression> joinBounds(List<Expression> other) {
-      var newExpressionList = new ArrayList<>(expressions);
-      other.stream()
-          .filter(e -> expressions.stream().noneMatch((e::equals)))
-          .forEach(newExpressionList::add);
-      return newExpressionList;
+      return new Segment(this.value, possiblyEmpty, bound.addToVariable(variable, value));
     }
   }
 }

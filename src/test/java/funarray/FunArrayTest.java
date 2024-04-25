@@ -43,6 +43,7 @@ public class FunArrayTest {
 
     funArray = funArray.insert(Expression.getZero(), new Interval(0, 0));
 
+    System.out.println(funArray);
     assertThat(funArray.segmentation().segments()).hasSize(3);
     assertThat(funArray.segmentation().segments().get(1).value()).isEqualTo(new Interval(0, 0));
     assertThat(funArray.segmentation().segments().get(2).value()).isEqualTo(new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY));
