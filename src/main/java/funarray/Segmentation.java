@@ -63,34 +63,35 @@ public record Segmentation(List<Bound> bounds, List<Interval> values, List<Boole
 
     var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
 
-
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
     var newPossiblyEmpty = new ArrayList<>(possiblyEmpty);
 
-    var insertIndex = greatestLowerBoundIndex + 1;
+    var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
+    var valuesSubList = newValues.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
+    var possiblyEmptySubList = newPossiblyEmpty.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
 
-    var rightBound = bounds.get(leastUpperBoundIndex);
-    newBounds.subList(insertIndex, leastUpperBoundIndex + 1).clear();
-    newValues.subList(insertIndex - 1, leastUpperBoundIndex).clear();
-    newPossiblyEmpty.subList(insertIndex - 1, leastUpperBoundIndex).clear();
+    boundsSubList.clear();
+    valuesSubList.clear();
+    possiblyEmptySubList.clear();
 
-    if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
-      newBounds.add(insertIndex, rightBound);
-      newPossiblyEmpty.add(insertIndex - 1, true);
-      newValues.add(insertIndex - 1, jointValue);
-    }
-
-    newBounds.add(insertIndex, Bound.of(to));
-    newPossiblyEmpty.add(insertIndex - 1, false);
-    newValues.add(insertIndex - 1, value);
-
+    //no left touching
     if (!bounds.get(greatestLowerBoundIndex).expressionEquals(from)) {
-
-      newBounds.add(insertIndex, Bound.of(from));
-      newPossiblyEmpty.add(insertIndex - 1, true);
-      newValues.add(insertIndex - 1, jointValue);
+      possiblyEmptySubList.add(true);
+      valuesSubList.add(jointValue);
+      boundsSubList.add(Bound.of(from));
     }
+
+    possiblyEmptySubList.add(false);
+    valuesSubList.add(value);
+
+    // no right touching
+    if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
+      possiblyEmptySubList.add(true);
+      valuesSubList.add(jointValue);
+      boundsSubList.add(Bound.of(to));
+    }
+
     return new Segmentation(newBounds, newValues, newPossiblyEmpty);
   }
 
