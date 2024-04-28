@@ -155,6 +155,6 @@ public record Interval(InfInt lowerLimit, InfInt upperLimit) {
    * @return the transformed interval.
    */
   public Interval add(InfInt value) {
-    return new Interval(lowerLimit.add(value), lowerLimit.add(value));
+    return new Interval(lowerLimit.add(value), upperLimit.add(value));
   }
 }
