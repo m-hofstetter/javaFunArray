@@ -1,9 +1,19 @@
 package base.infint;
 
-final class NegativeInfinity extends InfInt {
+final class NegativeInfinity extends Infinity {
   @Override
   public String toString() {
     return "-∞";
+  }
+
+  @Override
+  public InfInt negate() {
+    return new PositiveInfinity();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof NegativeInfinity;
   }
 
   @Override
@@ -13,4 +23,6 @@ final class NegativeInfinity extends InfInt {
     }
     return -1;
   }
+
+
 }

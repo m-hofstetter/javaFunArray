@@ -2,7 +2,7 @@ package funarray;
 
 import static base.TriBoolean.TRUE;
 
-import base.IntegerWithInfinity;
+import base.infint.InfInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,12 +20,12 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(Set.of(expressions));
   }
 
-  static Bound ofConstant(IntegerWithInfinity constant) {
+  static Bound ofConstant(InfInt constant) {
     return Bound.of(new Expression(Variable.ZERO_VALUE, constant));
   }
 
   static Bound ofConstant(int constant) {
-    return Bound.ofConstant(new IntegerWithInfinity(constant));
+    return Bound.ofConstant(InfInt.of(constant));
   }
 
   /**
@@ -37,7 +37,7 @@ public record Bound(Set<Expression> expressions) {
    * @param value    the value by which it is being increased.
    * @return the altered bound.
    */
-  public Bound addToVariableInFunArray(Variable variable, int value) {
+  public Bound addToVariableInFunArray(Variable variable, InfInt value) {
     return new Bound(
             expressions.stream()
                     .map(e -> e.addToVariableInFunArray(variable, value))

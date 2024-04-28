@@ -1,8 +1,9 @@
 package base.infint;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 
-@Getter
+@Getter(AccessLevel.PRIVATE)
 final class FiniteInteger extends InfInt {
 
   private final int value;
@@ -23,5 +24,23 @@ final class FiniteInteger extends InfInt {
   @Override
   public String toString() {
     return Integer.toString(value);
+  }
+
+  @Override
+  public InfInt add(InfInt value) {
+    return switch (value) {
+      case FiniteInteger f -> new FiniteInteger(this.value + f.value);
+      case Infinity i -> i;
+    };
+  }
+
+  @Override
+  public InfInt negate() {
+    return new FiniteInteger(-value);
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof FiniteInteger f && f.value == this.value;
   }
 }

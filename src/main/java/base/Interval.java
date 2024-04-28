@@ -1,7 +1,6 @@
 package base;
 
-import static base.IntegerWithInfinity.NEGATIVE_INFINITY;
-import static base.IntegerWithInfinity.POSITIVE_INFINITY;
+import base.infint.InfInt;
 
 /**
  * An abstract domain representing integers as intervals.
@@ -9,24 +8,24 @@ import static base.IntegerWithInfinity.POSITIVE_INFINITY;
  * @param lowerLimit the lower limit.
  * @param upperLimit the upper limit.
  */
-public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upperLimit) {
+public record Interval(InfInt lowerLimit, InfInt upperLimit) {
 
   public static final Interval UNREACHABLE = new Interval(null, null);
 
   public Interval(int lowerLimit, int upperLimit) {
-    this(new IntegerWithInfinity(lowerLimit), new IntegerWithInfinity(upperLimit));
+    this(InfInt.of(lowerLimit), InfInt.of(upperLimit));
   }
 
-  public Interval(IntegerWithInfinity lowerLimit, int upperLimit) {
-    this(lowerLimit, new IntegerWithInfinity(upperLimit));
+  public Interval(InfInt lowerLimit, int upperLimit) {
+    this(lowerLimit, InfInt.of(upperLimit));
   }
 
-  public Interval(int lowerLimit, IntegerWithInfinity upperLimit) {
-    this(new IntegerWithInfinity(lowerLimit), upperLimit);
+  public Interval(int lowerLimit, InfInt upperLimit) {
+    this(InfInt.of(lowerLimit), upperLimit);
   }
 
   public static Interval getUnknown() {
-    return new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY);
+    return new Interval(InfInt.negInf(), InfInt.posInf());
   }
 
   /**
@@ -44,8 +43,8 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
       return this;
     }
 
-    var lower = IntegerWithInfinity.min(this.lowerLimit(), other.lowerLimit());
-    var upper = IntegerWithInfinity.max(this.upperLimit(), other.upperLimit());
+    var lower = InfInt.min(this.lowerLimit(), other.lowerLimit());
+    var upper = InfInt.max(this.upperLimit(), other.upperLimit());
 
     return new Interval(lower, upper);
   }
@@ -61,8 +60,8 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
       return UNREACHABLE;
     }
 
-    var lower = IntegerWithInfinity.max(this.lowerLimit(), other.lowerLimit());
-    var upper = IntegerWithInfinity.min(this.upperLimit(), other.upperLimit());
+    var lower = InfInt.max(this.lowerLimit(), other.lowerLimit());
+    var upper = InfInt.min(this.upperLimit(), other.upperLimit());
 
     if (lower.isGreaterThan(upper)) {
       return UNREACHABLE;
@@ -92,10 +91,10 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
     var upper = this.upperLimit();
 
     if (other.lowerLimit().isLessThan(this.lowerLimit())) {
-      lower = NEGATIVE_INFINITY;
+      lower = InfInt.negInf();
     }
     if (other.upperLimit().isGreaterThan(this.upperLimit())) {
-      upper = POSITIVE_INFINITY;
+      upper = InfInt.posInf();
     }
     return new Interval(lower, upper);
   }
@@ -118,10 +117,10 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
     var lower = this.lowerLimit();
     var upper = this.upperLimit();
 
-    if (this.lowerLimit().equals(NEGATIVE_INFINITY)) {
+    if (this.lowerLimit().isNegInf()) {
       lower = other.lowerLimit();
     }
-    if (this.upperLimit().equals(POSITIVE_INFINITY)) {
+    if (this.upperLimit().isPosInf()) {
       upper = other.upperLimit();
     }
 
@@ -155,25 +154,7 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
    * @param value the value to be added.
    * @return the transformed interval.
    */
-  public Interval add(int value) {
-    IntegerWithInfinity newLowerLimit;
-    if (lowerLimit == NEGATIVE_INFINITY) {
-      newLowerLimit = NEGATIVE_INFINITY;
-    } else if (lowerLimit == POSITIVE_INFINITY) {
-      newLowerLimit = POSITIVE_INFINITY;
-    } else {
-      newLowerLimit = new IntegerWithInfinity(lowerLimit.value() + value);
-    }
-
-    IntegerWithInfinity newUpperLimit;
-    if (upperLimit == NEGATIVE_INFINITY) {
-      newUpperLimit = NEGATIVE_INFINITY;
-    } else if (upperLimit == POSITIVE_INFINITY) {
-      newUpperLimit = POSITIVE_INFINITY;
-    } else {
-      newUpperLimit = new IntegerWithInfinity(upperLimit.value() + value);
-    }
-
-    return new Interval(newLowerLimit, newUpperLimit);
+  public Interval add(InfInt value) {
+    return new Interval(lowerLimit.add(value), lowerLimit.add(value));
   }
 }

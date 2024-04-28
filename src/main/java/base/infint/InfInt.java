@@ -4,7 +4,19 @@ package base.infint;
  * A utility class for integers with infinities.
  */
 public abstract sealed class InfInt implements Comparable<InfInt>
-        permits NegativeInfinity, PositiveInfinity, FiniteInteger {
+        permits Infinity, FiniteInteger {
+
+  public static InfInt of(int value) {
+    return new FiniteInteger(value);
+  }
+
+  public static InfInt posInf() {
+    return new PositiveInfinity();
+  }
+
+  public static InfInt negInf() {
+    return new NegativeInfinity();
+  }
 
   @Override
   public abstract int compareTo(InfInt other);
@@ -41,4 +53,27 @@ public abstract sealed class InfInt implements Comparable<InfInt>
 
   @Override
   public abstract String toString();
+
+  public boolean isPosInf() {
+    return this instanceof PositiveInfinity;
+  }
+
+  public boolean isNegInf() {
+    return this instanceof NegativeInfinity;
+  }
+
+  public boolean isInf() {
+    return this instanceof Infinity;
+  }
+
+  public abstract InfInt add(InfInt value);
+
+  public InfInt subtract(InfInt value) {
+    return add(value.negate());
+  }
+
+  public abstract InfInt negate();
+
+  @Override
+  public abstract boolean equals(Object other);
 }

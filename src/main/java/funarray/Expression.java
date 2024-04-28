@@ -2,8 +2,8 @@ package funarray;
 
 import static base.TriBoolean.*;
 
-import base.IntegerWithInfinity;
 import base.TriBoolean;
+import base.infint.InfInt;
 
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
@@ -14,25 +14,25 @@ import base.TriBoolean;
  * @param variable the variable v
  * @param constant the constant k
  */
-public record Expression(Variable variable, IntegerWithInfinity constant) {
+public record Expression(Variable variable, InfInt constant) {
 
   public static Expression getZero() {
-    return new Expression(Variable.ZERO_VALUE, new IntegerWithInfinity(0));
+    return new Expression(Variable.ZERO_VALUE, InfInt.of(0));
   }
 
   public static Expression getConstant(int constant) {
-    return new Expression(Variable.ZERO_VALUE, new IntegerWithInfinity(constant));
+    return new Expression(Variable.ZERO_VALUE, InfInt.of(constant));
   }
 
   @Override
   public String toString() {
-    if (constant.equals(new IntegerWithInfinity(0))) {
+    if (constant.equals(InfInt.of(0))) {
       return variable.toString();
     }
     if (variable == Variable.ZERO_VALUE) {
       return constant().toString();
     }
-    if (constant.isLessThan(new IntegerWithInfinity(0))) {
+    if (constant.isLessThan(InfInt.of(0))) {
       return "%s%s".formatted(variable, constant);
     }
     return "%s+%s".formatted(variable, constant);
@@ -51,15 +51,15 @@ public record Expression(Variable variable, IntegerWithInfinity constant) {
    * @param value    the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression addToVariableInFunArray(Variable variable, int value) {
+  public Expression addToVariableInFunArray(Variable variable, InfInt value) {
     if (this.variable().equals(variable)) {
-      return new Expression(variable, new IntegerWithInfinity(constant().value() - value));
+      return new Expression(variable, constant.subtract(value));
     }
     return this;
   }
 
-  public Expression increase(int value) {
-    return new Expression(variable, new IntegerWithInfinity(constant.value() + value));
+  public Expression increase(InfInt value) {
+    return new Expression(variable, constant.add(value));
   }
 
   /**

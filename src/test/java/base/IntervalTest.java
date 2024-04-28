@@ -1,10 +1,9 @@
 package base;
 
-import static base.IntegerWithInfinity.NEGATIVE_INFINITY;
-import static base.IntegerWithInfinity.POSITIVE_INFINITY;
 import static base.Interval.UNREACHABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import base.infint.InfInt;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -21,11 +20,11 @@ public class IntervalTest {
   static Interval ONE_TO_THREE = new Interval(1, 3);
   static Interval ZERO_TO_THREE = new Interval(0, 3);
   static Interval ONE_TO_TWO = new Interval(1, 2);
-  static Interval NEG_INF_TO_POS_INF = new Interval(NEGATIVE_INFINITY, POSITIVE_INFINITY);
-  static Interval ZERO_TO_POS_INF = new Interval(0, POSITIVE_INFINITY);
-  static Interval NEG_INF_TO_ZERO = new Interval(NEGATIVE_INFINITY, 0);
-  static Interval POS_ONE_TO_POS_INF = new Interval(1, POSITIVE_INFINITY);
-  static Interval NEG_INF_TO_NEG_ONE = new Interval(NEGATIVE_INFINITY, -1);
+  static Interval NEG_INF_TO_POS_INF = new Interval(InfInt.negInf(), InfInt.posInf());
+  static Interval ZERO_TO_POS_INF = new Interval(0, InfInt.posInf());
+  static Interval NEG_INF_TO_ZERO = new Interval(InfInt.negInf(), 0);
+  static Interval POS_ONE_TO_POS_INF = new Interval(1, InfInt.posInf());
+  static Interval NEG_INF_TO_NEG_ONE = new Interval(InfInt.negInf(), -1);
 
 
   static Stream<Arguments> provideArgumentsForToStringTest() {

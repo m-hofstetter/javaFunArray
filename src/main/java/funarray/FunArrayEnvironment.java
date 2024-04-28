@@ -1,6 +1,7 @@
 package funarray;
 
 import base.Interval;
+import base.infint.InfInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public FunArrayEnvironment addToVariable(Variable variable, int value) {
+  public FunArrayEnvironment addToVariable(Variable variable, InfInt value) {
     var newVariable = new Variable(variable.value().add(value), variable.name());
 
     var newVariables = new ArrayList<>(variables);
@@ -48,7 +49,7 @@ public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
    * @return the altered FunArray
    */
   public FunArrayEnvironment assignArrayElement(Expression index, Interval value) {
-    var modified = funArray.insert(index, index.increase(1), value);
+    var modified = funArray.insert(index, index.increase(InfInt.of(1)), value);
     return new FunArrayEnvironment(modified, variables());
   }
 

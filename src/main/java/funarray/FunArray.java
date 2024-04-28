@@ -1,6 +1,7 @@
 package funarray;
 
 import base.Interval;
+import base.infint.InfInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,7 +78,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param value    the value.
    * @return the altered FunArray.
    */
-  public FunArray addToVariable(Variable variable, int value) {
+  public FunArray addToVariable(Variable variable, InfInt value) {
     var newBounds = bounds.stream()
             .map(s -> s.addToVariableInFunArray(variable, value))
             .toList();
