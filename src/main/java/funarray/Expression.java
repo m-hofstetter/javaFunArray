@@ -2,7 +2,8 @@ package funarray;
 
 import static base.TriBoolean.*;
 
-import base.*;
+import base.IntegerWithInfinity;
+import base.TriBoolean;
 
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.

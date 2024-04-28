@@ -1,8 +1,9 @@
 package funarray;
 
-import base.*;
-import java.util.*;
-import java.util.stream.*;
+import base.Interval;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The environment in which an abstract analysis of an Array can be done, consisting of the abstract

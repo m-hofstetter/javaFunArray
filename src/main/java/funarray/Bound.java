@@ -1,10 +1,10 @@
 package funarray;
 
-import static base.TriBoolean.*;
+import static base.TriBoolean.TRUE;
 
-import base.*;
-import java.util.*;
-import java.util.stream.*;
+import base.IntegerWithInfinity;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A segment bound in a {@link FunArray}.

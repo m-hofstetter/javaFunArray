@@ -146,7 +146,7 @@ public record Interval(IntegerWithInfinity lowerLimit, IntegerWithInfinity upper
     }
     var otherInterval = (Interval) other;
     return this.lowerLimit().equals(otherInterval.lowerLimit())
-        && this.upperLimit().equals(otherInterval.upperLimit());
+            && this.upperLimit().equals(otherInterval.upperLimit());
   }
 
   /**

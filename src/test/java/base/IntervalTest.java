@@ -5,10 +5,10 @@ import static base.IntegerWithInfinity.POSITIVE_INFINITY;
 import static base.Interval.UNREACHABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
 
 public class IntervalTest {
 
@@ -30,49 +30,49 @@ public class IntervalTest {
 
   static Stream<Arguments> provideArgumentsForToStringTest() {
     return Stream.of(
-        Arguments.of(NEG_INF_TO_POS_INF, "[-∞, ∞]"),
-        Arguments.of(ZERO_TO_POS_INF, "[0, ∞]"),
-        Arguments.of(NEG_INF_TO_ZERO, "[-∞, 0]"),
-        Arguments.of(POS_ONE_TO_POS_INF, "[1, ∞]"),
-        Arguments.of(NEG_INF_TO_NEG_ONE, "[-∞, -1]")
+            Arguments.of(NEG_INF_TO_POS_INF, "[-∞, ∞]"),
+            Arguments.of(ZERO_TO_POS_INF, "[0, ∞]"),
+            Arguments.of(NEG_INF_TO_ZERO, "[-∞, 0]"),
+            Arguments.of(POS_ONE_TO_POS_INF, "[1, ∞]"),
+            Arguments.of(NEG_INF_TO_NEG_ONE, "[-∞, -1]")
     );
   }
 
   static Stream<Arguments> provideArgumentsForJoinTest() {
     return Stream.of(
-        Arguments.of(ZERO, ZERO, ZERO),
-        Arguments.of(ZERO, ONE, ZERO_TO_ONE),
-        Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ZERO_TO_THREE),
-        Arguments.of(NEG_INF_TO_ZERO, ZERO, NEG_INF_TO_ZERO),
-        Arguments.of(NEG_INF_TO_POS_INF, ZERO, NEG_INF_TO_POS_INF)
+            Arguments.of(ZERO, ZERO, ZERO),
+            Arguments.of(ZERO, ONE, ZERO_TO_ONE),
+            Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ZERO_TO_THREE),
+            Arguments.of(NEG_INF_TO_ZERO, ZERO, NEG_INF_TO_ZERO),
+            Arguments.of(NEG_INF_TO_POS_INF, ZERO, NEG_INF_TO_POS_INF)
     );
   }
 
   static Stream<Arguments> provideArgumentsForMeetTest() {
     return Stream.of(
-        Arguments.of(ZERO, ZERO, ZERO),
-        Arguments.of(ZERO, ONE, UNREACHABLE),
-        Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ONE_TO_TWO),
-        Arguments.of(NEG_INF_TO_POS_INF, ZERO, ZERO)
+            Arguments.of(ZERO, ZERO, ZERO),
+            Arguments.of(ZERO, ONE, UNREACHABLE),
+            Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ONE_TO_TWO),
+            Arguments.of(NEG_INF_TO_POS_INF, ZERO, ZERO)
     );
   }
 
   static Stream<Arguments> provideArgumentsForWidenTest() {
     return Stream.of(
-        Arguments.of(ZERO, ONE, ZERO_TO_POS_INF),
-        Arguments.of(ZERO, NEG_ONE, NEG_INF_TO_ZERO),
-        Arguments.of(ZERO, NEG_ONE_TO_ONE, NEG_INF_TO_POS_INF),
-        Arguments.of(ZERO, ZERO, ZERO)
+            Arguments.of(ZERO, ONE, ZERO_TO_POS_INF),
+            Arguments.of(ZERO, NEG_ONE, NEG_INF_TO_ZERO),
+            Arguments.of(ZERO, NEG_ONE_TO_ONE, NEG_INF_TO_POS_INF),
+            Arguments.of(ZERO, ZERO, ZERO)
     );
   }
 
   static Stream<Arguments> provideArgumentsForNarrowTest() {
     return Stream.of(
-        Arguments.of(ZERO, ONE, ZERO),
-        Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ZERO_TO_TWO),
-        Arguments.of(ZERO, ZERO, ZERO),
-        Arguments.of(ZERO_TO_POS_INF, ZERO_TO_ONE, ZERO_TO_ONE),
-        Arguments.of(ZERO_TO_POS_INF, ONE_TO_TWO, ZERO_TO_TWO)
+            Arguments.of(ZERO, ONE, ZERO),
+            Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ZERO_TO_TWO),
+            Arguments.of(ZERO, ZERO, ZERO),
+            Arguments.of(ZERO_TO_POS_INF, ZERO_TO_ONE, ZERO_TO_ONE),
+            Arguments.of(ZERO_TO_POS_INF, ONE_TO_TWO, ZERO_TO_TWO)
     );
   }
 

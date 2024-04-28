@@ -1,8 +1,10 @@
 package funarray;
 
-import base.*;
-import java.util.*;
-import java.util.stream.*;
+import base.Interval;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 /**
@@ -11,8 +13,8 @@ import java.util.stream.*;
  * and scalable array content analysis. SIGPLAN Not. 46, 1 (January 2011), 105–118. <a
  * href="https://doi.org/10.1145/1925844.1926399">https://doi.org/10.1145/1925844.1926399</a>
  *
- * @param bounds the FunArray's segment bounds.
- * @param values the FunArray's values.
+ * @param bounds    the FunArray's segment bounds.
+ * @param values    the FunArray's values.
  * @param emptiness a list determining whether a segment might be empty.
  */
 public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
@@ -146,8 +148,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
   }
 
   /**
-   * Gets the index of the leftmost segment s such that the trailing bound of the segment s
-   * contains an expression that is greater than the given expression.
+   * Gets the index of the leftmost segment s such that the trailing bound of the segment s contains
+   * an expression that is greater than the given expression.
    *
    * @param expression the expression
    * @return the calculated index

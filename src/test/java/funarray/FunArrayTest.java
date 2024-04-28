@@ -1,12 +1,14 @@
 package funarray;
 
-import static base.IntegerWithInfinity.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static base.IntegerWithInfinity.NEGATIVE_INFINITY;
+import static base.IntegerWithInfinity.POSITIVE_INFINITY;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import base.*;
-import org.junit.jupiter.api.*;
-import java.util.*;
+import base.IntegerWithInfinity;
+import base.Interval;
+import org.junit.jupiter.api.Test;
+import java.util.List;
 
 public class FunArrayTest {
 
