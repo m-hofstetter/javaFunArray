@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
-public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
+public record Environment(FunArray funArray, List<Variable> variables) {
 
-  public FunArrayEnvironment {
+  public Environment {
     variables = List.copyOf(variables);
   }
 
-  public FunArrayEnvironment(Expression length) {
+  public Environment(Expression length) {
     this(new FunArray(length, false), List.of(length.variable()));
   }
 
@@ -30,7 +30,7 @@ public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public FunArrayEnvironment addToVariable(Variable variable, InfInt value) {
+  public Environment addToVariable(Variable variable, InfInt value) {
     var newVariable = new Variable(variable.value().add(value), variable.name());
 
     var newVariables = new ArrayList<>(variables);
@@ -38,7 +38,7 @@ public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
     newVariables.remove(variable);
     newVariables.add(newVariable);
     var newSegmentation = funArray.addToVariable(variable, value);
-    return new FunArrayEnvironment(newSegmentation, newVariables);
+    return new Environment(newSegmentation, newVariables);
   }
 
   /**
@@ -48,9 +48,9 @@ public record FunArrayEnvironment(FunArray funArray, List<Variable> variables) {
    * @param value the value.
    * @return the altered FunArray
    */
-  public FunArrayEnvironment assignArrayElement(Expression index, Interval value) {
+  public Environment assignArrayElement(Expression index, Interval value) {
     var modified = funArray.insert(index, index.increase(InfInt.of(1)), value);
-    return new FunArrayEnvironment(modified, variables());
+    return new Environment(modified, variables());
   }
 
   @Override

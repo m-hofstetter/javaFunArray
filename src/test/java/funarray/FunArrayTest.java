@@ -52,7 +52,7 @@ public class FunArrayTest {
   void instantiateTest() {
     var interval = new Interval(0, 10);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new FunArrayEnvironment(length);
+    var funArray = new Environment(length);
 
     assertEquals("A: {0} [-∞, ∞] {A.length}\nA.length: [0, 10]", funArray.toString());
   }
@@ -61,7 +61,7 @@ public class FunArrayTest {
   void addToVariableTest() {
     var interval = new Interval(0, 10);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new FunArrayEnvironment(length);
+    var funArray = new Environment(length);
 
     var modified = funArray.addToVariable(length.variable(), InfInt.of(3));
 
@@ -72,7 +72,7 @@ public class FunArrayTest {
   void insertTest() {
     var interval = new Interval(0, 0);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new FunArrayEnvironment(length);
+    var funArray = new Environment(length);
     assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_NEWLY_INSTANTIATED);
 
     funArray = funArray.assignArrayElement(Expression.getZero(), new Interval(0, 0));
