@@ -1,6 +1,8 @@
 package funarray;
 
-import static base.TriBoolean.*;
+import static base.TriBoolean.FALSE;
+import static base.TriBoolean.TRUE;
+import static base.TriBoolean.UNKNOWN;
 
 import base.TriBoolean;
 import base.infint.InfInt;
