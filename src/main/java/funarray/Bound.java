@@ -58,6 +58,10 @@ public record Bound(Set<Expression> expressions) {
     return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression) == TRUE);
   }
 
+  public boolean expressionIsGreaterThan(Expression expression) {
+    return expressions().stream().anyMatch(e -> e.isGreaterThan(expression) == TRUE);
+  }
+
   @Override
   public String toString() {
     return "{%s}".formatted(

@@ -158,8 +158,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    */
   private int getLeastUpperBoundIndex(Expression expression) {
     int leastUpperBoundIndex = bounds.size() - 1;
-    for (int i = 0; i >= bounds.size() - 1; i--) {
-      if (bounds.get(i).expressionIsGreaterEqualThan(expression)) {
+    for (int i = bounds.size() - 1; i >= 0; i--) {
+      if (bounds.get(i).expressionIsGreaterThan(expression)) {
         leastUpperBoundIndex = i;
       }
     }
