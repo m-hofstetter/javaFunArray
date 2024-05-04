@@ -132,6 +132,12 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return new FunArray(newBounds, newValues, newPossiblyEmpty);
   }
 
+  public Interval get(Expression abstractIndex) {
+    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex);
+    return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
+  }
+
   /**
    * Gets the index of the rightmost segment s such that the trailing bound of the segment s
    * contains an expression that is equal to or less than the given expression.

@@ -144,4 +144,14 @@ public class FunArrayTest {
     assertThat(unifiedArrays.get(0)).isEqualTo(expectedA);
     assertThat(unifiedArrays.get(1)).isEqualTo(expectedB);
   }
+
+  @Test
+  void getTest() {
+    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(0)))
+            .isEqualTo(Interval.of(0, 0));
+    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(1)))
+            .isEqualTo(Interval.of(0, 0));
+    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(2)))
+            .isEqualTo(Interval.unknown());
+  }
 }

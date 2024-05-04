@@ -53,6 +53,16 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     return new Environment(modified, variables());
   }
 
+  /**
+   * Returns the value of the element at a given index.
+   *
+   * @param index the index.
+   * @return the value.
+   */
+  public Interval getArrayElement(Expression index) {
+    return funArray.get(index);
+  }
+
   @Override
   public String toString() {
     var variablesString = variables.stream()
