@@ -20,6 +20,9 @@ import java.util.stream.IntStream;
  */
 public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
 
+  private static final Interval NEUTRAL_ELEMENT_UNKNOWN = Interval.getUnknown();
+  private static final Interval NEUTRAL_ELEMENT_UNREACHABLE = Interval.UNREACHABLE;
+
   /**
    * Constructor for FunArray.
    *
@@ -40,7 +43,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param isPossiblyEmpty whether the single segment might be empty.
    */
   public FunArray(Expression length, boolean isPossiblyEmpty) {
-    this(List.of(Bound.ofConstant(0), Bound.of(length)),
+    this(List.of(Bound.of(0), Bound.of(length)),
             List.of(Interval.getUnknown()),
             List.of(isPossiblyEmpty)
     );
@@ -178,5 +181,99 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       jointValue = jointValue.join(values.get(i));
     }
     return jointValue;
+  }
+
+  public List<FunArray> unify(FunArray other, Interval thisNeutralElement, Interval otherNeutralElement) {
+
+    List<Bound> boundsL = new ArrayList<>(this.bounds);
+    List<Interval> valuesL = new ArrayList<>(this.values);
+    List<Boolean> emptinessL = new ArrayList<>(this.emptiness);
+
+    List<Bound> boundsR = new ArrayList<>(other.bounds);
+    List<Interval> valuesR = new ArrayList<>(other.values);
+    List<Boolean> emptinessR = new ArrayList<>(other.emptiness);
+
+    int i = 0;
+    while (i < boundsL.size() - 1 && i < boundsR.size() - 1) {
+
+      var currentBoundL = boundsL.get(i);
+      var currentBoundR = boundsR.get(i);
+
+      var intersection = currentBoundR.intersect(currentBoundL);
+
+      if (intersection.isEmpty()) {
+        joinValueWithPredecessor(valuesL, i);
+        boundsL.remove(i);
+        emptinessL.remove(i);
+        joinValueWithPredecessor(valuesR, i);
+        boundsR.remove(i);
+        emptinessR.remove(i);
+        continue;
+      }
+
+      var complementInL = currentBoundL.getComplementBound(currentBoundR);
+      var complementInLWithOccurrencesInR = complementInL.intersect(boundsR.subList(i, boundsR.size()));
+
+      var complementInR = currentBoundR.getComplementBound(currentBoundL);
+      var complementInRWithOccurrencesInL = complementInR.intersect(boundsL.subList(i, boundsL.size()));
+
+      boundsL.remove(i);
+      boundsR.remove(i);
+
+      if (!complementInLWithOccurrencesInR.isEmpty()) {
+        boundsL.add(i, complementInLWithOccurrencesInR);
+        emptinessL.add(i, true);
+        valuesL.add(i, thisNeutralElement);
+      }
+
+      if (!complementInRWithOccurrencesInL.isEmpty()) {
+        boundsR.add(i, complementInRWithOccurrencesInL);
+        emptinessR.add(i, true);
+        valuesR.add(i, otherNeutralElement);
+      }
+
+      boundsL.add(i, intersection);
+      boundsR.add(i, intersection);
+      i++;
+    }
+
+    joinRemainingBounds(boundsL, i);
+    joinRemainingBounds(boundsR, i);
+
+    prune(valuesL, i);
+    prune(valuesR, i);
+    prune(emptinessL, i);
+    prune(emptinessR, i);
+
+    return List.of(
+            new FunArray(boundsL, valuesL, emptinessL),
+            new FunArray(boundsR, valuesR, emptinessR)
+    );
+  }
+
+  /**
+   * Joins the value in a list at a given index with the element proceeding it.
+   *
+   * @param list the list.
+   * @param i    the index.
+   */
+  private static void joinValueWithPredecessor(List<Interval> list, int i) {
+    var joinedValue = list.get(i - 1).join(list.get(i));
+    list.remove(i - 1);
+    list.remove(i);
+    list.add(joinedValue);
+  }
+
+  private static void joinRemainingBounds(List<Bound> bounds, int i) {
+    var remainingBounds = bounds.subList(i, bounds.size());
+    var joinedBound = Bound.join(remainingBounds);
+    remainingBounds.clear();
+    remainingBounds.add(joinedBound);
+  }
+
+  private static <T> void prune(List<T> list, int i) {
+    if (i < list.size()) {
+      list.subList(i, list.size()).clear();
+    }
   }
 }
