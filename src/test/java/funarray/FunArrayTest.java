@@ -7,6 +7,7 @@ import base.Interval;
 import base.infint.InfInt;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Set;
 
 public class FunArrayTest {
 
@@ -83,5 +84,64 @@ public class FunArrayTest {
 
     funArray = funArray.assignArrayElement(length.increase(InfInt.of(-1)), new Interval(0, 0));
     assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION);
+  }
+
+  /**
+   * From Cousot, Cousot, Logozzo (POPL 2011), Example 8
+   */
+  @Test
+  void unifyTest() {
+    var exp0 = new Expression(Variable.ZERO_VALUE, InfInt.of(0));
+    var expI = new Expression(new Variable(Interval.getUnknown(), "i"), InfInt.of(0));
+    var expN = new Expression(new Variable(Interval.getUnknown(), "n"), InfInt.of(0));
+    var expIm1 = new Expression(new Variable(Interval.getUnknown(), "i"), InfInt.of(-1));
+    var exp1 = new Expression(Variable.ZERO_VALUE, InfInt.of(1));
+
+    var arrayA = new FunArray(
+            List.of(new Bound(Set.of(exp0, expI)), new Bound(Set.of(expN))),
+            List.of(Interval.getUnknown()),
+            List.of(false)
+    );
+
+    var arrayB = new FunArray(
+            List.of(
+                    new Bound(Set.of(exp0, expIm1)),
+                    new Bound(Set.of(exp1, expI)),
+                    new Bound(Set.of(expN))
+            ),
+            List.of(
+                    new Interval(0, 0),
+                    Interval.getUnknown()),
+            List.of(false, true)
+    );
+
+    var expectedA = new FunArray(
+            List.of(
+                    new Bound(Set.of(exp0)),
+                    new Bound(Set.of(expI)),
+                    new Bound(Set.of(expN))
+            ),
+            List.of(
+                    Interval.UNREACHABLE,
+                    Interval.getUnknown()),
+            List.of(true, false)
+    );
+
+    var expectedB = new FunArray(
+            List.of(
+                    new Bound(Set.of(exp0)),
+                    new Bound(Set.of(expI)),
+                    new Bound(Set.of(expN))
+            ),
+            List.of(
+                    new Interval(0, 0),
+                    Interval.getUnknown()),
+            List.of(false, true)
+    );
+
+    var unifiedArrays = arrayA.unify(arrayB, Interval.UNREACHABLE, Interval.UNREACHABLE);
+
+    assertThat(unifiedArrays.get(0)).isEqualTo(expectedA);
+    assertThat(unifiedArrays.get(1)).isEqualTo(expectedB);
   }
 }
