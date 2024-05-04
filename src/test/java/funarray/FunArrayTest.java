@@ -12,12 +12,12 @@ import java.util.Set;
 public class FunArrayTest {
 
   static final Bound END_BOUND = new Bound(new Expression(
-          new Variable(new Interval(0, 0), "A.length"),
+          new Variable(0, "A.length"),
           InfInt.of(0)
   ));
 
   static final Bound END_MINUS_ONE_BOUND = new Bound(new Expression(
-          new Variable(new Interval(0, 0), "A.length"),
+          new Variable(0, "A.length"),
           InfInt.of(-1)
   ));
 
