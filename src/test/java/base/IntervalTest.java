@@ -1,9 +1,9 @@
 package base;
 
-import static base.Interval.UNREACHABLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import base.infint.InfInt;
+import base.interval.Interval;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,20 +11,20 @@ import java.util.stream.Stream;
 
 public class IntervalTest {
 
-  static Interval ZERO = new Interval(0, 0);
-  static Interval ONE = new Interval(1, 1);
-  static Interval NEG_ONE = new Interval(-1, -1);
-  static Interval ZERO_TO_ONE = new Interval(0, 1);
-  static Interval ZERO_TO_TWO = new Interval(0, 2);
-  static Interval NEG_ONE_TO_ONE = new Interval(-1, 1);
-  static Interval ONE_TO_THREE = new Interval(1, 3);
-  static Interval ZERO_TO_THREE = new Interval(0, 3);
-  static Interval ONE_TO_TWO = new Interval(1, 2);
-  static Interval NEG_INF_TO_POS_INF = new Interval(InfInt.negInf(), InfInt.posInf());
-  static Interval ZERO_TO_POS_INF = new Interval(0, InfInt.posInf());
-  static Interval NEG_INF_TO_ZERO = new Interval(InfInt.negInf(), 0);
-  static Interval POS_ONE_TO_POS_INF = new Interval(1, InfInt.posInf());
-  static Interval NEG_INF_TO_NEG_ONE = new Interval(InfInt.negInf(), -1);
+  static Interval ZERO = Interval.of(0, 0);
+  static Interval ONE = Interval.of(1, 1);
+  static Interval NEG_ONE = Interval.of(-1, -1);
+  static Interval ZERO_TO_ONE = Interval.of(0, 1);
+  static Interval ZERO_TO_TWO = Interval.of(0, 2);
+  static Interval NEG_ONE_TO_ONE = Interval.of(-1, 1);
+  static Interval ONE_TO_THREE = Interval.of(1, 3);
+  static Interval ZERO_TO_THREE = Interval.of(0, 3);
+  static Interval ONE_TO_TWO = Interval.of(1, 2);
+  static Interval NEG_INF_TO_POS_INF = Interval.of(InfInt.negInf(), InfInt.posInf());
+  static Interval ZERO_TO_POS_INF = Interval.of(0, InfInt.posInf());
+  static Interval NEG_INF_TO_ZERO = Interval.of(InfInt.negInf(), 0);
+  static Interval POS_ONE_TO_POS_INF = Interval.of(1, InfInt.posInf());
+  static Interval NEG_INF_TO_NEG_ONE = Interval.of(InfInt.negInf(), -1);
 
 
   static Stream<Arguments> provideArgumentsForToStringTest() {
@@ -50,7 +50,7 @@ public class IntervalTest {
   static Stream<Arguments> provideArgumentsForMeetTest() {
     return Stream.of(
             Arguments.of(ZERO, ZERO, ZERO),
-            Arguments.of(ZERO, ONE, UNREACHABLE),
+            Arguments.of(ZERO, ONE, Interval.unreachable()),
             Arguments.of(ZERO_TO_TWO, ONE_TO_THREE, ONE_TO_TWO),
             Arguments.of(NEG_INF_TO_POS_INF, ZERO, ZERO)
     );

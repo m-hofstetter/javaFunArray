@@ -1,7 +1,7 @@
 package funarray;
 
-import base.Interval;
 import base.infint.InfInt;
+import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BinaryOperator;
@@ -20,9 +20,6 @@ import java.util.stream.IntStream;
  * @param emptiness a list determining whether a segment might be empty.
  */
 public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
-
-  private static final Interval NEUTRAL_ELEMENT_UNKNOWN = Interval.getUnknown();
-  private static final Interval NEUTRAL_ELEMENT_UNREACHABLE = Interval.UNREACHABLE;
 
   /**
    * Constructor for FunArray.
@@ -45,7 +42,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    */
   public FunArray(Expression length, boolean isPossiblyEmpty) {
     this(List.of(new Bound(0), new Bound(length)),
-            List.of(Interval.getUnknown()),
+            List.of(Interval.unknown()),
             List.of(isPossiblyEmpty)
     );
   }
@@ -177,7 +174,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @return the joint of all values.
    */
   private Interval getJointValue(int from, int to) {
-    var jointValue = Interval.UNREACHABLE;
+    var jointValue = Interval.unreachable();
     for (int i = from; i <= to; i++) {
       jointValue = jointValue.join(values.get(i));
     }
@@ -307,18 +304,18 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
   }
 
   public FunArray join(FunArray other) {
-    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNREACHABLE, NEUTRAL_ELEMENT_UNREACHABLE);
+    return unifyOperation(Interval::join, other, Interval.unreachable(), Interval.unreachable());
   }
 
   public FunArray meet(FunArray other) {
-    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNKNOWN, NEUTRAL_ELEMENT_UNKNOWN);
+    return unifyOperation(Interval::join, other, Interval.unknown(), Interval.unknown());
   }
 
   public FunArray widen(FunArray other) {
-    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNREACHABLE, NEUTRAL_ELEMENT_UNREACHABLE);
+    return unifyOperation(Interval::join, other, Interval.unreachable(), Interval.unreachable());
   }
 
   public FunArray narrow(FunArray other) {
-    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNKNOWN, NEUTRAL_ELEMENT_UNKNOWN);
+    return unifyOperation(Interval::join, other, Interval.unknown(), Interval.unknown());
   }
 }

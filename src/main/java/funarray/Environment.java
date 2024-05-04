@@ -1,7 +1,7 @@
 package funarray;
 
-import base.Interval;
 import base.infint.InfInt;
+import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
