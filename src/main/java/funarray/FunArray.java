@@ -181,7 +181,16 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return jointValue;
   }
 
-  public List<FunArray> unify(FunArray other, Interval thisNeutralElement, Interval otherNeutralElement) {
+  /**
+   * Unifies this FunArray with another one, so their segment bounds coincide.
+   *
+   * @param other               the other.
+   * @param thisNeutralElement  the neutral element for this.
+   * @param otherNeutralElement the neutral element for the other.
+   * @return a list of two unified FunArrays.
+   */
+  public List<FunArray> unify(FunArray other,
+                              Interval thisNeutralElement, Interval otherNeutralElement) {
 
     List<Bound> boundsL = new ArrayList<>(this.bounds);
     List<Interval> valuesL = new ArrayList<>(this.values);
@@ -209,23 +218,25 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
         continue;
       }
 
-      var complementInL = currentBoundL.getComplementBound(currentBoundR);
-      var complementInLWithOccurrencesInR = complementInL.intersect(boundsR.subList(i, boundsR.size()));
-
-      var complementInR = currentBoundR.getComplementBound(currentBoundL);
-      var complementInRWithOccurrencesInL = complementInR.intersect(boundsL.subList(i, boundsL.size()));
+      var complementInThis = currentBoundL.getComplementBound(currentBoundR);
+      var complementInThisWithOccurrencesInOther = complementInThis
+              .intersect(boundsR.subList(i, boundsR.size()));
 
       boundsL.remove(i);
       boundsR.remove(i);
 
-      if (!complementInLWithOccurrencesInR.isEmpty()) {
-        boundsL.add(i, complementInLWithOccurrencesInR);
+      if (!complementInThisWithOccurrencesInOther.isEmpty()) {
+        boundsL.add(i, complementInThisWithOccurrencesInOther);
         emptinessL.add(i, true);
         valuesL.add(i, thisNeutralElement);
       }
 
-      if (!complementInRWithOccurrencesInL.isEmpty()) {
-        boundsR.add(i, complementInRWithOccurrencesInL);
+      var complementInOther = currentBoundR.getComplementBound(currentBoundL);
+      var complementInOtherWithOccurrencesInThis = complementInOther
+              .intersect(boundsL.subList(i, boundsL.size()));
+
+      if (!complementInOtherWithOccurrencesInThis.isEmpty()) {
+        boundsR.add(i, complementInOtherWithOccurrencesInThis);
         emptinessR.add(i, true);
         valuesR.add(i, otherNeutralElement);
       }
