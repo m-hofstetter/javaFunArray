@@ -1,8 +1,6 @@
 package funarray;
 
-import static base.TriBoolean.FALSE;
-import static base.TriBoolean.TRUE;
-import static base.TriBoolean.UNKNOWN;
+import static base.TriBoolean.*;
 
 import base.TriBoolean;
 import base.infint.InfInt;
@@ -18,12 +16,8 @@ import base.infint.InfInt;
  */
 public record Expression(Variable variable, InfInt constant) {
 
-  public static Expression getZero() {
-    return new Expression(Variable.ZERO_VALUE, InfInt.of(0));
-  }
-
-  public static Expression getConstant(int constant) {
-    return new Expression(Variable.ZERO_VALUE, InfInt.of(constant));
+  public Expression(int constant) {
+    this(Variable.ZERO_VALUE, InfInt.of(constant));
   }
 
   @Override

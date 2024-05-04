@@ -17,16 +17,16 @@ public record Bound(Set<Expression> expressions) {
     expressions = Set.copyOf(expressions);
   }
 
-  static Bound of(Expression... expressions) {
-    return new Bound(Set.of(expressions));
+  public Bound(Expression... expressions) {
+    this(Set.of(expressions));
   }
 
-  static Bound of(InfInt constant) {
-    return Bound.of(new Expression(Variable.ZERO_VALUE, constant));
+  public Bound(InfInt constant) {
+    this(new Expression(Variable.ZERO_VALUE, constant));
   }
 
-  static Bound of(int constant) {
-    return Bound.of(InfInt.of(constant));
+  public Bound(int constant) {
+    this(InfInt.of(constant));
   }
 
   /**

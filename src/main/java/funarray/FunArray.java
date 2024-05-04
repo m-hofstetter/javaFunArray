@@ -44,7 +44,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param isPossiblyEmpty whether the single segment might be empty.
    */
   public FunArray(Expression length, boolean isPossiblyEmpty) {
-    this(List.of(Bound.of(0), Bound.of(length)),
+    this(List.of(new Bound(0), new Bound(length)),
             List.of(Interval.getUnknown()),
             List.of(isPossiblyEmpty)
     );
@@ -119,7 +119,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     if (!bounds.get(greatestLowerBoundIndex).expressionEquals(from)) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(Bound.of(from));
+      boundsSubList.add(new Bound(from));
     }
 
     emptinessSubList.add(false);
@@ -129,7 +129,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(Bound.of(to));
+      boundsSubList.add(new Bound(to));
     }
 
     return new FunArray(newBounds, newValues, newPossiblyEmpty);
