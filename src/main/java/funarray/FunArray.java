@@ -4,6 +4,7 @@ import base.Interval;
 import base.infint.InfInt;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -275,5 +276,49 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     if (i < list.size()) {
       list.subList(i, list.size()).clear();
     }
+  }
+
+  /**
+   * Utility function. The abstract domain functions join, meet, widen and narrow utilise the same
+   * with only the neutral elements and the operation that is applied on the values is different.
+   *
+   * @param operation           the operation applied on the values.
+   * @param other               the other FunArray.
+   * @param thisNeutralElement  the neutral element for unifying of this FunArray.
+   * @param otherNeutralElement the neutral element for unifying of the other FunArray.
+   * @return the joined/met/widened/narrowed FunArray
+   */
+  private FunArray unifyOperation(BinaryOperator<Interval> operation, FunArray other,
+                                  Interval thisNeutralElement, Interval otherNeutralElement) {
+
+    var unifiedArrays = this.unify(other, thisNeutralElement, otherNeutralElement);
+    var thisUnified = unifiedArrays.getFirst();
+    var otherUnified = unifiedArrays.getLast();
+
+    var modifiedValues = IntStream.range(0, thisUnified.values.size())
+            .mapToObj(i -> operation.apply(thisUnified.values.get(i), otherUnified.values.get(i)))
+            .toList();
+
+    var modifiedEmptiness = IntStream.range(0, thisUnified.emptiness.size())
+            .mapToObj(i -> thisUnified.emptiness.get(i) || otherUnified.emptiness.get(i))
+            .toList();
+
+    return new FunArray(thisUnified.bounds, modifiedValues, modifiedEmptiness);
+  }
+
+  public FunArray join(FunArray other) {
+    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNREACHABLE, NEUTRAL_ELEMENT_UNREACHABLE);
+  }
+
+  public FunArray meet(FunArray other) {
+    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNKNOWN, NEUTRAL_ELEMENT_UNKNOWN);
+  }
+
+  public FunArray widen(FunArray other) {
+    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNREACHABLE, NEUTRAL_ELEMENT_UNREACHABLE);
+  }
+
+  public FunArray narrow(FunArray other) {
+    return unifyOperation(Interval::join, other, NEUTRAL_ELEMENT_UNKNOWN, NEUTRAL_ELEMENT_UNKNOWN);
   }
 }
