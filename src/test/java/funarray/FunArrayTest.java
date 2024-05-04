@@ -22,28 +22,28 @@ public class FunArrayTest {
 
   //A: {0} [-∞, ∞] {A.length}
   static final FunArray FUN_ARRAY_NEWLY_INSTANTIATED = new FunArray(
-          List.of(Bound.ofConstant(0), END_BOUND),
+          List.of(Bound.of(0), END_BOUND),
           List.of(Interval.getUnknown()),
           List.of(false)
   );
 
   //A: {0} [0, 0] {1}? [-∞, ∞] {A.length}
   static final FunArray FUN_ARRAY_AFTER_SINGLE_INSERTION = new FunArray(
-          List.of(Bound.ofConstant(0), Bound.ofConstant(1), END_BOUND),
+          List.of(Bound.of(0), Bound.of(1), END_BOUND),
           List.of(new Interval(0, 0), Interval.getUnknown()),
           List.of(false, true)
   );
 
   //A: {0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {A.length}?
   static final FunArray FUN_ARRAY_AFTER_TWO_INSERTIONS = new FunArray(
-          List.of(Bound.ofConstant(0), Bound.ofConstant(1), Bound.ofConstant(2), END_BOUND),
+          List.of(Bound.of(0), Bound.of(1), Bound.of(2), END_BOUND),
           List.of(new Interval(0, 0), new Interval(0, 0), Interval.getUnknown()),
           List.of(false, false, true)
   );
 
   //A: {0} [-∞, ∞] {A.length-1}? [0, 0] {A.length}
   static final FunArray FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION = new FunArray(
-          List.of(Bound.ofConstant(0), END_MINUS_ONE_BOUND, END_BOUND),
+          List.of(Bound.of(0), END_MINUS_ONE_BOUND, END_BOUND),
           List.of(Interval.getUnknown(), new Interval(0, 0)),
           List.of(true, false)
   );

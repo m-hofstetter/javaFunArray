@@ -3,6 +3,7 @@ package funarray;
 import static base.TriBoolean.TRUE;
 
 import base.infint.InfInt;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,12 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(Set.of(expressions));
   }
 
-  static Bound ofConstant(InfInt constant) {
+  static Bound of(InfInt constant) {
     return Bound.of(new Expression(Variable.ZERO_VALUE, constant));
   }
 
-  static Bound ofConstant(int constant) {
-    return Bound.ofConstant(InfInt.of(constant));
+  static Bound of(int constant) {
+    return Bound.of(InfInt.of(constant));
   }
 
   /**
@@ -61,5 +62,93 @@ public record Bound(Set<Expression> expressions) {
   public String toString() {
     return "{%s}".formatted(
             String.join(" ", expressions.stream().map(Expression::toString).toList()));
+  }
+
+  public boolean containsSubset(Bound subSet) {
+    return expressions.containsAll(subSet.expressions);
+  }
+
+  /**
+   * Returns a new bound of all expressions from a bound that are not contained in another specified
+   * bound.
+   *
+   * @param other the other bound.
+   * @return the complement.
+   */
+  public Bound getComplementBound(Bound other) {
+    return new Bound(
+            expressions.stream()
+                    .filter(e -> !other.expressions.contains(e))
+                    .collect(Collectors.toSet())
+    );
+  }
+
+  /**
+   * Returns a new bound containing all expressions from both bounds.
+   *
+   * @param other the other bound.
+   * @return the joined bound.
+   */
+  public Bound join(Bound other) {
+    var joinedExpressionSet = other.expressions.stream()
+            .filter(e -> !this.expressions.contains(e))
+            .collect(Collectors.toSet());
+
+    joinedExpressionSet.addAll(this.expressions);
+
+    return new Bound(joinedExpressionSet);
+  }
+
+  /**
+   * Returns a new bound containing all expressions the list of specified bounds.
+   *
+   * @param bounds the list of bounds.
+   * @return the joined bound.
+   */
+  public static Bound join(List<Bound> bounds) {
+    var bound = new Bound(Set.of());
+    for (Bound b : bounds) {
+      bound = bound.join(b);
+    }
+    return bound;
+  }
+
+  /**
+   * Returns a new bound containing all expressions that are present in both bounds.
+   *
+   * @param other the other bound.
+   * @return the intersection of both bound.
+   */
+  public Bound intersect(Bound other) {
+    var meetExpressionSet = other.expressions.stream()
+            .filter(this.expressions::contains)
+            .collect(Collectors.toSet());
+
+    return new Bound(meetExpressionSet);
+  }
+
+  /**
+   * Returns a new bound containing all expressions from this, that are also present in one of the
+   * bounds in the specified lsit.
+   *
+   * @param list the list of bounds.
+   * @return the intersected bound.
+   */
+  public Bound intersect(List<Bound> list) {
+    var joinedList = join(list);
+    return this.intersect(joinedList);
+  }
+
+  public boolean isEmpty() {
+    return expressions.isEmpty();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof Bound otherBound) {
+      return this.expressions.size() == otherBound.expressions.size()
+              && otherBound.expressions.containsAll(this.expressions);
+    }
+    return false;
   }
 }
