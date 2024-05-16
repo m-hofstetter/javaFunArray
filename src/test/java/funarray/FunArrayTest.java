@@ -116,6 +116,37 @@ public class FunArrayTest {
   }
 
   @Test
+  void joinTest() {
+    var i = new Variable(Interval.unknown(), "i");
+    var n = new Variable(Interval.unknown(), "n");
+
+    var arrayA = buildFunArray()
+            .bound(Variable.ZERO_VALUE, i)
+            .unknownValue()
+            .bound(n).build();
+
+    var arrayB = buildFunArray()
+            .bound(new Expression(0), new Expression(i, -1))
+            .value(0)
+            .bound(new Expression(1), new Expression(i))
+            .unknownValue()
+            .mightBeEmpty()
+            .bound(n).build();
+
+    var expected = buildFunArray()
+            .bound(0)
+            .value(0, 0)
+            .mightBeEmpty()
+            .bound(i)
+            .unknownValue()
+            .mightBeEmpty()
+            .bound(n).build();
+
+    var joined = arrayA.join(arrayB);
+    assertThat(joined).isEqualTo(expected);
+  }
+
+  @Test
   void getTest() {
 
     var firstValue = Interval.of(0);
@@ -130,14 +161,10 @@ public class FunArrayTest {
 
     assertThat(
             funArray.get(new Expression(0))
-    ).isEqualTo(
-            firstValue
-    );
+    ).isEqualTo(firstValue);
 
     assertThat(
             funArray.get(new Expression(1))
-    ).isEqualTo(
-            secondValue
-    );
+    ).isEqualTo(secondValue);
   }
 }
