@@ -4,6 +4,7 @@ import static base.TriBoolean.*;
 
 import base.TriBoolean;
 import base.infint.InfInt;
+import base.interval.Interval;
 
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
@@ -92,5 +93,13 @@ public record Expression(Variable variable, InfInt constant) {
 
   public TriBoolean isGreaterEqualThan(Expression other) {
     return isLessThan(other).invert();
+  }
+
+  public boolean containsVariable(Variable variable) {
+    return this.variable.equals(variable);
+  }
+
+  public Interval calculate() {
+    return variable.value().add(constant);
   }
 }

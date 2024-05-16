@@ -46,6 +46,19 @@ public record Bound(Set<Expression> expressions) {
     );
   }
 
+  public Bound assignVariableInFunArray(Variable variable, Expression expression) {
+    var modifiedExpressions = expressions.stream()
+            .filter(e -> !e.containsVariable(variable))
+            .collect(Collectors.toSet());
+
+    modifiedExpressions.stream()
+            .filter(e -> e.containsVariable(expression.variable()))
+            .findAny()
+            .ifPresent(e -> modifiedExpressions.add(new Expression(variable, e.constant().subtract(expression.constant()))));
+
+    return new Bound(modifiedExpressions);
+  }
+
   public boolean expressionEquals(Expression expression) {
     return expressions.contains(expression);
   }
