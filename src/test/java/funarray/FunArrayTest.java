@@ -1,62 +1,16 @@
 package funarray;
 
+import static funarray.util.FunArrayBuilder.buildFunArray;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import base.infint.InfInt;
 import base.interval.Interval;
 import org.junit.jupiter.api.Test;
-import java.util.List;
-import java.util.Set;
 
 public class FunArrayTest {
 
-  static final Bound END_BOUND = new Bound(new Expression(
-          new Variable(0, "A.length"),
-          InfInt.of(0)
-  ));
-
-  static final Bound END_MINUS_ONE_BOUND = new Bound(new Expression(
-          new Variable(0, "A.length"),
-          InfInt.of(-1)
-  ));
-
-  //A: {0} [-∞, ∞] {A.length}
-  static final FunArray FUN_ARRAY_NEWLY_INSTANTIATED = new FunArray(
-          List.of(new Bound(0), END_BOUND),
-          List.of(Interval.unknown()),
-          List.of(false)
-  );
-
-  //A: {0} [0, 0] {1}? [-∞, ∞] {A.length}
-  static final FunArray FUN_ARRAY_AFTER_SINGLE_INSERTION = new FunArray(
-          List.of(new Bound(0), new Bound(1), END_BOUND),
-          List.of(Interval.of(0, 0), Interval.unknown()),
-          List.of(false, true)
-  );
-
-  //A: {0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {A.length}?
-  static final FunArray FUN_ARRAY_AFTER_TWO_INSERTIONS = new FunArray(
-          List.of(new Bound(0), new Bound(1), new Bound(2), END_BOUND),
-          List.of(Interval.of(0, 0), Interval.of(0, 0), Interval.unknown()),
-          List.of(false, false, true)
-  );
-
-  //A: {0} [-∞, ∞] {A.length-1}? [0, 0] {A.length}
-  static final FunArray FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION = new FunArray(
-          List.of(new Bound(0), END_MINUS_ONE_BOUND, END_BOUND),
-          List.of(Interval.unknown(), Interval.of(0, 0)),
-          List.of(true, false)
-  );
-
-  @Test
-  void instantiateTest() {
-    var interval = Interval.of(0, 10);
-    var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new Environment(length);
-
-    assertEquals("A: {0} [-∞, ∞] {A.length}\nA.length: [0, 10]", funArray.toString());
-  }
+  static final Variable LENGTH = new Variable(0, "A.length");
 
   @Test
   void addToVariableTest() {
@@ -74,16 +28,47 @@ public class FunArrayTest {
     var interval = Interval.of(0, 0);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
     var funArray = new Environment(length);
-    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_NEWLY_INSTANTIATED);
+    assertThat(funArray.funArray()).isEqualTo(
+            buildFunArray()
+                    .bound(0)
+                    .unknownValue()
+                    .bound(LENGTH).build()
+    );
 
     funArray = funArray.assignArrayElement(new Expression(0), Interval.of(0, 0));
-    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_SINGLE_INSERTION);
+    assertThat(funArray.funArray()).isEqualTo(
+            buildFunArray()
+                    .bound(0)
+                    .value(0)
+                    .bound(1)
+                    .unknownValue()
+                    .mightBeEmpty()
+                    .bound(LENGTH).build()
+    );
 
     funArray = funArray.assignArrayElement(new Expression(1), Interval.of(0, 0));
-    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_TWO_INSERTIONS);
+    assertThat(funArray.funArray()).isEqualTo(
+            buildFunArray()
+                    .bound(0)
+                    .value(0)
+                    .bound(1)
+                    .value(0)
+                    .bound(2)
+                    .unknownValue()
+                    .mightBeEmpty()
+                    .bound(LENGTH).build()
+    );
 
     funArray = funArray.assignArrayElement(length.increase(InfInt.of(-1)), Interval.of(0, 0));
-    assertThat(funArray.funArray()).isEqualTo(FUN_ARRAY_AFTER_SEGMENT_JOINING_INSERTION);
+    assertThat(funArray.funArray()).isEqualTo(
+            buildFunArray()
+                    .bound(0)
+                    .unknownValue()
+                    .mightBeEmpty()
+                    .bound(new Expression(LENGTH, -1))
+                    .value(0)
+                    .bound(LENGTH).build()
+    );
   }
 
   /**
@@ -91,53 +76,38 @@ public class FunArrayTest {
    */
   @Test
   void unifyTest() {
-    var exp0 = new Expression(Variable.ZERO_VALUE, InfInt.of(0));
-    var expI = new Expression(new Variable(Interval.unknown(), "i"), InfInt.of(0));
-    var expN = new Expression(new Variable(Interval.unknown(), "n"), InfInt.of(0));
-    var expIm1 = new Expression(new Variable(Interval.unknown(), "i"), InfInt.of(-1));
-    var exp1 = new Expression(Variable.ZERO_VALUE, InfInt.of(1));
 
-    var arrayA = new FunArray(
-            List.of(new Bound(Set.of(exp0, expI)), new Bound(Set.of(expN))),
-            List.of(Interval.unknown()),
-            List.of(false)
-    );
+    var i = new Variable(Interval.unknown(), "i");
+    var n = new Variable(Interval.unknown(), "n");
 
-    var arrayB = new FunArray(
-            List.of(
-                    new Bound(Set.of(exp0, expIm1)),
-                    new Bound(Set.of(exp1, expI)),
-                    new Bound(Set.of(expN))
-            ),
-            List.of(
-                    Interval.of(0, 0),
-                    Interval.unknown()),
-            List.of(false, true)
-    );
+    var arrayA = buildFunArray()
+            .bound(Variable.ZERO_VALUE, i)
+            .unknownValue()
+            .bound(n).build();
 
-    var expectedA = new FunArray(
-            List.of(
-                    new Bound(Set.of(exp0)),
-                    new Bound(Set.of(expI)),
-                    new Bound(Set.of(expN))
-            ),
-            List.of(
-                    Interval.unreachable(),
-                    Interval.unknown()),
-            List.of(true, false)
-    );
+    var arrayB = buildFunArray()
+            .bound(new Expression(0), new Expression(i, -1))
+            .value(0)
+            .bound(new Expression(1), new Expression(i))
+            .unknownValue()
+            .mightBeEmpty()
+            .bound(n).build();
 
-    var expectedB = new FunArray(
-            List.of(
-                    new Bound(Set.of(exp0)),
-                    new Bound(Set.of(expI)),
-                    new Bound(Set.of(expN))
-            ),
-            List.of(
-                    Interval.of(0, 0),
-                    Interval.unknown()),
-            List.of(false, true)
-    );
+    var expectedA = buildFunArray()
+            .bound(0)
+            .unreachableValue()
+            .mightBeEmpty()
+            .bound(i)
+            .unknownValue()
+            .bound(n).build();
+
+    var expectedB = buildFunArray()
+            .bound(0)
+            .value(0, 0)
+            .bound(i)
+            .unknownValue()
+            .mightBeEmpty()
+            .bound(n).build();
 
     var unifiedArrays = arrayA.unify(arrayB, Interval.unreachable(), Interval.unreachable());
 
@@ -147,11 +117,27 @@ public class FunArrayTest {
 
   @Test
   void getTest() {
-    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(0)))
-            .isEqualTo(Interval.of(0, 0));
-    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(1)))
-            .isEqualTo(Interval.of(0, 0));
-    assertThat(FUN_ARRAY_AFTER_TWO_INSERTIONS.get(new Expression(2)))
-            .isEqualTo(Interval.unknown());
+
+    var firstValue = Interval.of(0);
+    var secondValue = Interval.of(1);
+
+    var funArray = buildFunArray()
+            .bound(0)
+            .value(firstValue)
+            .bound(1)
+            .value(secondValue)
+            .bound(2).build();
+
+    assertThat(
+            funArray.get(new Expression(0))
+    ).isEqualTo(
+            firstValue
+    );
+
+    assertThat(
+            funArray.get(new Expression(1))
+    ).isEqualTo(
+            secondValue
+    );
   }
 }

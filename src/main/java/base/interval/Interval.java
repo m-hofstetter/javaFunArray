@@ -31,6 +31,10 @@ public abstract sealed class Interval permits ReachableInterval, Unreachable {
     return new ReachableInterval(InfInt.of(lowerLimit), InfInt.of(upperLimit));
   }
 
+  public static Interval of(int bothLimits) {
+    return new ReachableInterval(InfInt.of(bothLimits), InfInt.of(bothLimits));
+  }
+
   /**
    * Joins two intervals so that all values from either are present in the resulting interval.
    *

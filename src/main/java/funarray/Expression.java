@@ -21,6 +21,14 @@ public record Expression(Variable variable, InfInt constant) {
     this(Variable.ZERO_VALUE, InfInt.of(constant));
   }
 
+  public Expression(Variable variable, int constant) {
+    this(variable, InfInt.of(constant));
+  }
+
+  public Expression(Variable variable) {
+    this(variable, InfInt.of(0));
+  }
+
   @Override
   public String toString() {
     if (constant.equals(InfInt.of(0))) {
