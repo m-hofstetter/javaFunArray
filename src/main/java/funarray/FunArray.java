@@ -5,6 +5,7 @@ import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -105,15 +106,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return new FunArray(newBounds, newValues, newEmptiness);
   }
 
-  /**
-   * Inserts a value into the FunArray.
-   *
-   * @param from  the leading bound expression for the new value.
-   * @param to    the trailing bound expression for the new value.
-   * @param value the value to be inserted.
-   * @return the modified Segmentation.
-   */
-  public FunArray insert(Expression from, Expression to, Interval value) {
+
+  public FunArray modify(Expression from, Expression to, UnaryOperator<Interval> modifyValue) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(to);
 
@@ -139,7 +133,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     }
 
     emptinessSubList.add(false);
-    valuesSubList.add(value);
+    valuesSubList.add(modifyValue.apply(jointValue));
 
     // no right touching
     if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
@@ -149,6 +143,18 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     }
 
     return new FunArray(newBounds, newValues, newPossiblyEmpty);
+  }
+
+  /**
+   * Inserts a value into the FunArray.
+   *
+   * @param from  the leading bound expression for the new value.
+   * @param to    the trailing bound expression for the new value.
+   * @param value the value to be inserted.
+   * @return the modified Segmentation.
+   */
+  public FunArray insert(Expression from, Expression to, Interval value) {
+    return modify(from, to, _ -> value);
   }
 
   public Interval get(Expression abstractIndex) {
