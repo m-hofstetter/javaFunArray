@@ -167,4 +167,17 @@ public class FunArrayTest {
             funArray.get(new Expression(1))
     ).isEqualTo(secondValue);
   }
+
+  @Test
+  void dutchNationalFlagTest() {
+
+    var length = new Variable(Interval.unknown(), "A.length");
+    var r = new Variable(0, 0, "r");
+    var w = new Variable(Interval.unknown(), "w");
+    var b = new Variable(Interval.unknown(), "b");
+
+    var funArray = new FunArray(new Expression(length), true);
+
+    //var env = new Environment(funArray, List.of(length, r, w, b));
+  }
 }

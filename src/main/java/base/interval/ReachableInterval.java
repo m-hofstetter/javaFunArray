@@ -1,6 +1,7 @@
 package base.interval;
 
 import base.infint.InfInt;
+import funarray.Expression;
 
 
 final class ReachableInterval extends Interval {
@@ -88,5 +89,18 @@ final class ReachableInterval extends Interval {
   @Override
   public Interval add(InfInt value) {
     return new ReachableInterval(lowerLimit.add(value), upperLimit.add(value));
+  }
+
+  @Override
+  public Interval assumeLessEqThan(Expression expression) {
+    var other = expression.calculate();
+    if (other instanceof ReachableInterval reachableOther) {
+      var upperLimit = InfInt.min(this.upperLimit, reachableOther.upperLimit);
+      if (upperLimit.isLessThan(this.lowerLimit)) {
+        return Interval.unreachable();
+      }
+      return Interval.of(this.lowerLimit, upperLimit);
+    }
+    return Interval.unreachable();
   }
 }

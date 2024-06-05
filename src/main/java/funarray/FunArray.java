@@ -163,6 +163,10 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
   }
 
+  public FunArray assumeContentLeqThan(Expression from, Expression to, Expression compare) {
+    return modify(from, to, e -> e.assumeLessEqThan(compare));
+  }
+
   /**
    * Gets the index of the rightmost segment s such that the trailing bound of the segment s
    * contains an expression that is equal to or less than the given expression.
