@@ -178,6 +178,10 @@ public class FunArrayTest {
 
     var funArray = new FunArray(new Expression(length), true);
 
+
+    System.out.println(funArray);
     //var env = new Environment(funArray, List.of(length, r, w, b));
+
+
   }
 }

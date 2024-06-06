@@ -41,4 +41,11 @@ public record Variable(Interval value, String name) {
   public String toStringWithValue() {
     return "%s: %s".formatted(name(), value());
   }
+
+  public Variable join(Variable other) {
+    if (!this.name.equals(other.name)) {
+      throw new IllegalStateException("Cannot join two different variables.");
+    }
+    return new Variable(value.join(other.value), name);
+  }
 }

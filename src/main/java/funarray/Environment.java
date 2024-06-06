@@ -4,6 +4,7 @@ import base.infint.InfInt;
 import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -80,5 +81,19 @@ public record Environment(FunArray funArray, List<Variable> variables) {
             .collect(Collectors.joining(" "));
 
     return "A: %s\n%s".formatted(funArray, variablesString);
+  }
+
+  public Environment assume(UnaryOperator<Environment> assumption, UnaryOperator<Environment> reverseAssumption, UnaryOperator<Environment> modification) {
+    var thisUnderAssumption = assumption.apply(this);
+    var thisUnderAssumptionAndModified = modification.apply(thisUnderAssumption);
+    var thisUnderReverseAssumption = reverseAssumption.apply(this);
+
+    return thisUnderAssumptionAndModified.join(thisUnderReverseAssumption);
+  }
+
+  private Environment join(Environment other) {
+    var joinedFunArray = funArray.join(other.funArray);
+    return new Environment(joinedFunArray, variables);
+    //TODO: join variables
   }
 }
