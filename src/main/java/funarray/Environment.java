@@ -91,7 +91,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     return thisUnderAssumptionAndModified.join(thisUnderReverseAssumption);
   }
 
-  private Environment join(Environment other) {
+  public Environment join(Environment other) {
     var joinedFunArray = funArray.join(other.funArray);
     return new Environment(joinedFunArray, variables);
     //TODO: join variables
