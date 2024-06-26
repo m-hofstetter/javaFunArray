@@ -96,4 +96,10 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     return new Environment(joinedFunArray, variables);
     //TODO: join variables
   }
+
+  public Environment widen(Environment other) {
+    var widenedFunArray = funArray.widen(other.funArray);
+    return new Environment(widenedFunArray, variables);
+    //TODO: proper widening
+  }
 }

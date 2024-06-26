@@ -68,6 +68,10 @@ public abstract sealed class InfInt implements Comparable<InfInt>
 
   public abstract InfInt add(InfInt value);
 
+  public InfInt add(int value) {
+    return this.add(InfInt.of(value));
+  }
+
   public InfInt subtract(InfInt value) {
     return add(value.negate());
   }

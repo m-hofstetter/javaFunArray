@@ -40,6 +40,11 @@ public class EnvironmentTest {
               return environment.assignArrayElement(new Expression(w), met);
             },
             environment -> {
+              var temp = environment.funArray().get(new Expression(r));
+              environment = environment
+                      .assignArrayElement(new Expression(r), environment.getArrayElement(new Expression(w)))
+                      .assignArrayElement(new Expression(w), temp)
+                      .addToVariable(r, InfInt.of(1));
               System.out.println(environment);
               return environment;
             });
