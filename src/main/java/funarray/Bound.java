@@ -3,6 +3,7 @@ package funarray;
 import static base.TriBoolean.TRUE;
 
 import base.infint.InfInt;
+import base.interval.Interval;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,6 +57,13 @@ public record Bound(Set<Expression> expressions) {
             .findAny()
             .ifPresent(e -> modifiedExpressions.add(new Expression(variable, e.constant().subtract(expression.constant()))));
 
+    return new Bound(modifiedExpressions);
+  }
+
+  public Bound assignVariableInFunArray(Variable variable, Interval interval) {
+    var modifiedExpressions = expressions.stream()
+            .filter(e -> !e.containsVariable(variable))
+            .collect(Collectors.toSet());
     return new Bound(modifiedExpressions);
   }
 

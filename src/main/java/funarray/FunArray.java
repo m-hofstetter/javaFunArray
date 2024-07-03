@@ -106,6 +106,25 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return new FunArray(newBounds, newValues, newEmptiness);
   }
 
+  public FunArray assignVariable(Variable variable, Interval interval) {
+    var newBounds = new ArrayList<>(bounds.stream().map(b -> b.assignVariableInFunArray(variable, interval)).toList());
+    var newValues = new ArrayList<>(values);
+    var newEmptiness = new ArrayList<>(emptiness);
+
+    var i = 1;
+    while (i < newBounds.size()) {
+      if (newBounds.get(i).isEmpty()) {
+        joinValueWithPredecessor(newValues, i);
+        newBounds.remove(i);
+        newEmptiness.set(i - 1, newEmptiness.get(i - 1) && newEmptiness.get(i));
+        newEmptiness.remove(i);
+        continue;
+      }
+      i++;
+    }
+    return new FunArray(newBounds, newValues, newEmptiness);
+  }
+
 
   public FunArray modify(Expression from, Expression to, UnaryOperator<Interval> modifyValue) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
