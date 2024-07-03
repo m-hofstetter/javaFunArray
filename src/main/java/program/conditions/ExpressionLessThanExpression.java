@@ -1,0 +1,18 @@
+package program.conditions;
+
+import funarray.Expression;
+
+public final class ExpressionLessThanExpression extends ExpressionInequality {
+
+  public ExpressionLessThanExpression(Expression left, Expression right) {
+    this.left = left;
+    this.right = right;
+    this.inequality = (l, r) -> l < r;
+    this.inverseInequality = (l, r) -> l >= r;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s < %s", left, right);
+  }
+}
