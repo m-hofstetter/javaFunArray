@@ -334,8 +334,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    */
   private static void joinValueWithPredecessor(List<Interval> list, int i) {
     var joinedValue = list.get(i - 1).join(list.get(i));
-    list.remove(i - 1);
     list.remove(i);
+    list.remove(i - 1);
     list.add(joinedValue);
   }
 
