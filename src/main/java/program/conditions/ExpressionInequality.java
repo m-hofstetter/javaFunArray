@@ -70,4 +70,6 @@ public abstract class ExpressionInequality implements Condition {
     return false;
   }
 
+  @Override
+  public abstract String toString();
 }

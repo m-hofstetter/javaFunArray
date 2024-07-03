@@ -28,4 +28,6 @@ public abstract class ArrayElementInequality implements Condition {
     return input.equals(satisfy(input));
   }
 
+  @Override
+  public abstract String toString();
 }

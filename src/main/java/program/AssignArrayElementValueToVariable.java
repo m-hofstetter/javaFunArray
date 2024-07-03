@@ -10,6 +10,9 @@ public record AssignArrayElementValueToVariable(Expression arrayIndex,
   @Override
   public Environment run(Environment startingState) {
     var arrayElementValue = startingState.getArrayElement(arrayIndex);
-    return startingState.assignVariable(variable, arrayElementValue);
+    var updatedState = startingState.assignVariable(variable, arrayElementValue);
+    System.out.printf("%s ← A[%s]\n", variable, arrayIndex);
+    System.out.println(updatedState);
+    return updatedState;
   }
 }

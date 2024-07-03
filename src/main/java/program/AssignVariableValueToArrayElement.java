@@ -9,6 +9,9 @@ public record AssignVariableValueToArrayElement(Expression arrayIndex,
 
   @Override
   public Environment run(Environment startingState) {
-    return startingState.assignArrayElement(arrayIndex, variable.value());
+    var updatedState = startingState.assignArrayElement(arrayIndex, variable.value());
+    System.out.printf("A[%s] ← %s\n", arrayIndex, variable);
+    System.out.println(updatedState);
+    return updatedState;
   }
 }

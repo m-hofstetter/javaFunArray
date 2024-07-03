@@ -10,4 +10,9 @@ public final class ExpressionLessEqualThanExpression extends ExpressionInequalit
     this.inequality = (l, r) -> l <= r;
     this.inverseInequality = (l, r) -> l > r;
   }
+
+  @Override
+  public String toString() {
+    return String.format("%s <= %s", left, right);
+  }
 }

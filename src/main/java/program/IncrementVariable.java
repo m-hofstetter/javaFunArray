@@ -8,6 +8,9 @@ public record IncrementVariable(Variable variable, InfInt amount) implements Pro
 
   @Override
   public Environment run(Environment startingState) {
-    return startingState.addToVariable(variable, amount);
+    var updatedState = startingState.addToVariable(variable, amount);
+    System.out.printf("%s ← %s + %s\n", variable, variable, amount);
+    System.out.println(updatedState);
+    return updatedState;
   }
 }

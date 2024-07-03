@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
  */
 public record Environment(FunArray funArray, List<Variable> variables) {
 
+  private static final String CONSOLE_COLOR_CYAN = "\033[0;36m";
+  private static final String CONSOLE_COLOR_RESET = "\033[0m";
+
   public Environment {
     variables = List.copyOf(variables);
   }
@@ -80,7 +83,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
             .map(Variable::toStringWithValue)
             .collect(Collectors.joining(" "));
 
-    return "A: %s\n%s".formatted(funArray, variablesString);
+    return "%sA: %s\n%s%s".formatted(CONSOLE_COLOR_CYAN, funArray, variablesString, CONSOLE_COLOR_RESET);
   }
 
   public Environment assume(UnaryOperator<Environment> assumption, UnaryOperator<Environment> reverseAssumption, UnaryOperator<Environment> modification) {

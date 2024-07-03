@@ -13,13 +13,19 @@ public record While(Condition condition, Program program) implements Program {
     var previousState = condition.satisfy(startingState);
     var currentState = condition.satisfy(startingState);
 
+    System.out.printf("WHILE %s DO:\n", condition);
+    System.out.println(currentState.toString());
+
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       currentState = program.run(currentState);
       currentState = previousState.widen(currentState);
 
       if (previousState.equals(currentState)) {
         // fixpoint has been reached
-        return condition.satisfyComplement(currentState);
+        System.out.printf("END WHILE\n", condition);
+        var updatedState = condition.satisfyComplement(currentState);
+        System.out.println(updatedState);
+        return updatedState;
       }
       previousState = currentState;
     }
