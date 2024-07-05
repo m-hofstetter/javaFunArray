@@ -22,7 +22,7 @@ public record While(Condition condition, Program program) implements Program {
 
       if (previousState.equals(currentState)) {
         // fixpoint has been reached
-        System.out.printf("END WHILE\n", condition);
+        System.out.print("END WHILE\n");
         var updatedState = condition.satisfyComplement(currentState);
         System.out.println(updatedState);
         return updatedState;

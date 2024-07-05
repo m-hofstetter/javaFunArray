@@ -189,26 +189,10 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return modify(from, to, _ -> value);
   }
 
-  /**
-   * Inserts a value into the FunArray.
-   *
-   * @param from  the leading bound variable for the new value.
-   * @param to    the trailing bound variable for the new value.
-   * @param value the value to be inserted.
-   * @return the modified Segmentation.
-   */
-  public FunArray insert(Variable from, Variable to, Interval value) {
-    return modify(new Expression(from), new Expression(to), _ -> value);
-  }
-
   public Interval get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex);
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
-  }
-
-  public FunArray assumeContentLeqThan(Expression from, Expression to, Expression compare) {
-    return modify(from, to, e -> e.assumeLessEqThan(compare));
   }
 
   /**

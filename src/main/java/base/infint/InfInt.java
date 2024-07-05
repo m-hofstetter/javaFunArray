@@ -62,10 +62,6 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return this instanceof NegativeInfinity;
   }
 
-  public boolean isInf() {
-    return this instanceof Infinity;
-  }
-
   public abstract InfInt add(InfInt value);
 
   public InfInt add(int value) {

@@ -46,13 +46,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
   }
 
   public Environment assignVariable(Variable variable, Expression expression) {
-    var modifiedFunArray = funArray.assignVariable(variable, expression);
-    var newVariables = new ArrayList<>(variables);
-
-    newVariables.remove(variable);
-    newVariables.add(new Variable(expression.calculate(), variable.name()));
-
-    return new Environment(modifiedFunArray, newVariables);
+    return assignVariable(variable, expression.calculate());
   }
 
   public Environment assignVariable(Variable variable, Interval interval) {

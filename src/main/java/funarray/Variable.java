@@ -27,7 +27,7 @@ public record Variable(Interval value, String name) {
     this(InfInt.of(value), name);
   }
 
-  public static Variable ZERO_VALUE = new Variable(Interval.of(0, 0), "0");
+  public static final Variable ZERO_VALUE = new Variable(Interval.of(0, 0), "0");
 
   public boolean equals(Variable other) {
     return this.value().equals(other.value()) && this.name().equals(other.name());

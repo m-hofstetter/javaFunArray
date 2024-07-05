@@ -43,10 +43,6 @@ public record Expression(Variable variable, InfInt constant) {
     return "%s+%s".formatted(variable, constant);
   }
 
-  public boolean equals(Expression other) {
-    return this.variable.equals(other.variable()) && this.constant.equals(other.constant());
-  }
-
   /**
    * If a variable v changes reversibly to f(v), all occurrences of v in an FunArray have to be
    * replaced by f^-1(v), so that it still represents the Array correctly. See Cousot et al. 2011.
