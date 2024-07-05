@@ -13,8 +13,15 @@ public abstract class ExpressionInequality implements Condition {
   Expression right;
 
   static FunArray lessEqualThan(Expression left, Expression right, FunArray funArray) {
-    var leftIndex = findIndex(left, funArray);
-    var rightIndex = findIndex(right, funArray);
+
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left, funArray);
+      rightIndex = findIndex(right, funArray);
+    } catch (IndexOutOfBoundsException e) {
+      return funArray;
+    }
 
     var bounds = new ArrayList<>(funArray.bounds());
     var values = new ArrayList<>(funArray.values());
@@ -47,8 +54,15 @@ public abstract class ExpressionInequality implements Condition {
   }
 
   static FunArray lessThan(Expression left, Expression right, FunArray funArray) {
-    var leftIndex = findIndex(left, funArray);
-    var rightIndex = findIndex(right, funArray);
+
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left, funArray);
+      rightIndex = findIndex(right, funArray);
+    } catch (IndexOutOfBoundsException e) {
+      return funArray;
+    }
 
     if (leftIndex + 1 == rightIndex) {
       // Since the condition requires strict inequality, a single segment between the expressions cannot be empty.
