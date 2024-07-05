@@ -24,10 +24,5 @@ public abstract class ArrayElementInequality implements Condition {
   }
 
   @Override
-  public boolean isMet(Environment input) {
-    return input.equals(satisfy(input));
-  }
-
-  @Override
   public abstract String toString();
 }

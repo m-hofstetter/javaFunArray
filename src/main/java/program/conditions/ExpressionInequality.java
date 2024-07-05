@@ -66,10 +66,5 @@ public abstract class ExpressionInequality implements Condition {
   }
 
   @Override
-  public boolean isMet(Environment input) {
-    return false;
-  }
-
-  @Override
   public abstract String toString();
 }
