@@ -1,5 +1,6 @@
 package program.conditions;
 
+import funarray.Environment;
 import funarray.Expression;
 
 public final class ExpressionLessThanExpression extends ExpressionInequality {
@@ -7,8 +8,18 @@ public final class ExpressionLessThanExpression extends ExpressionInequality {
   public ExpressionLessThanExpression(Expression left, Expression right) {
     this.left = left;
     this.right = right;
-    this.inequality = (l, r) -> l < r;
-    this.inverseInequality = (l, r) -> l >= r;
+  }
+
+  @Override
+  public Environment satisfy(Environment input) {
+    var modifiedFunArray = lessThan(left, right, input.funArray());
+    return new Environment(modifiedFunArray, input.variables());
+  }
+
+  @Override
+  public Environment satisfyComplement(Environment input) {
+    var modifiedFunArray = lessEqualThan(right, left, input.funArray());
+    return new Environment(modifiedFunArray, input.variables());
   }
 
   @Override

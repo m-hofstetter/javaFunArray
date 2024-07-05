@@ -1,68 +1,79 @@
 package program.conditions;
 
-import funarray.Environment;
+import exception.FunArrayLogicException;
+import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
 import java.util.ArrayList;
-import java.util.function.BiPredicate;
+import java.util.stream.Collectors;
 
 public abstract class ExpressionInequality implements Condition {
 
   Expression left;
   Expression right;
-  BiPredicate<Integer, Integer> inequality;
-  BiPredicate<Integer, Integer> inverseInequality;
 
-  static Environment satisfyInequality(Expression left, Expression right, BiPredicate<Integer, Integer> inequality, Environment input) {
-    var bounds = new ArrayList<>(input.funArray().bounds());
+  static FunArray lessEqualThan(Expression left, Expression right, FunArray funArray) {
+    var leftIndex = findIndex(left, funArray);
+    var rightIndex = findIndex(right, funArray);
 
-    Integer indexLeftExpression = null;
-    Integer indexRightExpression = null;
+    var bounds = new ArrayList<>(funArray.bounds());
+    var values = new ArrayList<>(funArray.values());
+    var emptiness = new ArrayList<>(funArray.emptiness());
 
+    if (leftIndex <= rightIndex) {
+      // Condition is already met, change nothing
+      return funArray;
+    } else if (emptiness.subList(rightIndex, leftIndex).stream().anyMatch(e -> !e)) {
+      // Bound order states that left expression is greater than right expression
+      // Condition states that left expression is less equal than right expression
+      // --> Condition cannot be satisfied
+      throw new FunArrayLogicException("Condition cannot be satisfied!");
+    } else {
+      // Bound order states that left expression is greater equal than right expression
+      // Condition states that left expression is less equal than right expression
+      // --> left expression has to be equal to right expression --> Squash segments
+      var boundsToBeSquashed = bounds.subList(rightIndex, leftIndex + 1);
+      var squashedBoundExpressions = boundsToBeSquashed.stream()
+              .flatMap(b -> b.expressions().stream())
+              .collect(Collectors.toSet());
+      boundsToBeSquashed.clear();
+      boundsToBeSquashed.add(new Bound(squashedBoundExpressions));
+
+      values.subList(rightIndex, leftIndex).clear();
+      emptiness.subList(rightIndex, leftIndex).clear();
+
+      return new FunArray(bounds, values, emptiness);
+    }
+  }
+
+  static FunArray lessThan(Expression left, Expression right, FunArray funArray) {
+    var leftIndex = findIndex(left, funArray);
+    var rightIndex = findIndex(right, funArray);
+
+    if (leftIndex + 1 == rightIndex) {
+      // Since the condition requires strict inequality, a single segment between the expressions cannot be empty.
+      var emptiness = new ArrayList<>(funArray.emptiness());
+      emptiness.set(leftIndex, false);
+      return new FunArray(funArray.bounds(), funArray.values(), emptiness);
+    } else if (leftIndex < rightIndex) {
+      // If there is more than one segment in between the expressions it cannot be decided which one is not empty.
+      return funArray;
+    } else {
+      // Bound order states that left expression is greater than right expression
+      // Condition states that left expression is less than right expression
+      // --> Condition cannot be satisfied
+      throw new FunArrayLogicException("Condition cannot be satisfied!");
+    }
+  }
+
+  private static int findIndex(Expression expression, FunArray environment) {
+    var bounds = environment.bounds();
     for (int i = 0; i < bounds.size(); i++) {
-      if (bounds.get(i).expressionEquals(left)) {
-        indexLeftExpression = i;
-      }
-      if (bounds.get(i).expressionEquals(right)) {
-        indexRightExpression = i;
+      if (bounds.get(i).expressionEquals(expression)) {
+        return i;
       }
     }
-
-    if (indexLeftExpression == null || indexRightExpression == null) {
-      return input;
-    }
-
-    if (inequality.test(indexLeftExpression, indexRightExpression)) {
-      return input;
-    }
-
-    var leftBound = bounds.get(indexLeftExpression);
-    var rightBound = bounds.get(indexRightExpression);
-
-    bounds.subList(indexLeftExpression, indexRightExpression + 1).clear();
-
-    bounds.add(indexLeftExpression, rightBound);
-    bounds.add(indexRightExpression, leftBound);
-
-    var values = new ArrayList<>(input.funArray().values());
-    values.subList(indexLeftExpression, indexRightExpression - 1).clear();
-
-    var emptiness = new ArrayList<>(input.funArray().emptiness());
-    emptiness.subList(indexLeftExpression, indexRightExpression - 1).clear();
-
-    var updatedFunArray = new FunArray(bounds, values, emptiness);
-
-    return new Environment(updatedFunArray, input.variables());
-  }
-
-  @Override
-  public Environment satisfy(Environment input) {
-    return satisfyInequality(left, right, inequality, input);
-  }
-
-  @Override
-  public Environment satisfyComplement(Environment input) {
-    return satisfyInequality(left, right, inverseInequality, input);
+    throw new IndexOutOfBoundsException();
   }
 
   @Override
