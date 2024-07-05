@@ -86,7 +86,7 @@ public record Bound(Set<Expression> expressions) {
   @Override
   public String toString() {
     return "{%s}".formatted(
-            String.join(" ", expressions.stream().map(Expression::toString).toList()));
+            String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
   }
 
   public boolean containsSubset(Bound subSet) {
