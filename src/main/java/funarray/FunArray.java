@@ -140,53 +140,83 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
   /**
    * Inserts a value into the FunArray.
    *
-   * @param from  the leading bound expression for the new value.
-   * @param to    the trailing bound expression for the new value.
+   * @param index the leading bound expression for the new value.
    * @param value the value to be inserted.
    * @return the modified Segmentation.
    */
-  public FunArray insert(Expression from, Expression to, Interval value) {
-    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(from);
-    int leastUpperBoundIndex = getLeastUpperBoundIndex(to);
+  public FunArray insert(Expression index, Interval value) {
+    var trailingIndex = index.increase(InfInt.of(1));
+    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
 
     var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
 
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
-    var newPossiblyEmpty = new ArrayList<>(emptiness);
+    var newEmptiness = new ArrayList<>(this.emptiness);
+
+    var leftAdjacent = bounds.get(greatestLowerBoundIndex).expressionEquals(index);
+    var rightAdjacent = bounds.get(leastUpperBoundIndex).expressionEquals(trailingIndex);
+
+    var leftBound = new Bound(index);
+    if (leftAdjacent) {
+      leftBound = leftBound.intersect(bounds.get(greatestLowerBoundIndex));
+    }
+
+    var rightBound = new Bound(trailingIndex);
+    if (rightAdjacent) {
+      rightBound = rightBound.intersect(bounds.get(leastUpperBoundIndex));
+    }
+
+    var rightSideStrictlyGreater = !newEmptiness.get(greatestLowerBoundIndex);
+    var leftSideStrictlyLess = !newEmptiness.get(leastUpperBoundIndex - 1);
 
     var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
     var valuesSubList = newValues.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
-    var emptinessSubList = newPossiblyEmpty.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
+    var emptinessSubList = newEmptiness.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
+
+    if (rightSideStrictlyGreater && leftAdjacent) {
+      newEmptiness.set(greatestLowerBoundIndex, true);
+      emptinessSubList.addFirst(false);
+      valuesSubList.addFirst(value);
+      boundsSubList.addFirst(rightBound);
+      return new FunArray(newBounds, newValues, newEmptiness);
+    }
+
+    if (leftSideStrictlyLess && rightAdjacent) {
+      newEmptiness.set(leastUpperBoundIndex, true);
+      emptinessSubList.add(false);
+      valuesSubList.add(value);
+      boundsSubList.add(leftBound);
+      return new FunArray(newBounds, newValues, newEmptiness);
+    }
 
     boundsSubList.clear();
     valuesSubList.clear();
     emptinessSubList.clear();
 
-    //no left touching
-    if (!bounds.get(greatestLowerBoundIndex).expressionEquals(from)) {
+    if (!leftAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(new Bound(from));
+      boundsSubList.add(leftBound);
     }
 
     emptinessSubList.add(false);
     valuesSubList.add(value);
 
-    // no right touching
-    if (!bounds.get(leastUpperBoundIndex).expressionEquals(to)) {
+    if (!rightAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(new Bound(to));
+      boundsSubList.add(rightBound);
     }
 
-    return new FunArray(newBounds, newValues, newPossiblyEmpty);
+    return new FunArray(newBounds, newValues, newEmptiness);
   }
 
   public Interval get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex);
-    return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
+    return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
   }
 
   /**

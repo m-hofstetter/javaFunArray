@@ -67,7 +67,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
    * @return the altered FunArray
    */
   public Environment assignArrayElement(Expression index, Interval value) {
-    var modified = funArray.insert(index, index.increase(InfInt.of(1)), value);
+    var modified = funArray.insert(index, value);
     return new Environment(modified, variables());
   }
 
