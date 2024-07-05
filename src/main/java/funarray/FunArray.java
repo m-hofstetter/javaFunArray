@@ -29,10 +29,23 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param values    the FunArray's values.
    * @param emptiness a list determining whether a segment might be empty.
    */
-  public FunArray {
-    bounds = List.copyOf(bounds);
-    values = List.copyOf(values);
-    emptiness = List.copyOf(emptiness);
+  public FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
+
+    if (bounds.size() < 2) {
+      throw new IllegalArgumentException("FunArray requires at least two bounds.");
+    }
+
+    if (values.size() != bounds.size() - 1) {
+      throw new IllegalArgumentException("Number of segment values does not match up with count of bound count. Needs to be exactly one less.");
+    }
+
+    if (emptiness.size() != bounds.size() - 1) {
+      throw new IllegalArgumentException("Number of emptiness values does not match up with count of bound count. Needs to be exactly one less.");
+    }
+
+    this.bounds = List.copyOf(bounds);
+    this.values = List.copyOf(values);
+    this.emptiness = List.copyOf(emptiness);
   }
 
   /**
