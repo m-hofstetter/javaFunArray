@@ -14,7 +14,7 @@ public record While(Condition condition, Program program) implements Program {
     var currentState = condition.satisfy(startingState);
 
     System.out.printf("WHILE %s DO:\n", condition);
-    System.out.println(currentState.toString());
+    currentState.consolePrintOut();
 
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       currentState = program.run(currentState);
@@ -24,7 +24,7 @@ public record While(Condition condition, Program program) implements Program {
         // fixpoint has been reached
         System.out.print("END WHILE\n");
         var updatedState = condition.satisfyComplement(currentState);
-        System.out.println(updatedState);
+        updatedState.consolePrintOut();
         return updatedState;
       }
       previousState = currentState;

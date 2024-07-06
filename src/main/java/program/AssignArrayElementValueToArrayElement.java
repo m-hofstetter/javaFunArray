@@ -11,7 +11,7 @@ public record AssignArrayElementValueToArrayElement(Expression arrayIndexSource,
     var arrayElementValue = startingState.getArrayElement(arrayIndexSource);
     var updatedState = startingState.assignArrayElement(arrayIndexTarget, arrayElementValue);
     System.out.printf("A[%s] ← A[%s]\n", arrayIndexTarget, arrayIndexSource);
-    System.out.println(updatedState);
+    updatedState.consolePrintOut();
     return updatedState;
   }
 }

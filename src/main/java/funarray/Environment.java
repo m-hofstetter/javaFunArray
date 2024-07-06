@@ -87,7 +87,11 @@ public record Environment(FunArray funArray, List<Variable> variables) {
             .map(Variable::toStringWithValue)
             .collect(Collectors.joining(" "));
 
-    return "%sA: %s\n%s%s".formatted(CONSOLE_COLOR_CYAN, funArray, variablesString, CONSOLE_COLOR_RESET);
+    return "A: %s\n%s".formatted(funArray, variablesString);
+  }
+
+  public void consolePrintOut() {
+    System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, toString(), CONSOLE_COLOR_RESET);
   }
 
   public Environment assume(UnaryOperator<Environment> assumption, UnaryOperator<Environment> reverseAssumption, UnaryOperator<Environment> modification) {

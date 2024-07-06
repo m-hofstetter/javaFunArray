@@ -12,7 +12,7 @@ public record AssignArrayElementValueToVariable(Expression arrayIndex,
     var arrayElementValue = startingState.getArrayElement(arrayIndex);
     var updatedState = startingState.assignVariable(variable, arrayElementValue);
     System.out.printf("%s ← A[%s]\n", variable, arrayIndex);
-    System.out.println(updatedState);
+    updatedState.consolePrintOut();
     return updatedState;
   }
 }

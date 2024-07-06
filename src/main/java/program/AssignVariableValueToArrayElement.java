@@ -11,7 +11,7 @@ public record AssignVariableValueToArrayElement(Expression arrayIndex,
   public Environment run(Environment startingState) {
     var updatedState = startingState.assignArrayElement(arrayIndex, variable.value());
     System.out.printf("A[%s] ← %s\n", arrayIndex, variable);
-    System.out.println(updatedState);
+    updatedState.consolePrintOut();
     return updatedState;
   }
 }
