@@ -1,7 +1,5 @@
 package funarray;
 
-import static base.TriBoolean.TRUE;
-
 import base.infint.InfInt;
 import base.interval.Interval;
 import java.util.List;
@@ -72,15 +70,15 @@ public record Bound(Set<Expression> expressions) {
   }
 
   public boolean expressionIsLessEqualThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isLessEqualThan(expression) == TRUE);
+    return expressions().stream().anyMatch(e -> e.isLessEqualThan(expression));
   }
 
   public boolean expressionIsGreaterEqualThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression) == TRUE);
+    return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression));
   }
 
   public boolean expressionIsGreaterThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isGreaterThan(expression) == TRUE);
+    return expressions().stream().anyMatch(e -> e.isGreaterThan(expression));
   }
 
   @Override

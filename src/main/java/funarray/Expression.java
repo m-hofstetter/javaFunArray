@@ -1,8 +1,5 @@
 package funarray;
 
-import static base.TriBoolean.*;
-
-import base.TriBoolean;
 import base.infint.InfInt;
 import base.interval.Interval;
 
@@ -70,15 +67,18 @@ public record Expression(Variable variable, InfInt constant) {
    * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
    *         than the other and UNKNOWN if it can't be determined
    */
-  public TriBoolean isLessThan(Expression other) {
+  public boolean isLessThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
-      return UNKNOWN;
+      return false;
     }
-    return this.constant().isLessThan(other.constant()) ? TRUE : FALSE;
+    return this.constant().isLessThan(other.constant());
   }
 
-  public TriBoolean isLessEqualThan(Expression other) {
-    return isGreaterThan(other).invert();
+  public boolean isLessEqualThan(Expression other) {
+    if (!this.variable().equals(other.variable())) {
+      return false;
+    }
+    return !this.constant().isGreaterThan(other.constant());
   }
 
   /**
@@ -88,15 +88,18 @@ public record Expression(Variable variable, InfInt constant) {
    * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
    *         greater than the other and UNKNOWN if it can't be determined
    */
-  public TriBoolean isGreaterThan(Expression other) {
+  public boolean isGreaterThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
-      return UNKNOWN;
+      return false;
     }
-    return this.constant().isGreaterThan(other.constant()) ? TRUE : FALSE;
+    return this.constant().isGreaterThan(other.constant());
   }
 
-  public TriBoolean isGreaterEqualThan(Expression other) {
-    return isLessThan(other).invert();
+  public boolean isGreaterEqualThan(Expression other) {
+    if (!this.variable().equals(other.variable())) {
+      return false;
+    }
+    return !this.constant().isLessThan(other.constant());
   }
 
   public boolean containsVariable(Variable variable) {
