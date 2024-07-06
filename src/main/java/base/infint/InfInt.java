@@ -72,6 +72,10 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return add(value.negate());
   }
 
+  public InfInt subtract(int value) {
+    return subtract(InfInt.of(value));
+  }
+
   public abstract InfInt negate();
 
   @Override
