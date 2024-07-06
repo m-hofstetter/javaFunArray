@@ -171,6 +171,11 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     var rightSideStrictlyGreater = !newEmptiness.get(greatestLowerBoundIndex);
     var leftSideStrictlyLess = !newEmptiness.get(leastUpperBoundIndex - 1);
 
+    if (leftAdjacent && rightAdjacent) {
+      newValues.set(greatestLowerBoundIndex, value);
+      return new FunArray(newBounds, newValues, newEmptiness);
+    }
+
     var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
     var valuesSubList = newValues.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
     var emptinessSubList = newEmptiness.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
