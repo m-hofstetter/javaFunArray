@@ -293,7 +293,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     List<Boolean> emptinessR = new ArrayList<>(other.emptiness);
 
     int i = 0;
-    while (i < boundsL.size() - 1 && i < boundsR.size() - 1) {
+    while (i < boundsL.size() && i < boundsR.size()) {
 
       var currentBoundL = boundsL.get(i);
       var currentBoundR = boundsR.get(i);
@@ -337,6 +337,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       boundsR.add(i, intersection);
       i++;
     }
+
+    i--;
 
     joinRemainingBounds(boundsL, i);
     joinRemainingBounds(boundsR, i);
