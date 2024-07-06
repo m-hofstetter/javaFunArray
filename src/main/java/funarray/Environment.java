@@ -91,7 +91,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
   }
 
   public void consolePrintOut() {
-    System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, toString(), CONSOLE_COLOR_RESET);
+    System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, this, CONSOLE_COLOR_RESET);
   }
 
   public Environment assume(UnaryOperator<Environment> assumption, UnaryOperator<Environment> reverseAssumption, UnaryOperator<Environment> modification) {
@@ -112,5 +112,9 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     var widenedFunArray = funArray.widen(other.funArray);
     return new Environment(widenedFunArray, variables);
     //TODO: proper widening
+  }
+
+  public Variable getVariable(String variableName) {
+    return variables.stream().filter(variable -> variable.name().equals(variableName)).findFirst().orElseThrow();
   }
 }
