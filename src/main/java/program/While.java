@@ -17,6 +17,7 @@ public record While(Condition condition, Program program) implements Program {
     currentState.consolePrintOut();
 
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
+      currentState = condition.satisfy(startingState);
       currentState = program.run(currentState);
       currentState = previousState.widen(currentState);
 
