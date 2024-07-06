@@ -149,7 +149,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
 
-    var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex - 1);
+    var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
 
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
@@ -215,7 +215,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
 
   public Interval get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
-    int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(InfInt.of(1)));
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
   }
 
@@ -262,7 +262,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    */
   private Interval getJointValue(int from, int to) {
     var jointValue = Interval.unreachable();
-    for (int i = from; i <= to; i++) {
+    for (int i = from; i < to; i++) {
       jointValue = jointValue.join(values.get(i));
     }
     return jointValue;
