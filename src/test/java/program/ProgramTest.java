@@ -1,50 +1,58 @@
 package program;
 
+import base.infint.InfInt;
 import base.interval.Interval;
-import funarray.*;
+import funarray.Environment;
+import funarray.Expression;
+import funarray.Variable;
+import funarray.util.FunArrayBuilder;
 import org.junit.jupiter.api.Test;
-import program.conditions.ExpressionLessEqualThanExpression;
+import program.conditions.ArrayElementLessEqualThanConstant;
+import program.conditions.ExpressionLessThanExpression;
 import java.util.List;
 
 public class ProgramTest {
+
+  /**
+   * From Cousot, Cousot and Logozzo (2011) Array in-situ rearrangement example
+   */
   @Test
-  void lessEqualThanTest() {
+  void cousotExampleTest() {
+    var a = new Variable(0, "a");
+    var b = new Variable(0, "b");
+    var length = new Variable(InfInt.of(1), InfInt.posInf(), "A.length");
+    var zero = new Variable(0, "0");
+    var temp = new Variable(Interval.unknown(), "temp");
 
-    var x = new Variable(0, "x");
-    var y = new Variable(0, "y");
-    var z = new Variable(0, "z");
+    var expA = new Expression(a);
+    var expB = new Expression(b);
+    var expLength = new Expression(length);
+    var expZero = new Expression(zero);
 
-    var expX = new Expression(x);
-    var expY = new Expression(y);
-    var expZ = new Expression(z);
+    var funArray = FunArrayBuilder.buildFunArray()
+            .bound(expZero, expA)
+            .value(Interval.of(-100, 100))
+            .bound(expB, expLength)
+            .build();
 
-    var bounds = List.of(
-            new Bound(expX),
-            new Bound(expY),
-            new Bound(expZ)
+    var environment = new Environment(funArray, List.of(a, b, length, zero, temp));
+
+    var loopCondition = new ExpressionLessThanExpression(new Expression(a), new Expression(b));
+    var positiveIntCondition = new ArrayElementLessEqualThanConstant(InfInt.of(0), new Expression(a));
+
+    var program = new While(loopCondition,
+            new IfThenElse(positiveIntCondition,
+                    new IncrementVariable(a, InfInt.of(1)),
+                    new Block(
+                            new IncrementVariable(b, InfInt.of(-1)),
+                            new AssignArrayElementValueToVariable(expA, temp),
+                            new AssignArrayElementValueToArrayElement(expB, expA),
+                            new AssignVariableValueToArrayElement(expB, temp)
+
+                    )
+            )
     );
 
-    var values = List.of(
-            Interval.unknown(),
-            Interval.unknown()
-    );
-
-    var emptiness = List.of(true, true);
-
-    var funArray = new FunArray(bounds, values, emptiness);
-    var env = new Environment(funArray, List.of(x, y, z));
-
-    var condition = new ExpressionLessEqualThanExpression(expY, expZ);
-
-    var program = new Block(
-            new While(
-                    condition,
-                    new Print()
-            ),
-            new Print()
-    );
-
-    program.run(env);
-
+    program.run(environment);
   }
 }
