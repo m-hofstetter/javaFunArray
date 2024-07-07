@@ -109,4 +109,12 @@ public record Expression(Variable variable, InfInt constant) {
   public Interval calculate() {
     return variable.value().add(constant);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof Expression otherExpression) {
+      return this.variable().equals(otherExpression.variable()) && this.constant().equals(otherExpression.constant());
+    }
+    return false;
+  }
 }

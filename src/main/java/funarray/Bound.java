@@ -66,7 +66,7 @@ public record Bound(Set<Expression> expressions) {
   }
 
   public boolean expressionEquals(Expression expression) {
-    return expressions.contains(expression);
+    return expressions().stream().anyMatch(e -> e.equals(expression));
   }
 
   public boolean expressionIsLessEqualThan(Expression expression) {
