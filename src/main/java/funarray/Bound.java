@@ -65,7 +65,7 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  public boolean expressionEquals(Expression expression) {
+  public boolean contains(Expression expression) {
     return expressions().stream().anyMatch(e -> e.equals(expression));
   }
 
@@ -77,18 +77,10 @@ public record Bound(Set<Expression> expressions) {
     return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression));
   }
 
-  public boolean expressionIsGreaterThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isGreaterThan(expression));
-  }
-
   @Override
   public String toString() {
     return "{%s}".formatted(
             String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
-  }
-
-  public boolean containsSubset(Bound subSet) {
-    return expressions.containsAll(subSet.expressions);
   }
 
   /**
@@ -107,33 +99,15 @@ public record Bound(Set<Expression> expressions) {
   }
 
   /**
-   * Returns a new bound containing all expressions from both bounds.
-   *
-   * @param other the other bound.
-   * @return the joined bound.
-   */
-  public Bound join(Bound other) {
-    var joinedExpressionSet = other.expressions.stream()
-            .filter(e -> !this.expressions.contains(e))
-            .collect(Collectors.toSet());
-
-    joinedExpressionSet.addAll(this.expressions);
-
-    return new Bound(joinedExpressionSet);
-  }
-
-  /**
    * Returns a new bound containing all expressions the list of specified bounds.
    *
    * @param bounds the list of bounds.
    * @return the joined bound.
    */
   public static Bound join(List<Bound> bounds) {
-    var bound = new Bound(Set.of());
-    for (Bound b : bounds) {
-      bound = bound.join(b);
-    }
-    return bound;
+    return new Bound(
+            bounds.stream().flatMap(b -> b.expressions().stream()).collect(Collectors.toSet())
+    );
   }
 
   /**

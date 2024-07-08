@@ -155,8 +155,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(this.emptiness);
 
-    var leftAdjacent = bounds.get(greatestLowerBoundIndex).expressionEquals(index);
-    var rightAdjacent = bounds.get(leastUpperBoundIndex).expressionEquals(trailingIndex);
+    var leftAdjacent = bounds.get(greatestLowerBoundIndex).contains(index);
+    var rightAdjacent = bounds.get(leastUpperBoundIndex).contains(trailingIndex);
 
     var leftBound = new Bound(index);
     if (leftAdjacent) {

@@ -31,25 +31,6 @@ public class BoundTest {
   }
 
   @Test
-  void containsSubsetTest() {
-    assertThat(
-            new Bound(SET_A).containsSubset(new Bound(SET_A))
-    ).isTrue();
-
-    assertThat(
-            new Bound(SET_A).containsSubset(new Bound(SET_B))
-    ).isFalse();
-
-    assertThat(
-            new Bound(SET_AB).containsSubset(new Bound(SET_A))
-    ).isTrue();
-
-    assertThat(
-            new Bound(SET_A).containsSubset(new Bound(SET_AB))
-    ).isFalse();
-  }
-
-  @Test
   void complementTest() {
     assertThat(
             new Bound(SET_AB).getComplementBound(new Bound(SET_A))

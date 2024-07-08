@@ -83,7 +83,7 @@ public abstract class ExpressionInequality implements Condition {
   private static int findIndex(Expression expression, FunArray environment) {
     var bounds = environment.bounds();
     for (int i = 0; i < bounds.size(); i++) {
-      if (bounds.get(i).expressionEquals(expression)) {
+      if (bounds.get(i).contains(expression)) {
         return i;
       }
     }
