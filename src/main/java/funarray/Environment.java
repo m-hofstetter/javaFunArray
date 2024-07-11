@@ -1,5 +1,6 @@
 package funarray;
 
+import base.DomainValue;
 import base.infint.InfInt;
 import base.interval.Interval;
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.stream.Collectors;
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
-public record Environment(FunArray funArray, List<Variable> variables) {
+public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
+                                                    List<Variable> variables) {
 
   private static final String CONSOLE_COLOR_CYAN = "\033[0;36m";
   private static final String CONSOLE_COLOR_RESET = "\033[0m";
@@ -23,7 +25,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
   }
 
   public Environment(Expression length) {
-    this(new FunArray(length, false), List.of(length.variable()));
+    this(new FunArray<>(length, false), List.of(length.variable()));
   }
 
   /**
@@ -33,7 +35,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public Environment addToVariable(Variable variable, InfInt value) {
+  public Environment<T> addToVariable(Variable variable, InfInt value) {
     var newVariable = new Variable(variable.value().add(value), variable.name());
 
     var newVariables = new ArrayList<>(variables);
@@ -41,10 +43,10 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     newVariables.remove(variable);
     newVariables.add(newVariable);
     var newSegmentation = funArray.addToVariable(variable, value);
-    return new Environment(newSegmentation, newVariables);
+    return new Environment<>(newSegmentation, newVariables);
   }
 
-  public Environment assignVariable(Variable variable, Expression expression) {
+  public Environment<T> assignVariable(Variable variable, Expression expression) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
     modifiedFunArray = modifiedFunArray.insertExpression(variable, expression);
 
@@ -53,17 +55,17 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     newVariables.remove(variable);
     newVariables.add(new Variable(expression.calculate(), variable.name()));
 
-    return new Environment(modifiedFunArray, newVariables);
+    return new Environment<>(modifiedFunArray, newVariables);
   }
 
-  public Environment assignVariable(Variable variable, Interval interval) {
+  public Environment<T> assignVariable(Variable variable, Interval interval) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
 
     var newVariables = new ArrayList<>(variables);
     newVariables.remove(variable);
     newVariables.add(new Variable(interval, variable.name()));
 
-    return new Environment(modifiedFunArray, newVariables);
+    return new Environment<>(modifiedFunArray, newVariables);
   }
 
   /**
@@ -73,9 +75,9 @@ public record Environment(FunArray funArray, List<Variable> variables) {
    * @param value the value.
    * @return the altered FunArray
    */
-  public Environment assignArrayElement(Expression index, Interval value) {
+  public Environment<T> assignArrayElement(Expression index, T value) {
     var modified = funArray.insert(index, value);
-    return new Environment(modified, variables());
+    return new Environment<>(modified, variables());
   }
 
   /**
@@ -84,7 +86,7 @@ public record Environment(FunArray funArray, List<Variable> variables) {
    * @param index the index.
    * @return the value.
    */
-  public Interval getArrayElement(Expression index) {
+  public T getArrayElement(Expression index) {
     return funArray.get(index);
   }
 
@@ -101,15 +103,15 @@ public record Environment(FunArray funArray, List<Variable> variables) {
     System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, this, CONSOLE_COLOR_RESET);
   }
 
-  public Environment join(Environment other) {
+  public Environment<T> join(Environment<T> other) {
     var joinedFunArray = funArray.join(other.funArray);
-    return new Environment(joinedFunArray, variables);
+    return new Environment<>(joinedFunArray, variables);
     //TODO: join variables
   }
 
-  public Environment widen(Environment other) {
+  public Environment<T> widen(Environment<T> other) {
     var widenedFunArray = funArray.widen(other.funArray);
-    return new Environment(widenedFunArray, variables);
+    return new Environment<>(widenedFunArray, variables);
     //TODO: proper widening
   }
 

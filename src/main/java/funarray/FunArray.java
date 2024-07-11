@@ -1,7 +1,7 @@
 package funarray;
 
+import base.DomainValue;
 import base.infint.InfInt;
-import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BinaryOperator;
@@ -19,7 +19,8 @@ import java.util.stream.IntStream;
  * @param values    the FunArray's values.
  * @param emptiness a list determining whether a segment might be empty.
  */
-public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
+public record FunArray<T extends DomainValue<T>>(List<Bound> bounds, List<T> values,
+                                                 List<Boolean> emptiness) {
 
   /**
    * Constructor for FunArray.
@@ -28,7 +29,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param values    the FunArray's values.
    * @param emptiness a list determining whether a segment might be empty.
    */
-  public FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> emptiness) {
+  public FunArray(List<Bound> bounds, List<T> values, List<Boolean> emptiness) {
 
     if (bounds.size() < 2) {
       throw new IllegalArgumentException("FunArray requires at least two bounds.");
@@ -55,7 +56,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    */
   public FunArray(Expression length, boolean isPossiblyEmpty) {
     this(List.of(new Bound(0), new Bound(length)),
-            List.of(Interval.unknown()),
+            List.of(T.unknown()),
             List.of(isPossiblyEmpty)
     );
   }
@@ -92,24 +93,24 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param value    the value.
    * @return the altered FunArray.
    */
-  public FunArray addToVariable(Variable variable, InfInt value) {
+  public FunArray<T> addToVariable(Variable variable, InfInt value) {
     var newBounds = bounds.stream()
             .map(s -> s.addToVariableInFunArray(variable, value))
             .toList();
-    return new FunArray(newBounds, values, emptiness);
+    return new FunArray<>(newBounds, values, emptiness);
   }
 
-  public FunArray insertExpression(Variable variable, Expression expression) {
+  public FunArray<T> insertExpression(Variable variable, Expression expression) {
     var newBounds = new ArrayList<>(bounds.stream()
             .map(b -> b.insertExpression(variable, expression))
             .toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
 
-    return new FunArray(newBounds, newValues, newEmptiness);
+    return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public FunArray removeVariableOccurrences(Variable variable) {
+  public FunArray<T> removeVariableOccurrences(Variable variable) {
     var newBounds = new ArrayList<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
@@ -125,7 +126,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       }
       i++;
     }
-    return new FunArray(newBounds, newValues, newEmptiness);
+    return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
   /**
@@ -135,7 +136,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param value the value to be inserted.
    * @return the modified Segmentation.
    */
-  public FunArray insert(Expression index, Interval value) {
+  public FunArray<T> insert(Expression index, T value) {
     var trailingIndex = index.increase(InfInt.of(1));
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
@@ -164,7 +165,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
 
     if (leftAdjacent && rightAdjacent) {
       newValues.set(greatestLowerBoundIndex, value);
-      return new FunArray(newBounds, newValues, newEmptiness);
+      return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
     var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
@@ -176,7 +177,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       emptinessSubList.addFirst(false);
       valuesSubList.addFirst(value);
       boundsSubList.addFirst(rightBound);
-      return new FunArray(newBounds, newValues, newEmptiness);
+      return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
     if (leftSideStrictlyLess && rightAdjacent) {
@@ -184,7 +185,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       emptinessSubList.add(false);
       valuesSubList.add(value);
       boundsSubList.add(leftBound);
-      return new FunArray(newBounds, newValues, newEmptiness);
+      return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
     boundsSubList.clear();
@@ -206,10 +207,10 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
       boundsSubList.add(rightBound);
     }
 
-    return new FunArray(newBounds, newValues, newEmptiness);
+    return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public Interval get(Expression abstractIndex) {
+  public T get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(InfInt.of(1)));
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
@@ -256,8 +257,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param to   the index of the last segment (inclusive).
    * @return the joint of all values.
    */
-  private Interval getJointValue(int from, int to) {
-    var jointValue = Interval.unreachable();
+  private T getJointValue(int from, int to) {
+    var jointValue = (T) T.unreachable(); //TODO: find solution where unchecked cast is not required
     for (int i = from; i < to; i++) {
       jointValue = jointValue.join(values.get(i));
     }
@@ -272,15 +273,15 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param otherNeutralElement the neutral element for the other.
    * @return a list of two unified FunArrays.
    */
-  public List<FunArray> unify(FunArray other,
-                              Interval thisNeutralElement, Interval otherNeutralElement) {
+  public List<FunArray<T>> unify(FunArray<T> other,
+                                 T thisNeutralElement, T otherNeutralElement) {
 
     List<Bound> boundsL = new ArrayList<>(this.bounds);
-    List<Interval> valuesL = new ArrayList<>(this.values);
+    List<T> valuesL = new ArrayList<>(this.values);
     List<Boolean> emptinessL = new ArrayList<>(this.emptiness);
 
     List<Bound> boundsR = new ArrayList<>(other.bounds);
-    List<Interval> valuesR = new ArrayList<>(other.values);
+    List<T> valuesR = new ArrayList<>(other.values);
     List<Boolean> emptinessR = new ArrayList<>(other.emptiness);
 
     int i = 0;
@@ -340,8 +341,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     prune(emptinessR, i);
 
     return List.of(
-            new FunArray(boundsL, valuesL, emptinessL),
-            new FunArray(boundsR, valuesR, emptinessR)
+            new FunArray<>(boundsL, valuesL, emptinessL),
+            new FunArray<>(boundsR, valuesR, emptinessR)
     );
   }
 
@@ -351,7 +352,7 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param list the list.
    * @param i    the index.
    */
-  private static void joinValueWithPredecessor(List<Interval> list, int i) {
+  private static <T extends DomainValue<T>> void joinValueWithPredecessor(List<T> list, int i) {
     var joinedValue = list.get(i - 1).join(list.get(i));
     list.remove(i);
     list.remove(i - 1);
@@ -381,8 +382,8 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
    * @param otherNeutralElement the neutral element for unifying of the other FunArray.
    * @return the joined/met/widened/narrowed FunArray
    */
-  private FunArray unifyOperation(BinaryOperator<Interval> operation, FunArray other,
-                                  Interval thisNeutralElement, Interval otherNeutralElement) {
+  private FunArray<T> unifyOperation(BinaryOperator<T> operation, FunArray<T> other,
+                                     T thisNeutralElement, T otherNeutralElement) {
 
     var unifiedArrays = this.unify(other, thisNeutralElement, otherNeutralElement);
     var thisUnified = unifiedArrays.getFirst();
@@ -396,22 +397,22 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
             .mapToObj(i -> thisUnified.emptiness.get(i) || otherUnified.emptiness.get(i))
             .toList();
 
-    return new FunArray(thisUnified.bounds, modifiedValues, modifiedEmptiness);
+    return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
 
-  public FunArray join(FunArray other) {
-    return unifyOperation(Interval::join, other, Interval.unreachable(), Interval.unreachable());
+  public FunArray<T> join(FunArray<T> other) {
+    return unifyOperation(T::join, other, T.unreachable(), T.unreachable());
   }
 
-  public FunArray meet(FunArray other) {
-    return unifyOperation(Interval::join, other, Interval.unknown(), Interval.unknown());
+  public FunArray<T> meet(FunArray<T> other) {
+    return unifyOperation(T::join, other, T.unknown(), T.unknown());
   }
 
-  public FunArray widen(FunArray other) {
-    return unifyOperation(Interval::join, other, Interval.unreachable(), Interval.unreachable());
+  public FunArray<T> widen(FunArray<T> other) {
+    return unifyOperation(T::join, other, T.unreachable(), T.unreachable());
   }
 
-  public FunArray narrow(FunArray other) {
-    return unifyOperation(Interval::join, other, Interval.unknown(), Interval.unknown());
+  public FunArray<T> narrow(FunArray<T> other) {
+    return unifyOperation(T::join, other, T.unknown(), T.unknown());
   }
 }
