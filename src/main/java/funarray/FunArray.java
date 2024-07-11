@@ -99,27 +99,18 @@ public record FunArray(List<Bound> bounds, List<Interval> values, List<Boolean> 
     return new FunArray(newBounds, values, emptiness);
   }
 
-  public FunArray assignVariable(Variable variable, Expression expression) {
-    var newBounds = new ArrayList<>(bounds.stream().map(b -> b.assignVariableInFunArray(variable, expression)).toList());
+  public FunArray insertExpression(Variable variable, Expression expression) {
+    var newBounds = new ArrayList<>(bounds.stream()
+            .map(b -> b.insertExpression(variable, expression))
+            .toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
 
-    var i = 1;
-    while (i < newBounds.size()) {
-      if (newBounds.get(i).isEmpty()) {
-        joinValueWithPredecessor(newValues, i);
-        newBounds.remove(i);
-        newEmptiness.set(i - 1, newEmptiness.get(i - 1) && newEmptiness.get(i));
-        newEmptiness.remove(i);
-        continue;
-      }
-      i++;
-    }
     return new FunArray(newBounds, newValues, newEmptiness);
   }
 
-  public FunArray assignVariable(Variable variable, Interval interval) {
-    var newBounds = new ArrayList<>(bounds.stream().map(b -> b.assignVariableInFunArray(variable, interval)).toList());
+  public FunArray removeVariableOccurrences(Variable variable) {
+    var newBounds = new ArrayList<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
 

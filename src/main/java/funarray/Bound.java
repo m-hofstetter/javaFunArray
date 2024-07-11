@@ -1,7 +1,6 @@
 package funarray;
 
 import base.infint.InfInt;
-import base.interval.Interval;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,7 +44,7 @@ public record Bound(Set<Expression> expressions) {
     );
   }
 
-  public Bound assignVariableInFunArray(Variable variable, Expression expression) {
+  public Bound insertExpression(Variable variable, Expression expression) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(variable))
             .collect(Collectors.toSet());
@@ -58,7 +57,7 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  public Bound assignVariableInFunArray(Variable variable, Interval interval) {
+  public Bound removeVariableOccurrences(Variable variable) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(variable))
             .collect(Collectors.toSet());
