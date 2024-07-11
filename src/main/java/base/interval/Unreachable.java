@@ -1,7 +1,6 @@
 package base.interval;
 
 import base.infint.InfInt;
-import funarray.Expression;
 
 final class Unreachable extends Interval {
 
@@ -37,11 +36,6 @@ final class Unreachable extends Interval {
 
   @Override
   public Interval add(InfInt value) {
-    return this;
-  }
-
-  @Override
-  public Interval assumeLessEqThan(Expression expression) {
     return this;
   }
 }

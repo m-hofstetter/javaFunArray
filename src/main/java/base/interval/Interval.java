@@ -1,7 +1,6 @@
 package base.interval;
 
 import base.infint.InfInt;
-import funarray.Expression;
 
 /**
  * An abstract domain representing integers as intervals.
@@ -89,6 +88,4 @@ public abstract sealed class Interval permits ReachableInterval, Unreachable {
    * @return the transformed interval.
    */
   public abstract Interval add(InfInt value);
-
-  public abstract Interval assumeLessEqThan(Expression expression);
 }

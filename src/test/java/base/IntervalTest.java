@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import base.infint.InfInt;
 import base.interval.Interval;
-import funarray.Expression;
-import funarray.Variable;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -111,10 +108,4 @@ public class IntervalTest {
     var actual = intervalA.narrow(intervalB);
     assertEquals(expected, actual);
   }
-
-  @Test
-  public void assumeLessEqTest() {
-    System.out.println(Interval.of(0, 10).assumeLessEqThan(new Expression(new Variable(-10, 0, "test"))));
-  }
-
 }
