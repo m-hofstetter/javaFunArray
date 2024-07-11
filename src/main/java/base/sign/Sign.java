@@ -3,12 +3,11 @@ package base.sign;
 import static base.sign.Sign.SignElement.*;
 
 import base.DomainValue;
-import exception.DomainException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Sign implements DomainValue {
+public class Sign implements DomainValue<Sign> {
 
   final Set<SignElement> elements;
 
@@ -21,34 +20,28 @@ public class Sign implements DomainValue {
   }
 
   @Override
-  public DomainValue join(DomainValue other) {
-    if (other instanceof Sign otherSign) {
-      var joinedSet = new HashSet<>(elements);
-      joinedSet.addAll(otherSign.elements);
-      return new Sign(joinedSet);
-    }
-    throw new DomainException("Cannot join domain values from different domains.");
+  public Sign join(Sign other) {
+    var joinedSet = new HashSet<>(elements);
+    joinedSet.addAll(other.elements);
+    return new Sign(joinedSet);
   }
 
   @Override
-  public DomainValue meet(DomainValue other) {
-    if (other instanceof Sign otherSign) {
-      var metSet = elements.stream()
-              .filter(otherSign.elements::contains)
-              .collect(Collectors.toSet());
-      return new Sign(metSet);
-    }
-    throw new DomainException("Cannot meet domain values from different domains.");
+  public Sign meet(Sign other) {
+    var metSet = elements.stream()
+            .filter(other.elements::contains)
+            .collect(Collectors.toSet());
+    return new Sign(metSet);
   }
 
   @Override
-  public DomainValue widen(DomainValue other) {
+  public Sign widen(Sign other) {
     // Finite lattice converges towards a fixpoint by itself. No widening necessary.
     return other;
   }
 
   @Override
-  public DomainValue narrow(DomainValue other) {
+  public Sign narrow(Sign other) {
     // Finite lattice converges towards a fixpoint by itself. No narrowing necessary.
     return other;
   }

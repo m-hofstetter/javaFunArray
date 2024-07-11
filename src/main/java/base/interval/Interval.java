@@ -6,7 +6,7 @@ import base.infint.InfInt;
 /**
  * An abstract domain representing integers as intervals.
  */
-public abstract sealed class Interval implements DomainValue permits ReachableInterval, Unreachable {
+public abstract sealed class Interval implements DomainValue<Interval> permits ReachableInterval, Unreachable {
 
   public static Interval unreachable() {
     return new Unreachable();
@@ -42,7 +42,7 @@ public abstract sealed class Interval implements DomainValue permits ReachableIn
    * @param other the other interval.
    * @return the joint of both intervals.
    */
-  public abstract Interval join(DomainValue other);
+  public abstract Interval join(Interval other);
 
   /**
    * Meets two intervals so that only values present in either are in the resulting interval.
@@ -50,7 +50,7 @@ public abstract sealed class Interval implements DomainValue permits ReachableIn
    * @param other the other interval.
    * @return the meet of both intervals.
    */
-  public abstract Interval meet(DomainValue other);
+  public abstract Interval meet(Interval other);
 
   /**
    * The abstract widening operator. See: Cousot, P., Cousot, R. (1992). Comparing the Galois
@@ -62,7 +62,7 @@ public abstract sealed class Interval implements DomainValue permits ReachableIn
    * @param other the interval to widen this with.
    * @return the widened interval.
    */
-  public abstract Interval widen(DomainValue other);
+  public abstract Interval widen(Interval other);
 
   /**
    * The abstract narrowing operator. See: Cousot, P., Cousot, R. (1992). Comparing the Galois
@@ -74,7 +74,7 @@ public abstract sealed class Interval implements DomainValue permits ReachableIn
    * @param other the interval to narrow this with.
    * @return the narrowed interval.
    */
-  public abstract Interval narrow(DomainValue other);
+  public abstract Interval narrow(Interval other);
 
   @Override
   public abstract String toString();

@@ -1,19 +1,19 @@
 package base;
 
-public interface DomainValue {
-  static DomainValue unreachable() {
+public interface DomainValue<T> {
+  static <T> T unreachable() {
     throw new IllegalStateException("Method unreachable() not implemented.");
   }
 
-  static DomainValue unknown() {
+  static <T> T unknown() {
     throw new IllegalStateException("Method unreachable() not implemented.");
   }
 
-  DomainValue join(DomainValue other);
+  T join(T other);
 
-  DomainValue meet(DomainValue other);
+  T meet(T other);
 
-  DomainValue widen(DomainValue other);
+  T widen(T other);
 
-  DomainValue narrow(DomainValue other);
+  T narrow(T other);
 }

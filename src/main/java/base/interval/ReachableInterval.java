@@ -1,8 +1,6 @@
 package base.interval;
 
-import base.DomainValue;
 import base.infint.InfInt;
-import exception.DomainException;
 
 
 final class ReachableInterval extends Interval {
@@ -16,10 +14,7 @@ final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval join(DomainValue other) {
-    if (!(other instanceof Interval)) {
-      throw new DomainException("Cannot join domain values from different domains.");
-    }
+  public Interval join(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
       var lower = InfInt.min(this.lowerLimit, reachableOther.lowerLimit);
       var upper = InfInt.max(this.upperLimit, reachableOther.upperLimit);
@@ -30,10 +25,7 @@ final class ReachableInterval extends Interval {
 
 
   @Override
-  public Interval meet(DomainValue other) {
-    if (!(other instanceof Interval)) {
-      throw new DomainException("Cannot meet domain values from different domains.");
-    }
+  public Interval meet(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
       var lower = InfInt.max(this.lowerLimit, reachableOther.lowerLimit);
       var upper = InfInt.min(this.upperLimit, reachableOther.upperLimit);
@@ -47,10 +39,7 @@ final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval widen(DomainValue other) {
-    if (!(other instanceof Interval)) {
-      throw new DomainException("Cannot widen domain values from different domains.");
-    }
+  public Interval widen(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
       var lower = this.lowerLimit;
       var upper = this.upperLimit;
@@ -67,10 +56,7 @@ final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval narrow(DomainValue other) {
-    if (!(other instanceof Interval)) {
-      throw new DomainException("Cannot narrow domain values from different domains.");
-    }
+  public Interval narrow(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
       var lower = this.lowerLimit;
       var upper = this.upperLimit;
