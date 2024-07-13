@@ -253,15 +253,20 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     return jointValue;
   }
 
+  public record UnifyResult<E extends DomainValue<E>, V extends DomainValue<V>>(
+          FunArray<E, V> resultThis,
+          FunArray<E, V> resultOther) {
+  }
+
   /**
    * Unifies this FunArray with another one, so their segment bounds coincide.
    *
    * @param other               the other.
    * @param thisNeutralElement  the neutral element for this.
    * @param otherNeutralElement the neutral element for the other.
-   * @return a list of two unified FunArrays.
+   * @return two unified FunArrays.
    */
-  public List<FunArray<ELEMENT_TYPE, VARIABLE_TYPE>> unify(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other,
+  public UnifyResult<ELEMENT_TYPE, VARIABLE_TYPE> unify(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other,
                                                            ELEMENT_TYPE thisNeutralElement, ELEMENT_TYPE otherNeutralElement) {
 
     List<Bound<VARIABLE_TYPE>> boundsL = new ArrayList<>(this.bounds);
@@ -328,7 +333,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     prune(emptinessL, i);
     prune(emptinessR, i);
 
-    return List.of(
+    return new UnifyResult<>(
             new FunArray<>(boundsL, valuesL, emptinessL),
             new FunArray<>(boundsR, valuesR, emptinessR)
     );
@@ -374,8 +379,8 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
                                                                ELEMENT_TYPE thisNeutralElement, ELEMENT_TYPE otherNeutralElement) {
 
     var unifiedArrays = this.unify(other, thisNeutralElement, otherNeutralElement);
-    var thisUnified = unifiedArrays.getFirst();
-    var otherUnified = unifiedArrays.getLast();
+    var thisUnified = unifiedArrays.resultThis();
+    var otherUnified = unifiedArrays.resultOther();
 
     var modifiedValues = IntStream.range(0, thisUnified.values.size())
             .mapToObj(i -> operation.apply(thisUnified.values.get(i), otherUnified.values.get(i)))

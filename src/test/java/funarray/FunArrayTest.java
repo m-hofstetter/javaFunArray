@@ -126,8 +126,8 @@ public class FunArrayTest {
 
     var unifiedArrays = arrayA.unify(arrayB, Interval.unreachable(), Interval.unreachable());
 
-    assertThat(unifiedArrays.get(0)).isEqualTo(expectedA);
-    assertThat(unifiedArrays.get(1)).isEqualTo(expectedB);
+    assertThat(unifiedArrays.resultThis()).isEqualTo(expectedA);
+    assertThat(unifiedArrays.resultOther()).isEqualTo(expectedB);
   }
 
   @Test
