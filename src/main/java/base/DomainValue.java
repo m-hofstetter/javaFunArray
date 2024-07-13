@@ -5,4 +5,10 @@ public interface DomainValue<T extends DomainValue<T>> {
   T meet(T other);
   T widen(T other);
   T narrow(T other);
+
+  T add(T other);
+
+  T subtract(T other);
+
+  T inverse();
 }
