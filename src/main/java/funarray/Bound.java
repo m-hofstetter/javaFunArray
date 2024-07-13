@@ -19,14 +19,6 @@ public record Bound(Set<Expression> expressions) {
     this(Set.of(expressions));
   }
 
-  public Bound(InfInt constant) {
-    this(new Expression(Variable.ZERO_VALUE, constant));
-  }
-
-  public Bound(int constant) {
-    this(InfInt.of(constant));
-  }
-
   /**
    * If a variable v changes reversibly to f(v), all occurrences of v in an FunArray have to be
    * replaced by f^-1(v), so that it still represents the Array correctly. See Cousot et al. 2011.

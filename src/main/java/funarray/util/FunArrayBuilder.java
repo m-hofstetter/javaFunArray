@@ -33,7 +33,7 @@ public class FunArrayBuilder {
   }
 
   public FunArrayBuilder bound(int boundValue) {
-    var bound = new Bound(boundValue);
+    var bound = new Bound(new Expression(new Variable(Interval.of(0), "0"), boundValue));
     return bound(bound);
   }
 

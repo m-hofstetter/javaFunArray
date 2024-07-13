@@ -14,10 +14,6 @@ import base.interval.Interval;
  */
 public record Expression(Variable variable, InfInt constant) {
 
-  public Expression(int constant) {
-    this(Variable.ZERO_VALUE, InfInt.of(constant));
-  }
-
   public Expression(Variable variable, int constant) {
     this(variable, InfInt.of(constant));
   }
@@ -31,7 +27,7 @@ public record Expression(Variable variable, InfInt constant) {
     if (constant.equals(InfInt.of(0))) {
       return variable.toString();
     }
-    if (variable == Variable.ZERO_VALUE) {
+    if (variable.value().equals(Interval.of(0))) {
       return constant().toString();
     }
     if (constant.isLessThan(InfInt.of(0))) {
