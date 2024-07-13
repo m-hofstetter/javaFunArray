@@ -1,9 +1,11 @@
 package base;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import base.infint.InfInt;
 import base.interval.Interval;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -107,5 +109,19 @@ public class IntervalTest {
   public void narrowTest(Interval intervalA, Interval intervalB, Interval expected) {
     var actual = intervalA.narrow(intervalB);
     assertEquals(expected, actual);
+  }
+
+  @Test
+  public void addTest() {
+    assertThat(Interval.of(0).add(Interval.of(1))).isEqualTo(Interval.of(1));
+    assertThat(Interval.of(0).add(Interval.of(0, 1))).isEqualTo(Interval.of(0, 1));
+    assertThat(Interval.of(0).add(Interval.of(0, InfInt.posInf()))).isEqualTo(Interval.of(0, InfInt.posInf()));
+  }
+
+  @Test
+  public void inverseTest() {
+    assertThat(Interval.of(0).inverse()).isEqualTo(Interval.of(0));
+    assertThat(Interval.of(1, 2).inverse()).isEqualTo(Interval.of(-2, -1));
+    assertThat(Interval.of(0, InfInt.posInf()).inverse()).isEqualTo(Interval.of(InfInt.negInf(), 0));
   }
 }

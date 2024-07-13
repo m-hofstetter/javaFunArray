@@ -38,4 +38,19 @@ final class Unreachable extends Interval {
   public Interval add(InfInt value) {
     return this;
   }
+
+  @Override
+  public Interval add(Interval value) {
+    return this;
+  }
+
+  @Override
+  public Interval inverse() {
+    return this;
+  }
+
+  @Override
+  public Interval subtract(Interval value) {
+    return this;
+  }
 }

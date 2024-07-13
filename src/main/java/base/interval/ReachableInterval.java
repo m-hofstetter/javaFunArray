@@ -86,7 +86,20 @@ final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval add(InfInt value) {
-    return new ReachableInterval(lowerLimit.add(value), upperLimit.add(value));
+  public Interval add(Interval value) {
+    if (value instanceof ReachableInterval reachableValue) {
+      return new ReachableInterval(lowerLimit.add(reachableValue.lowerLimit), upperLimit.add(reachableValue.upperLimit));
+    }
+    return new Unreachable();
+  }
+
+  @Override
+  public Interval inverse() {
+    return new ReachableInterval(upperLimit.negate(), lowerLimit.negate());
+  }
+
+  @Override
+  public Interval subtract(Interval value) {
+    return add(value.inverse());
   }
 }
