@@ -5,7 +5,7 @@ import funarray.Environment;
 
 public record Skip() implements Program {
   @Override
-  public Environment<Interval> run(Environment<Interval> startingState) {
+  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
     System.out.println("SKIP");
     return startingState;
   }

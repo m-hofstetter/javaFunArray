@@ -9,7 +9,7 @@ public record While(Condition condition, Program program) implements Program {
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
 
   @Override
-  public Environment<Interval> run(Environment<Interval> startingState) {
+  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
 
     var previousState = condition.satisfy(startingState);
     var currentState = condition.satisfy(startingState);

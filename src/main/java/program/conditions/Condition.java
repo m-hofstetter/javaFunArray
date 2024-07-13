@@ -4,7 +4,7 @@ import base.interval.Interval;
 import funarray.Environment;
 
 public interface Condition {
-  Environment<Interval> satisfy(Environment<Interval> input);
+  Environment<Interval, Interval> satisfy(Environment<Interval, Interval> input);
 
-  Environment<Interval> satisfyComplement(Environment<Interval> input);
+  Environment<Interval, Interval> satisfyComplement(Environment<Interval, Interval> input);
 }

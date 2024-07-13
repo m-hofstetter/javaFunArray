@@ -12,13 +12,13 @@ public final class ExpressionLessEqualThanExpression extends ExpressionInequalit
   }
 
   @Override
-  public Environment<Interval> satisfy(Environment<Interval> input) {
+  public Environment<Interval, Interval> satisfy(Environment<Interval, Interval> input) {
     var modifiedFunArray = lessEqualThan(left, right, input.funArray());
     return new Environment<>(modifiedFunArray, input.variables());
   }
 
   @Override
-  public Environment<Interval> satisfyComplement(Environment<Interval> input) {
+  public Environment<Interval, Interval> satisfyComplement(Environment<Interval, Interval> input) {
     var modifiedFunArray = lessThan(right, left, input.funArray());
     return new Environment<>(modifiedFunArray, input.variables());
   }

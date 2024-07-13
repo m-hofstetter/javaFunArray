@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public abstract class ExpressionInequality implements Condition {
 
-  Expression left;
-  Expression right;
+  Expression<Interval> left;
+  Expression<Interval> right;
 
-  static FunArray<Interval> lessEqualThan(Expression left, Expression right, FunArray<Interval> funArray) {
+  static FunArray<Interval, Interval> lessEqualThan(Expression<Interval> left, Expression<Interval> right, FunArray<Interval, Interval> funArray) {
 
     int leftIndex;
     int rightIndex;
@@ -45,7 +45,7 @@ public abstract class ExpressionInequality implements Condition {
               .flatMap(b -> b.expressions().stream())
               .collect(Collectors.toSet());
       boundsToBeSquashed.clear();
-      boundsToBeSquashed.add(new Bound(squashedBoundExpressions));
+      boundsToBeSquashed.add(new Bound<>(squashedBoundExpressions));
 
       values.subList(rightIndex, leftIndex).clear();
       emptiness.subList(rightIndex, leftIndex).clear();
@@ -54,7 +54,7 @@ public abstract class ExpressionInequality implements Condition {
     }
   }
 
-  static FunArray<Interval> lessThan(Expression left, Expression right, FunArray<Interval> funArray) {
+  static FunArray<Interval, Interval> lessThan(Expression<Interval> left, Expression<Interval> right, FunArray<Interval, Interval> funArray) {
 
     int leftIndex;
     int rightIndex;
@@ -81,7 +81,7 @@ public abstract class ExpressionInequality implements Condition {
     }
   }
 
-  private static int findIndex(Expression expression, FunArray<Interval> environment) {
+  private static int findIndex(Expression<Interval> expression, FunArray<Interval, Interval> environment) {
     var bounds = environment.bounds();
     for (int i = 0; i < bounds.size(); i++) {
       if (bounds.get(i).contains(expression)) {

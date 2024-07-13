@@ -7,7 +7,7 @@ import funarray.Expression;
 public class ArrayElementLessEqualThanConstant extends ArrayElementInequality {
   private final InfInt lessEqualThan;
 
-  public ArrayElementLessEqualThanConstant(InfInt lessEqualThan, Expression index) {
+  public ArrayElementLessEqualThanConstant(InfInt lessEqualThan, Expression<Interval> index) {
     this.lessEqualThan = lessEqualThan;
     this.index = index;
     this.constraintsIf = Interval.of(InfInt.negInf(), lessEqualThan);

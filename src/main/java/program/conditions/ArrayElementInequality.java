@@ -7,17 +7,17 @@ import funarray.Expression;
 public abstract class ArrayElementInequality implements Condition {
   Interval constraintsIf;
   Interval constraintsElse;
-  Expression index;
+  Expression<Interval> index;
 
   @Override
-  public Environment<Interval> satisfy(Environment<Interval> input) {
+  public Environment<Interval, Interval> satisfy(Environment<Interval, Interval> input) {
     var elementValue = input.getArrayElement(index);
     elementValue = constraintsIf.meet(elementValue);
     return input.assignArrayElement(index, elementValue);
   }
 
   @Override
-  public Environment<Interval> satisfyComplement(Environment<Interval> input) {
+  public Environment<Interval, Interval> satisfyComplement(Environment<Interval, Interval> input) {
     var elementValue = input.getArrayElement(index);
     elementValue = constraintsElse.meet(elementValue);
     return input.assignArrayElement(index, elementValue);

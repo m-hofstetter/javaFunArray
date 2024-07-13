@@ -7,7 +7,7 @@ import program.conditions.Condition;
 public record IfThenElse(Condition condition, Program ifProgram,
                          Program elseProgram) implements Program {
   @Override
-  public Environment<Interval> run(Environment<Interval> startingState) {
+  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
     System.out.printf("IF %s THEN DO:\n", condition.toString());
 
     var satisifiedState = condition.satisfy(startingState);

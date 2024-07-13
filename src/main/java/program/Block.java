@@ -15,7 +15,7 @@ public record Block(List<Program> statements) implements Program {
   }
 
   @Override
-  public Environment<Interval> run(Environment<Interval> startingState) {
+  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
     for (Program s : statements) {
       startingState = s.run(startingState);
     }
