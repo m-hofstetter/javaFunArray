@@ -1,5 +1,6 @@
 package funarray;
 
+import base.DomainValue;
 import base.infint.InfInt;
 import base.interval.Interval;
 
@@ -12,13 +13,13 @@ import base.interval.Interval;
  * @param variable the variable v
  * @param constant the constant k
  */
-public record Expression(Variable variable, InfInt constant) {
+public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt constant) {
 
-  public Expression(Variable variable, int constant) {
+  public Expression(Variable<T> variable, int constant) {
     this(variable, InfInt.of(constant));
   }
 
-  public Expression(Variable variable) {
+  public Expression(Variable<T> variable) {
     this(variable, InfInt.of(0));
   }
 
@@ -45,15 +46,15 @@ public record Expression(Variable variable, InfInt constant) {
    * @param value    the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression addToVariableInFunArray(Variable variable, InfInt value) {
+  public Expression<T> addToVariableInFunArray(Variable<T> variable, InfInt value) {
     if (this.variable().equals(variable)) {
-      return new Expression(variable, constant.subtract(value));
+      return new Expression<>(variable, constant.subtract(value));
     }
     return this;
   }
 
-  public Expression increase(InfInt value) {
-    return new Expression(variable, constant.add(value));
+  public Expression<T> increase(InfInt value) {
+    return new Expression<>(variable, constant.add(value));
   }
 
   /**
@@ -63,14 +64,14 @@ public record Expression(Variable variable, InfInt constant) {
    * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
    *         than the other and UNKNOWN if it can't be determined
    */
-  public boolean isLessThan(Expression other) {
+  public boolean isLessThan(Expression<T> other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return this.constant().isLessThan(other.constant());
   }
 
-  public boolean isLessEqualThan(Expression other) {
+  public boolean isLessEqualThan(Expression<T> other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
@@ -84,25 +85,25 @@ public record Expression(Variable variable, InfInt constant) {
    * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
    *         greater than the other and UNKNOWN if it can't be determined
    */
-  public boolean isGreaterThan(Expression other) {
+  public boolean isGreaterThan(Expression<T> other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return this.constant().isGreaterThan(other.constant());
   }
 
-  public boolean isGreaterEqualThan(Expression other) {
+  public boolean isGreaterEqualThan(Expression<T> other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return !this.constant().isLessThan(other.constant());
   }
 
-  public boolean containsVariable(Variable variable) {
+  public boolean containsVariable(Variable<T> variable) {
     return this.variable.equals(variable);
   }
 
-  public Interval calculate() {
+  public T calculate() {
     return variable.value().addConstant(constant);
   }
 

@@ -1,5 +1,6 @@
 package funarray;
 
+import base.DomainValue;
 import base.infint.InfInt;
 import java.util.List;
 import java.util.Set;
@@ -10,12 +11,13 @@ import java.util.stream.Collectors;
  *
  * @param expressions the expressions contained within.
  */
-public record Bound(Set<Expression> expressions) {
+public record Bound<T extends DomainValue<T>>(Set<Expression<T>> expressions) {
   public Bound {
     expressions = Set.copyOf(expressions);
   }
 
-  public Bound(Expression... expressions) {
+  @SafeVarargs
+  public Bound(Expression<T>... expressions) {
     this(Set.of(expressions));
   }
 
@@ -28,15 +30,15 @@ public record Bound(Set<Expression> expressions) {
    * @param value    the value by which it is being increased.
    * @return the altered bound.
    */
-  public Bound addToVariableInFunArray(Variable variable, InfInt value) {
-    return new Bound(
+  public Bound<T> addToVariableInFunArray(Variable<T> variable, InfInt value) {
+    return new Bound<>(
             expressions.stream()
                     .map(e -> e.addToVariableInFunArray(variable, value))
                     .collect(Collectors.toSet())
     );
   }
 
-  public Bound insertExpression(Variable variable, Expression expression) {
+  public Bound<T> insertExpression(Variable<T> variable, Expression<T> expression) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(variable))
             .collect(Collectors.toSet());
@@ -49,22 +51,22 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  public Bound removeVariableOccurrences(Variable variable) {
+  public Bound<T> removeVariableOccurrences(Variable<T> variable) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(variable))
             .collect(Collectors.toSet());
     return new Bound(modifiedExpressions);
   }
 
-  public boolean contains(Expression expression) {
+  public boolean contains(Expression<T> expression) {
     return expressions().stream().anyMatch(e -> e.equals(expression));
   }
 
-  public boolean expressionIsLessEqualThan(Expression expression) {
+  public boolean expressionIsLessEqualThan(Expression<T> expression) {
     return expressions().stream().anyMatch(e -> e.isLessEqualThan(expression));
   }
 
-  public boolean expressionIsGreaterEqualThan(Expression expression) {
+  public boolean expressionIsGreaterEqualThan(Expression<T> expression) {
     return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression));
   }
 
@@ -81,7 +83,7 @@ public record Bound(Set<Expression> expressions) {
    * @param other the other bound.
    * @return the complement.
    */
-  public Bound getComplementBound(Bound other) {
+  public Bound<T> getComplementBound(Bound<T> other) {
     return new Bound(
             expressions.stream()
                     .filter(e -> !other.expressions.contains(e))
@@ -95,8 +97,8 @@ public record Bound(Set<Expression> expressions) {
    * @param bounds the list of bounds.
    * @return the joined bound.
    */
-  public static Bound join(List<Bound> bounds) {
-    return new Bound(
+  public static <T extends DomainValue<T>> Bound<T> join(List<Bound<T>> bounds) {
+    return new Bound<>(
             bounds.stream().flatMap(b -> b.expressions().stream()).collect(Collectors.toSet())
     );
   }
@@ -107,12 +109,12 @@ public record Bound(Set<Expression> expressions) {
    * @param other the other bound.
    * @return the intersection of both bound.
    */
-  public Bound intersect(Bound other) {
+  public Bound<T> intersect(Bound<T> other) {
     var meetExpressionSet = other.expressions.stream()
             .filter(this.expressions::contains)
             .collect(Collectors.toSet());
 
-    return new Bound(meetExpressionSet);
+    return new Bound<>(meetExpressionSet);
   }
 
   /**
@@ -122,7 +124,7 @@ public record Bound(Set<Expression> expressions) {
    * @param list the list of bounds.
    * @return the intersected bound.
    */
-  public Bound intersect(List<Bound> list) {
+  public Bound<T> intersect(List<Bound<T>> list) {
     var joinedList = join(list);
     return this.intersect(joinedList);
   }

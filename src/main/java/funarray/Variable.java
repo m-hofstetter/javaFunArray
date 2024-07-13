@@ -1,6 +1,6 @@
 package funarray;
 
-import base.interval.Interval;
+import base.DomainValue;
 
 /**
  * The abstract representation of a variable.
@@ -8,9 +8,9 @@ import base.interval.Interval;
  * @param value the value of the variable.
  * @param name  the name of the variable.
  */
-public record Variable(Interval value, String name) {
+public record Variable<T extends DomainValue<T>>(T value, String name) {
 
-  public boolean equals(Variable other) {
+  public boolean equals(Variable<T> other) {
     return this.value().equals(other.value()) && this.name().equals(other.name());
   }
 

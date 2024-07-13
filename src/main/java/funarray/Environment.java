@@ -2,7 +2,6 @@ package funarray;
 
 import base.DomainValue;
 import base.infint.InfInt;
-import base.interval.Interval;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +13,9 @@ import java.util.stream.Collectors;
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
-public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
-                                                    List<Variable> variables) {
+public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_TYPE extends DomainValue<VARIABLE_TYPE>>(
+        FunArray<ELEMENT_TYPE, VARIABLE_TYPE> funArray,
+        List<Variable<VARIABLE_TYPE>> variables) {
 
   private static final String CONSOLE_COLOR_CYAN = "\033[0;36m";
   private static final String CONSOLE_COLOR_RESET = "\033[0m";
@@ -31,8 +31,8 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public Environment<T> addToVariable(Variable variable, InfInt value) {
-    var newVariable = new Variable(variable.value().addConstant(value), variable.name());
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> addToVariable(Variable<VARIABLE_TYPE> variable, InfInt value) {
+    var newVariable = new Variable<>(variable.value().addConstant(value), variable.name());
 
     var newVariables = new ArrayList<>(variables);
 
@@ -42,24 +42,24 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
     return new Environment<>(newSegmentation, newVariables);
   }
 
-  public Environment<T> assignVariable(Variable variable, Expression expression) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(Variable<VARIABLE_TYPE> variable, Expression<VARIABLE_TYPE> expression) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
     modifiedFunArray = modifiedFunArray.insertExpression(variable, expression);
 
     var newVariables = new ArrayList<>(variables);
 
     newVariables.remove(variable);
-    newVariables.add(new Variable(expression.calculate(), variable.name()));
+    newVariables.add(new Variable<>(expression.calculate(), variable.name()));
 
     return new Environment<>(modifiedFunArray, newVariables);
   }
 
-  public Environment<T> assignVariable(Variable variable, Interval interval) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(Variable<VARIABLE_TYPE> variable, VARIABLE_TYPE interval) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
 
     var newVariables = new ArrayList<>(variables);
     newVariables.remove(variable);
-    newVariables.add(new Variable(interval, variable.name()));
+    newVariables.add(new Variable<>(interval, variable.name()));
 
     return new Environment<>(modifiedFunArray, newVariables);
   }
@@ -71,7 +71,7 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
    * @param value the value.
    * @return the altered FunArray
    */
-  public Environment<T> assignArrayElement(Expression index, T value) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignArrayElement(Expression<VARIABLE_TYPE> index, ELEMENT_TYPE value) {
     var modified = funArray.insert(index, value);
     return new Environment<>(modified, variables());
   }
@@ -82,7 +82,7 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
    * @param index the index.
    * @return the value.
    */
-  public T getArrayElement(Expression index) {
+  public ELEMENT_TYPE getArrayElement(Expression<VARIABLE_TYPE> index) {
     return funArray.get(index);
   }
 
@@ -99,19 +99,19 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
     System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, this, CONSOLE_COLOR_RESET);
   }
 
-  public Environment<T> join(Environment<T> other, T unreachable) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> join(Environment<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
     var joinedFunArray = funArray.join(other.funArray, unreachable);
     return new Environment<>(joinedFunArray, variables);
     //TODO: join variables
   }
 
-  public Environment<T> widen(Environment<T> other, T unreachable) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> widen(Environment<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
     var widenedFunArray = funArray.widen(other.funArray, unreachable);
     return new Environment<>(widenedFunArray, variables);
     //TODO: proper widening
   }
 
-  public Variable getVariable(String variableName) {
+  public Variable<VARIABLE_TYPE> getVariable(String variableName) {
     return variables.stream().filter(variable -> variable.name().equals(variableName)).findFirst().orElseThrow();
   }
 }
