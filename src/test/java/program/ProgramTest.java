@@ -18,10 +18,10 @@ public class ProgramTest {
    */
   @Test
   void cousotExampleTest() {
-    var a = new Variable(0, "a");
-    var b = new Variable(0, "b");
-    var length = new Variable(InfInt.of(1), InfInt.posInf(), "A.length");
-    var zero = new Variable(0, "0");
+    var a = new Variable(Interval.of(0), "a");
+    var b = new Variable(Interval.of(0), "b");
+    var length = new Variable(Interval.of(1, InfInt.posInf()), "A.length");
+    var zero = new Variable(Interval.of(0), "0");
     var temp = new Variable(Interval.unknown(), "temp");
 
     var expA = new Expression(a);

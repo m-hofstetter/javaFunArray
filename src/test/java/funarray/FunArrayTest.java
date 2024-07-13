@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class FunArrayTest {
 
-  static final Variable LENGTH = new Variable(0, "A.length");
+  static final Variable LENGTH = new Variable(Interval.of(0), "A.length");
 
   @Test
   void addToVariableTest() {
@@ -166,22 +166,5 @@ public class FunArrayTest {
     assertThat(
             funArray.get(new Expression(1))
     ).isEqualTo(secondValue);
-  }
-
-  @Test
-  void dutchNationalFlagTest() {
-
-    var length = new Variable(Interval.unknown(), "A.length");
-    var r = new Variable(0, 0, "r");
-    var w = new Variable(Interval.unknown(), "w");
-    var b = new Variable(Interval.unknown(), "b");
-
-    var funArray = new FunArray(new Expression(length), true);
-
-
-    System.out.println(funArray);
-    //var env = new Environment(funArray, List.of(length, r, w, b));
-
-
   }
 }

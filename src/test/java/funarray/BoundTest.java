@@ -3,13 +3,14 @@ package funarray;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import base.infint.InfInt;
+import base.interval.Interval;
 import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 public class BoundTest {
 
-  static final Expression A = new Expression(new Variable(0, "A"), InfInt.of(0));
-  static final Expression B = new Expression(new Variable(0, "B"), InfInt.of(0));
+  static final Expression A = new Expression(new Variable(Interval.of(0), "A"), InfInt.of(0));
+  static final Expression B = new Expression(new Variable(Interval.of(0), "B"), InfInt.of(0));
 
   static final Set<Expression> SET_A = Set.of(A);
   static final Set<Expression> SET_AB = Set.of(A, B);

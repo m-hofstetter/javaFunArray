@@ -93,7 +93,7 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
   @Override
   public String toString() {
     var variablesString = variables.stream()
-            .map(Variable::toStringWithValue)
+            .map(v -> "%s: %s".formatted(v.name(), v.value()))
             .collect(Collectors.joining(" "));
 
     return "A: %s\n%s".formatted(funArray, variablesString);
