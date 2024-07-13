@@ -20,7 +20,7 @@ public record While(Condition condition, Program program) implements Program {
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       currentState = condition.satisfy(startingState);
       currentState = program.run(currentState);
-      currentState = previousState.widen(currentState);
+      currentState = previousState.widen(currentState, Interval.unreachable());
 
       if (previousState.equals(currentState)) {
         // fixpoint has been reached

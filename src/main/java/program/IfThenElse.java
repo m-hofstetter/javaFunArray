@@ -22,7 +22,7 @@ public record IfThenElse(Condition condition, Program ifProgram,
 
     System.out.print("END ELSEIF\n");
 
-    var joinedState = stateIf.join(stateElse);
+    var joinedState = stateIf.join(stateElse, Interval.unreachable());
     joinedState.consolePrintOut();
     return joinedState;
   }

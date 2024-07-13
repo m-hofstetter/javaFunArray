@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import base.infint.InfInt;
 import base.interval.Interval;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
 public class FunArrayTest {
 
@@ -16,7 +17,14 @@ public class FunArrayTest {
   void addToVariableTest() {
     var interval = Interval.of(0, 10);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new Environment(length);
+    var funArray = new Environment(
+            new FunArray<>(
+                    List.of(new Bound(0), new Bound(length)),
+                    List.of(Interval.unknown()),
+                    List.of(false)
+            ),
+            List.of(length.variable())
+    );
 
     var modified = funArray.addToVariable(length.variable(), InfInt.of(3));
 
@@ -27,7 +35,14 @@ public class FunArrayTest {
   void insertTest() {
     var interval = Interval.of(0, 0);
     var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new Environment(length);
+    var funArray = new Environment(
+            new FunArray<>(
+                    List.of(new Bound(0), new Bound(length)),
+                    List.of(Interval.unknown()),
+                    List.of(false)
+            ),
+            List.of(length.variable())
+    );
     assertThat(funArray.funArray()).isEqualTo(
             buildFunArray()
                     .bound(0)
@@ -142,7 +157,7 @@ public class FunArrayTest {
             .mightBeEmpty()
             .bound(n).build();
 
-    var joined = arrayA.join(arrayB);
+    var joined = arrayA.join(arrayB, Interval.unreachable());
     assertThat(joined).isEqualTo(expected);
   }
 

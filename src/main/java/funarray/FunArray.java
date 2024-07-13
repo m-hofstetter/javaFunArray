@@ -48,19 +48,6 @@ public record FunArray<T extends DomainValue<T>>(List<Bound> bounds, List<T> val
     this.emptiness = List.copyOf(emptiness);
   }
 
-  /**
-   * Constructor for a FunArray consisting of a single value and its bounds.
-   *
-   * @param length          the length of the segment.
-   * @param isPossiblyEmpty whether the single segment might be empty.
-   */
-  public FunArray(Expression length, boolean isPossiblyEmpty) {
-    this(List.of(new Bound(0), new Bound(length)),
-            List.of(T.unknown()),
-            List.of(isPossiblyEmpty)
-    );
-  }
-
   @Override
   public String toString() {
     return IntStream.range(0, bounds.size())
@@ -258,8 +245,8 @@ public record FunArray<T extends DomainValue<T>>(List<Bound> bounds, List<T> val
    * @return the joint of all values.
    */
   private T getJointValue(int from, int to) {
-    var jointValue = (T) T.unreachable(); //TODO: find solution where unchecked cast is not required
-    for (int i = from; i < to; i++) {
+    var jointValue = values.get(from);
+    for (int i = from + 1; i < to; i++) {
       jointValue = jointValue.join(values.get(i));
     }
     return jointValue;
@@ -400,19 +387,19 @@ public record FunArray<T extends DomainValue<T>>(List<Bound> bounds, List<T> val
     return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
 
-  public FunArray<T> join(FunArray<T> other) {
-    return unifyOperation(T::join, other, T.unreachable(), T.unreachable());
+  public FunArray<T> join(FunArray<T> other, T unreachable) {
+    return unifyOperation(T::join, other, unreachable, unreachable);
   }
 
-  public FunArray<T> meet(FunArray<T> other) {
-    return unifyOperation(T::join, other, T.unknown(), T.unknown());
+  public FunArray<T> meet(FunArray<T> other, T unknown) {
+    return unifyOperation(T::join, other, unknown, unknown);
   }
 
-  public FunArray<T> widen(FunArray<T> other) {
-    return unifyOperation(T::join, other, T.unreachable(), T.unreachable());
+  public FunArray<T> widen(FunArray<T> other, T unreachable) {
+    return unifyOperation(T::join, other, unreachable, unreachable);
   }
 
-  public FunArray<T> narrow(FunArray<T> other) {
-    return unifyOperation(T::join, other, T.unknown(), T.unknown());
+  public FunArray<T> narrow(FunArray<T> other, T unknown) {
+    return unifyOperation(T::join, other, unknown, unknown);
   }
 }

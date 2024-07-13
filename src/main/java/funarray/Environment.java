@@ -24,10 +24,6 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
     variables = List.copyOf(variables);
   }
 
-  public Environment(Expression length) {
-    this(new FunArray<>(length, false), List.of(length.variable()));
-  }
-
   /**
    * Adds to a variable. See Cousot et al. 2011, Chapter 11.6.
    *
@@ -103,14 +99,14 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
     System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, this, CONSOLE_COLOR_RESET);
   }
 
-  public Environment<T> join(Environment<T> other) {
-    var joinedFunArray = funArray.join(other.funArray);
+  public Environment<T> join(Environment<T> other, T unreachable) {
+    var joinedFunArray = funArray.join(other.funArray, unreachable);
     return new Environment<>(joinedFunArray, variables);
     //TODO: join variables
   }
 
-  public Environment<T> widen(Environment<T> other) {
-    var widenedFunArray = funArray.widen(other.funArray);
+  public Environment<T> widen(Environment<T> other, T unreachable) {
+    var widenedFunArray = funArray.widen(other.funArray, unreachable);
     return new Environment<>(widenedFunArray, variables);
     //TODO: proper widening
   }
