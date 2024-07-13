@@ -82,9 +82,8 @@ public abstract sealed class Interval implements DomainValue<Interval> permits R
   @Override
   public abstract boolean equals(Object other);
 
-  public Interval add(InfInt value) {
-    return add(Interval.of(value, value));
-  }
+  @Override
+  public abstract Interval addConstant(InfInt value);
 
   @Override
   public abstract Interval add(Interval value);

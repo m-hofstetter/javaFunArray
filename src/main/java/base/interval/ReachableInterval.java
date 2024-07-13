@@ -102,4 +102,14 @@ final class ReachableInterval extends Interval {
   public Interval subtract(Interval value) {
     return add(value.inverse());
   }
+
+  @Override
+  public Interval addConstant(InfInt constant) {
+    return add(Interval.of(constant, constant));
+  }
+
+  @Override
+  public Interval subtractConstant(InfInt constant) {
+    return addConstant(constant.negate());
+  }
 }

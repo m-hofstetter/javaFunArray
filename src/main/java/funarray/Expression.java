@@ -103,7 +103,7 @@ public record Expression(Variable variable, InfInt constant) {
   }
 
   public Interval calculate() {
-    return variable.value().add(constant);
+    return variable.value().addConstant(constant);
   }
 
   @Override

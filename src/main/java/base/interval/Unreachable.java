@@ -35,11 +35,6 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval add(InfInt value) {
-    return this;
-  }
-
-  @Override
   public Interval add(Interval value) {
     return this;
   }
@@ -51,6 +46,16 @@ final class Unreachable extends Interval {
 
   @Override
   public Interval subtract(Interval value) {
+    return this;
+  }
+
+  @Override
+  public Interval addConstant(InfInt constant) {
+    return this;
+  }
+
+  @Override
+  public Interval subtractConstant(InfInt constant) {
     return this;
   }
 }

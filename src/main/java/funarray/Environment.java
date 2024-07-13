@@ -32,7 +32,7 @@ public record Environment<T extends DomainValue<T>>(FunArray<T> funArray,
    * @return the altered FunArray
    */
   public Environment<T> addToVariable(Variable variable, InfInt value) {
-    var newVariable = new Variable(variable.value().add(value), variable.name());
+    var newVariable = new Variable(variable.value().addConstant(value), variable.name());
 
     var newVariables = new ArrayList<>(variables);
 

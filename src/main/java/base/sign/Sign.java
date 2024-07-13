@@ -3,6 +3,7 @@ package base.sign;
 import static base.sign.Sign.SignElement.*;
 
 import base.DomainValue;
+import base.infint.InfInt;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -121,6 +122,24 @@ public class Sign implements DomainValue<Sign> {
   @Override
   public Sign subtract(Sign other) {
     return add(other.inverse());
+  }
+
+  @Override
+  public Sign addConstant(InfInt constant) {
+    SignElement constantSign;
+    if (constant.equals(InfInt.of(0))) {
+      constantSign = SignElement.ZERO;
+    } else if (constant.isLessThan(InfInt.of(0))) {
+      constantSign = NEGATIVE;
+    } else {
+      constantSign = POSITIVE;
+    }
+    return add(new Sign(Set.of(constantSign)));
+  }
+
+  @Override
+  public Sign subtractConstant(InfInt constant) {
+    return addConstant(constant.negate());
   }
 
   @Override
