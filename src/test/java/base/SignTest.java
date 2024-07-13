@@ -57,4 +57,48 @@ public class SignTest {
       assertThat(ALL.narrow(i)).isEqualTo(i);
     }
   }
+
+  @Test
+  public void testAdd() {
+    assertThat(NONE.add(ALL)).isEqualTo(NONE);
+
+    assertThat(POS.add(NONE)).isEqualTo(NONE);
+    assertThat(POS.add(POS)).isEqualTo(POS);
+    assertThat(POS.add(ZER)).isEqualTo(POS);
+    assertThat(POS.add(NEG)).isEqualTo(ALL);
+    assertThat(POS.add(POS_ZER)).isEqualTo(POS);
+    assertThat(POS.add(POS_NEG)).isEqualTo(ALL);
+    assertThat(POS.add(NEG_ZER)).isEqualTo(ALL);
+    assertThat(POS.add(ALL)).isEqualTo(ALL);
+
+    assertThat(NEG.add(NONE)).isEqualTo(NONE);
+    assertThat(NEG.add(POS)).isEqualTo(ALL);
+    assertThat(NEG.add(ZER)).isEqualTo(NEG);
+    assertThat(NEG.add(NEG)).isEqualTo(NEG);
+    assertThat(NEG.add(POS_ZER)).isEqualTo(ALL);
+    assertThat(NEG.add(POS_NEG)).isEqualTo(ALL);
+    assertThat(NEG.add(NEG_ZER)).isEqualTo(NEG);
+    assertThat(NEG.add(ALL)).isEqualTo(ALL);
+
+    assertThat(ZER.add(NONE)).isEqualTo(NONE);
+    assertThat(ZER.add(POS)).isEqualTo(POS);
+    assertThat(ZER.add(ZER)).isEqualTo(ZER);
+    assertThat(ZER.add(NEG)).isEqualTo(NEG);
+    assertThat(ZER.add(POS_ZER)).isEqualTo(POS_ZER);
+    assertThat(ZER.add(POS_NEG)).isEqualTo(POS_NEG);
+    assertThat(ZER.add(NEG_ZER)).isEqualTo(NEG_ZER);
+    assertThat(ZER.add(ALL)).isEqualTo(ALL);
+  }
+
+  @Test
+  public void testInverse() {
+    assertThat(NONE.inverse()).isEqualTo(NONE);
+    assertThat(NEG.inverse()).isEqualTo(POS);
+    assertThat(ZER.inverse()).isEqualTo(ZER);
+    assertThat(POS.inverse()).isEqualTo(NEG);
+    assertThat(NEG_ZER.inverse()).isEqualTo(POS_ZER);
+    assertThat(POS_ZER.inverse()).isEqualTo(NEG_ZER);
+    assertThat(POS_NEG.inverse()).isEqualTo(POS_NEG);
+    assertThat(ALL.inverse()).isEqualTo(ALL);
+  }
 }

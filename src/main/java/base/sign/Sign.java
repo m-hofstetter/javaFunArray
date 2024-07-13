@@ -82,4 +82,60 @@ public class Sign implements DomainValue<Sign> {
     }
     return false;
   }
+
+  @Override
+  public Sign add(Sign other) {
+    if (elements.isEmpty() || other.elements.isEmpty()) {
+      return new Sign(Set.of());
+    }
+    var modifiedSet = new HashSet<>(elements);
+    if (elements.contains(NEGATIVE)) {
+      if (other.elements.contains(POSITIVE)) {
+        modifiedSet.add(ZERO);
+        modifiedSet.add(POSITIVE);
+      }
+    }
+    if (elements.contains(ZERO)) {
+      if (other.elements.contains(POSITIVE)) {
+        modifiedSet.add(POSITIVE);
+        if (!other.elements.contains(ZERO)) {
+          modifiedSet.remove(ZERO);
+        }
+      }
+      if (other.elements.contains(NEGATIVE)) {
+        modifiedSet.add(NEGATIVE);
+        if (!other.elements.contains(ZERO)) {
+          modifiedSet.remove(ZERO);
+        }
+      }
+    }
+    if (elements.contains(POSITIVE)) {
+      if (other.elements.contains(NEGATIVE)) {
+        modifiedSet.add(ZERO);
+        modifiedSet.add(NEGATIVE);
+      }
+    }
+    return new Sign(modifiedSet);
+  }
+
+  @Override
+  public Sign subtract(Sign other) {
+    return add(other.inverse());
+  }
+
+  @Override
+  public Sign inverse() {
+    var modifiedSet = new HashSet<>(elements);
+    if (elements.contains(NEGATIVE)) {
+      modifiedSet.add(POSITIVE);
+    } else {
+      modifiedSet.remove(POSITIVE);
+    }
+    if (elements.contains(POSITIVE)) {
+      modifiedSet.add(NEGATIVE);
+    } else {
+      modifiedSet.remove(NEGATIVE);
+    }
+    return new Sign(modifiedSet);
+  }
 }
