@@ -10,14 +10,14 @@ public abstract class ArrayElementInequality implements Condition {
   Expression index;
 
   @Override
-  public Environment satisfy(Environment input) {
+  public Environment<Interval> satisfy(Environment<Interval> input) {
     var elementValue = input.getArrayElement(index);
     elementValue = constraintsIf.meet(elementValue);
     return input.assignArrayElement(index, elementValue);
   }
 
   @Override
-  public Environment satisfyComplement(Environment input) {
+  public Environment<Interval> satisfyComplement(Environment<Interval> input) {
     var elementValue = input.getArrayElement(index);
     elementValue = constraintsElse.meet(elementValue);
     return input.assignArrayElement(index, elementValue);

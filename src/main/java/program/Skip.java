@@ -1,10 +1,11 @@
 package program;
 
+import base.interval.Interval;
 import funarray.Environment;
 
 public record Skip() implements Program {
   @Override
-  public Environment run(Environment startingState) {
+  public Environment<Interval> run(Environment<Interval> startingState) {
     System.out.println("SKIP");
     return startingState;
   }

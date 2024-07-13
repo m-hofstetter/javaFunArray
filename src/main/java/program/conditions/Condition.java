@@ -1,9 +1,10 @@
 package program.conditions;
 
+import base.interval.Interval;
 import funarray.Environment;
 
 public interface Condition {
-  Environment satisfy(Environment input);
+  Environment<Interval> satisfy(Environment<Interval> input);
 
-  Environment satisfyComplement(Environment input);
+  Environment<Interval> satisfyComplement(Environment<Interval> input);
 }

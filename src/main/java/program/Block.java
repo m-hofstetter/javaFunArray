@@ -1,5 +1,6 @@
 package program;
 
+import base.interval.Interval;
 import funarray.Environment;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public record Block(List<Program> statements) implements Program {
   }
 
   @Override
-  public Environment run(Environment startingState) {
+  public Environment<Interval> run(Environment<Interval> startingState) {
     for (Program s : statements) {
       startingState = s.run(startingState);
     }

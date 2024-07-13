@@ -1,12 +1,13 @@
 package program;
 
+import base.interval.Interval;
 import funarray.Environment;
 import program.conditions.Condition;
 
 public record IfThenElse(Condition condition, Program ifProgram,
                          Program elseProgram) implements Program {
   @Override
-  public Environment run(Environment startingState) {
+  public Environment<Interval> run(Environment<Interval> startingState) {
     System.out.printf("IF %s THEN DO:\n", condition.toString());
 
     var satisifiedState = condition.satisfy(startingState);

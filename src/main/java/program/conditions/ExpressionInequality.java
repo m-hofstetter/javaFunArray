@@ -1,5 +1,6 @@
 package program.conditions;
 
+import base.interval.Interval;
 import exception.FunArrayLogicException;
 import funarray.Bound;
 import funarray.Expression;
@@ -12,7 +13,7 @@ public abstract class ExpressionInequality implements Condition {
   Expression left;
   Expression right;
 
-  static FunArray lessEqualThan(Expression left, Expression right, FunArray funArray) {
+  static FunArray<Interval> lessEqualThan(Expression left, Expression right, FunArray<Interval> funArray) {
 
     int leftIndex;
     int rightIndex;
@@ -49,11 +50,11 @@ public abstract class ExpressionInequality implements Condition {
       values.subList(rightIndex, leftIndex).clear();
       emptiness.subList(rightIndex, leftIndex).clear();
 
-      return new FunArray(bounds, values, emptiness);
+      return new FunArray<>(bounds, values, emptiness);
     }
   }
 
-  static FunArray lessThan(Expression left, Expression right, FunArray funArray) {
+  static FunArray<Interval> lessThan(Expression left, Expression right, FunArray<Interval> funArray) {
 
     int leftIndex;
     int rightIndex;
@@ -68,7 +69,7 @@ public abstract class ExpressionInequality implements Condition {
       // Since the condition requires strict inequality, a single segment between the expressions cannot be empty.
       var emptiness = new ArrayList<>(funArray.emptiness());
       emptiness.set(leftIndex, false);
-      return new FunArray(funArray.bounds(), funArray.values(), emptiness);
+      return new FunArray<>(funArray.bounds(), funArray.values(), emptiness);
     } else if (leftIndex < rightIndex) {
       // If there is more than one segment in between the expressions it cannot be decided which one is not empty.
       return funArray;
@@ -80,7 +81,7 @@ public abstract class ExpressionInequality implements Condition {
     }
   }
 
-  private static int findIndex(Expression expression, FunArray environment) {
+  private static int findIndex(Expression expression, FunArray<Interval> environment) {
     var bounds = environment.bounds();
     for (int i = 0; i < bounds.size(); i++) {
       if (bounds.get(i).contains(expression)) {

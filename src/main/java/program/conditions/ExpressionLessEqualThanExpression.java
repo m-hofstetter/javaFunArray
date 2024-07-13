@@ -1,5 +1,6 @@
 package program.conditions;
 
+import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;
 
@@ -11,15 +12,15 @@ public final class ExpressionLessEqualThanExpression extends ExpressionInequalit
   }
 
   @Override
-  public Environment satisfy(Environment input) {
+  public Environment<Interval> satisfy(Environment<Interval> input) {
     var modifiedFunArray = lessEqualThan(left, right, input.funArray());
-    return new Environment(modifiedFunArray, input.variables());
+    return new Environment<>(modifiedFunArray, input.variables());
   }
 
   @Override
-  public Environment satisfyComplement(Environment input) {
+  public Environment<Interval> satisfyComplement(Environment<Interval> input) {
     var modifiedFunArray = lessThan(right, left, input.funArray());
-    return new Environment(modifiedFunArray, input.variables());
+    return new Environment<>(modifiedFunArray, input.variables());
   }
 
   @Override

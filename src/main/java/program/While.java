@@ -1,5 +1,6 @@
 package program;
 
+import base.interval.Interval;
 import funarray.Environment;
 import program.conditions.Condition;
 
@@ -8,7 +9,7 @@ public record While(Condition condition, Program program) implements Program {
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
 
   @Override
-  public Environment run(Environment startingState) {
+  public Environment<Interval> run(Environment<Interval> startingState) {
 
     var previousState = condition.satisfy(startingState);
     var currentState = condition.satisfy(startingState);
