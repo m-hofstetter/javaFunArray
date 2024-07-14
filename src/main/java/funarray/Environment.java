@@ -114,4 +114,14 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
   public Variable<VARIABLE_TYPE> getVariable(String variableName) {
     return variables.stream().filter(variable -> variable.name().equals(variableName)).findFirst().orElseThrow();
   }
+
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessEqualThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+    //TODO: Variables need to be modified to satisfy condition
+    return new Environment<>(funArray.satisfyBoundExpressionLessEqualThan(left, right), variables());
+  }
+
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+    //TODO: Variables need to be modified to satisfy condition
+    return new Environment<>(funArray.satisfyBoundExpressionLessThan(left, right), variables());
+  }
 }

@@ -4,7 +4,10 @@ import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;
 
-public final class ExpressionLessThanExpression extends ExpressionInequality {
+public final class ExpressionLessThanExpression implements Condition {
+
+  Expression<Interval> left;
+  Expression<Interval> right;
 
   public ExpressionLessThanExpression(Expression left, Expression right) {
     this.left = left;
@@ -13,14 +16,12 @@ public final class ExpressionLessThanExpression extends ExpressionInequality {
 
   @Override
   public Environment<Interval, Interval> satisfy(Environment<Interval, Interval> input) {
-    var modifiedFunArray = lessThan(left, right, input.funArray());
-    return new Environment<>(modifiedFunArray, input.variables());
+    return input.satisfyExpressionLessThan(left, right);
   }
 
   @Override
   public Environment<Interval, Interval> satisfyComplement(Environment<Interval, Interval> input) {
-    var modifiedFunArray = lessEqualThan(right, left, input.funArray());
-    return new Environment<>(modifiedFunArray, input.variables());
+    return input.satisfyExpressionLessEqualThan(right, left);
   }
 
   @Override

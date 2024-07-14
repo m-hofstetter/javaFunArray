@@ -2,6 +2,7 @@ package funarray;
 
 import base.DomainValue;
 import base.infint.InfInt;
+import exception.FunArrayLogicException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BinaryOperator;
@@ -392,6 +393,82 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
 
     return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
+
+  public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> satisfyBoundExpressionLessEqualThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left);
+      rightIndex = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return this;
+    }
+
+    var modifiedBounds = new ArrayList<>(bounds);
+    var modifiedValues = new ArrayList<>(values);
+    var modifiedEmptiness = new ArrayList<>(emptiness);
+
+    if (leftIndex <= rightIndex) {
+      // Condition is already met, change nothing
+      return this;
+    } else if (modifiedEmptiness.subList(rightIndex, leftIndex).stream().anyMatch(e -> !e)) {
+      // Bound order states that left expression is greater than right expression
+      // Condition states that left expression is less equal than right expression
+      // --> Condition cannot be satisfied
+      throw new FunArrayLogicException("Condition cannot be satisfied!");
+    } else {
+      // Bound order states that left expression is greater equal than right expression
+      // Condition states that left expression is less equal than right expression
+      // --> left expression has to be equal to right expression --> Squash segments
+      var boundsToBeSquashed = modifiedBounds.subList(rightIndex, leftIndex + 1);
+      var squashedBoundExpressions = boundsToBeSquashed.stream()
+              .flatMap(b -> b.expressions().stream())
+              .collect(Collectors.toSet());
+      boundsToBeSquashed.clear();
+      boundsToBeSquashed.add(new Bound<>(squashedBoundExpressions));
+
+      modifiedValues.subList(rightIndex, leftIndex).clear();
+      modifiedEmptiness.subList(rightIndex, leftIndex).clear();
+
+      return new FunArray<>(modifiedBounds, modifiedValues, modifiedEmptiness);
+    }
+  }
+
+  public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> satisfyBoundExpressionLessThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left);
+      rightIndex = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return this;
+    }
+
+    if (leftIndex + 1 == rightIndex) {
+      // Since the condition requires strict inequality, a single segment between the expressions cannot be empty.
+      var modifiedEmptiness = new ArrayList<>(emptiness);
+      modifiedEmptiness.set(leftIndex, false);
+      return new FunArray<>(bounds, values, modifiedEmptiness);
+    } else if (leftIndex < rightIndex) {
+      // If there is more than one segment in between the expressions it cannot be decided which one is not empty.
+      return this;
+    } else {
+      // Bound order states that left expression is greater than right expression
+      // Condition states that left expression is less than right expression
+      // --> Condition cannot be satisfied
+      throw new FunArrayLogicException("Condition cannot be satisfied!");
+    }
+  }
+
+  private int findIndex(Expression<VARIABLE_TYPE> expression) {
+    for (int i = 0; i < bounds.size(); i++) {
+      if (bounds.get(i).contains(expression)) {
+        return i;
+      }
+    }
+    throw new IndexOutOfBoundsException();
+  }
+
 
   public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> join(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
     return unifyOperation(ELEMENT_TYPE::join, other, unreachable, unreachable);
