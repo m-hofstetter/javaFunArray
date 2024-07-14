@@ -157,4 +157,80 @@ public class Sign implements DomainValue<Sign> {
     }
     return new Sign(modifiedSet);
   }
+
+  @Override
+  public Sign satisfyLessEqualThan(Sign other) {
+    var modifiedSet = new HashSet<>(elements);
+    if (!other.elements.contains(POSITIVE)) {
+      modifiedSet.remove(POSITIVE);
+      if (!other.elements.contains(ZERO)) {
+        modifiedSet.remove(ZERO);
+        if (!other.elements.contains(NEGATIVE)) {
+          modifiedSet.remove(NEGATIVE);
+        }
+      }
+    }
+    return new Sign(modifiedSet);
+  }
+
+  @Override
+  public Sign satisfyGreaterEqualThan(Sign other) {
+    var modifiedSet = new HashSet<>(elements);
+    if (!other.elements.contains(NEGATIVE)) {
+      modifiedSet.remove(NEGATIVE);
+      if (!other.elements.contains(ZERO)) {
+        modifiedSet.remove(ZERO);
+        if (!other.elements.contains(POSITIVE)) {
+          modifiedSet.remove(POSITIVE);
+        }
+      }
+    }
+    return new Sign(modifiedSet);
+  }
+
+  @Override
+  public Sign satisfyLessThan(Sign other) {
+    var modifiedSet = new HashSet<>(elements);
+    if (other.elements.contains(POSITIVE)) {
+      modifiedSet.remove(POSITIVE);
+    }
+    if (other.elements.contains(ZERO)) {
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(POSITIVE);
+    }
+    if (other.elements.contains(NEGATIVE)) {
+      modifiedSet.remove(NEGATIVE);
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(POSITIVE);
+    }
+    if (other.elements.isEmpty()) {
+      modifiedSet.remove(NEGATIVE);
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(POSITIVE);
+    }
+    return new Sign(modifiedSet);
+  }
+
+  @Override
+  public Sign satisfyGreaterThan(Sign other) {
+    var modifiedSet = new HashSet<>(elements);
+    if (other.elements.contains(NEGATIVE)) {
+      modifiedSet.remove(NEGATIVE);
+    }
+    if (other.elements.contains(ZERO)) {
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(NEGATIVE);
+    }
+    if (other.elements.contains(POSITIVE)) {
+      modifiedSet.remove(NEGATIVE);
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(POSITIVE);
+    }
+    if (other.elements.isEmpty()) {
+      modifiedSet.remove(NEGATIVE);
+      modifiedSet.remove(ZERO);
+      modifiedSet.remove(POSITIVE);
+    }
+    return new Sign(modifiedSet);
+  }
 }

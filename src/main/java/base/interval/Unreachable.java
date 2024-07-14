@@ -58,4 +58,24 @@ final class Unreachable extends Interval {
   public Interval subtractConstant(InfInt constant) {
     return this;
   }
+
+  @Override
+  public Interval satisfyLessEqualThan(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval satisfyGreaterEqualThan(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval satisfyLessThan(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval satisfyGreaterThan(Interval other) {
+    return this;
+  }
 }

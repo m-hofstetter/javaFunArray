@@ -124,4 +124,31 @@ public class IntervalTest {
     assertThat(Interval.of(1, 2).inverse()).isEqualTo(Interval.of(-2, -1));
     assertThat(Interval.of(0, InfInt.posInf()).inverse()).isEqualTo(Interval.of(InfInt.negInf(), 0));
   }
+
+  @Test
+  public void inequalityTest() {
+    assertThat(Interval.of(0, 10).satisfyLessEqualThan(Interval.of(0, 5))).isEqualTo(Interval.of(0, 5));
+    assertThat(Interval.of(0, 10).satisfyLessEqualThan(Interval.of(-10, -5))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyLessEqualThan(Interval.of(15, 20))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyLessEqualThan(Interval.of(15, InfInt.posInf()))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyLessEqualThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
+
+    assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.of(5, 10))).isEqualTo(Interval.of(5, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.of(15, 20))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.of(-10, -5))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.of(InfInt.negInf(), 5))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
+
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(5, 10))).isEqualTo(Interval.of(0, 4));
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(15, 20))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(0, 0))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(InfInt.negInf(), 10))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
+
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, 5))).isEqualTo(Interval.of(6, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(-10, -5))).isEqualTo(Interval.of(0, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(10, 10))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, InfInt.posInf()))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
+  }
 }

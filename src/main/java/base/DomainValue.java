@@ -10,9 +10,15 @@ public interface DomainValue<T extends DomainValue<T>> {
 
   T add(T other);
   T subtract(T other);
-
   T addConstant(InfInt constant);
-
   T subtractConstant(InfInt constant);
   T inverse();
+
+  T satisfyLessEqualThan(T other);
+
+  T satisfyGreaterEqualThan(T other);
+
+  T satisfyLessThan(T other);
+
+  T satisfyGreaterThan(T other);
 }
