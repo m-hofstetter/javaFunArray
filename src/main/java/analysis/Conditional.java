@@ -38,6 +38,46 @@ public interface Conditional<ELEMENT extends DomainValue<ELEMENT>, VARIABLE exte
       return state.satisfyExpressionLessEqualThan(right, left);
     }
   }
+
+  record ArrayElementLessEqualThan<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
+          Expression<VARIABLE> index,
+          Expression<VARIABLE> comparand,
+          DomainConversion<VARIABLE, ELEMENT> variableToValueConversion) implements Conditional<ELEMENT, VARIABLE> {
+
+    @Override
+    public Environment<ELEMENT, VARIABLE> satisfy(Environment<ELEMENT, VARIABLE> state) {
+      var valueAtIndex = state.getArrayElement(index);
+      var valueAtIndexWithSatisfiedCondition = valueAtIndex.satisfyLessEqualThan(variableToValueConversion.convert(comparand.calculate()));
+      return state.assignArrayElement(index, valueAtIndexWithSatisfiedCondition);
+    }
+
+    @Override
+    public Environment<ELEMENT, VARIABLE> satisfyComplement(Environment<ELEMENT, VARIABLE> state) {
+      var valueAtIndex = state.getArrayElement(index);
+      var valueAtIndexWithSatisfiedCondition = valueAtIndex.satisfyGreaterThan(variableToValueConversion.convert(comparand.calculate()));
+      return state.assignArrayElement(index, valueAtIndexWithSatisfiedCondition);
+    }
+  }
+
+  record ArrayElementGreaterEqualThan<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
+          Expression<VARIABLE> index,
+          Expression<VARIABLE> comparand,
+          DomainConversion<VARIABLE, ELEMENT> variableToValueConversion) implements Conditional<ELEMENT, VARIABLE> {
+
+    @Override
+    public Environment<ELEMENT, VARIABLE> satisfy(Environment<ELEMENT, VARIABLE> state) {
+      var valueAtIndex = state.getArrayElement(index);
+      var valueAtIndexWithSatisfiedCondition = valueAtIndex.satisfyGreaterEqualThan(variableToValueConversion.convert(comparand.calculate()));
+      return state.assignArrayElement(index, valueAtIndexWithSatisfiedCondition);
+    }
+
+    @Override
+    public Environment<ELEMENT, VARIABLE> satisfyComplement(Environment<ELEMENT, VARIABLE> state) {
+      var valueAtIndex = state.getArrayElement(index);
+      var valueAtIndexWithSatisfiedCondition = valueAtIndex.satisfyLessThan(variableToValueConversion.convert(comparand.calculate()));
+      return state.assignArrayElement(index, valueAtIndexWithSatisfiedCondition);
+    }
+  }
 }
 
 
