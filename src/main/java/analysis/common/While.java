@@ -1,8 +1,8 @@
-package program;
+package analysis.common;
 
+import analysis.common.condition.Condition;
 import base.interval.Interval;
 import funarray.Environment;
-import program.conditions.Condition;
 
 public record While(Condition condition, Program program) implements Program {
 

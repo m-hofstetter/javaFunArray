@@ -1,5 +1,6 @@
-package program.conditions;
+package analysis.interval.condition;
 
+import analysis.common.condition.Condition;
 import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;

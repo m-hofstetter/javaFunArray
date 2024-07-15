@@ -1,5 +1,14 @@
-package program;
+package analysis;
 
+import analysis.common.Block;
+import analysis.common.IfThenElse;
+import analysis.common.While;
+import analysis.interval.AssignArrayElementValueToArrayElement;
+import analysis.interval.AssignArrayElementValueToVariable;
+import analysis.interval.AssignVariableValueToArrayElement;
+import analysis.interval.IncrementVariable;
+import analysis.interval.condition.ArrayElementLessEqualThanConstant;
+import analysis.interval.condition.ExpressionLessThanExpression;
 import base.infint.InfInt;
 import base.interval.Interval;
 import funarray.Environment;
@@ -7,8 +16,6 @@ import funarray.Expression;
 import funarray.Variable;
 import funarray.util.FunArrayBuilder;
 import org.junit.jupiter.api.Test;
-import program.conditions.ArrayElementLessEqualThanConstant;
-import program.conditions.ExpressionLessThanExpression;
 import java.util.List;
 
 public class ProgramTest {

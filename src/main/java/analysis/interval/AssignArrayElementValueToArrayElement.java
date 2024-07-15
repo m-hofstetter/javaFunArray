@@ -1,5 +1,6 @@
-package program;
+package analysis.interval;
 
+import analysis.common.Program;
 import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;

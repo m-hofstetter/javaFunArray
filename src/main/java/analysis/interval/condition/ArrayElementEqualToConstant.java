@@ -1,4 +1,4 @@
-package program.conditions;
+package analysis.interval.condition;
 
 import base.infint.InfInt;
 import base.interval.Interval;
