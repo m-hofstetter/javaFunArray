@@ -1,13 +1,16 @@
 package analysis.common;
 
 import analysis.common.condition.Condition;
-import base.interval.Interval;
+import base.DomainValue;
 import funarray.Environment;
 
-public record IfThenElse(Condition condition, Program ifProgram,
-                         Program elseProgram) implements Program {
+public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
+        Condition<ELEMENT, VARIABLE> condition, Program<ELEMENT, VARIABLE> ifProgram,
+        Program<ELEMENT, VARIABLE> elseProgram,
+        ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
+
   @Override
-  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
+  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     System.out.printf("IF %s THEN DO:\n", condition.toString());
 
     var satisifiedState = condition.satisfy(startingState);
@@ -22,7 +25,7 @@ public record IfThenElse(Condition condition, Program ifProgram,
 
     System.out.print("END ELSEIF\n");
 
-    var joinedState = stateIf.join(stateElse, Interval.unreachable());
+    var joinedState = stateIf.join(stateElse, unreachable);
     joinedState.consolePrintOut();
     return joinedState;
   }

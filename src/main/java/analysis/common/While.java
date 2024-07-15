@@ -1,15 +1,17 @@
 package analysis.common;
 
 import analysis.common.condition.Condition;
-import base.interval.Interval;
+import base.DomainValue;
 import funarray.Environment;
 
-public record While(Condition condition, Program program) implements Program {
+public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
+        Condition<ELEMENT, VARIABLE> condition, Program<ELEMENT, VARIABLE> program,
+        ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
 
   @Override
-  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
+  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
 
     var previousState = condition.satisfy(startingState);
     var currentState = condition.satisfy(startingState);
@@ -20,7 +22,7 @@ public record While(Condition condition, Program program) implements Program {
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       currentState = condition.satisfy(startingState);
       currentState = program.run(currentState);
-      currentState = previousState.widen(currentState, Interval.unreachable());
+      currentState = previousState.widen(currentState, unreachable);
 
       if (previousState.equals(currentState)) {
         // fixpoint has been reached

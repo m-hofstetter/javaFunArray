@@ -1,8 +1,8 @@
 package analysis.common;
 
-import base.interval.Interval;
+import base.DomainValue;
 import funarray.Environment;
 
-public interface Program {
-  Environment<Interval, Interval> run(Environment<Interval, Interval> startingState);
+public interface Program<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>> {
+  Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState);
 }

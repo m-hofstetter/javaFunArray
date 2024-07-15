@@ -1,22 +1,23 @@
 package analysis.common;
 
-import base.interval.Interval;
+import base.DomainValue;
 import funarray.Environment;
 import java.util.List;
 
-public record Block(List<Program> statements) implements Program {
+public record Block<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
+        List<Program<VARIABLE, ELEMENT>> statements) implements Program<VARIABLE, ELEMENT> {
 
   public Block {
     statements = List.copyOf(statements);
   }
 
-  public Block(Program... statements) {
+  public Block(Program<VARIABLE, ELEMENT>... statements) {
     this(List.of(statements));
   }
 
   @Override
-  public Environment<Interval, Interval> run(Environment<Interval, Interval> startingState) {
-    for (Program s : statements) {
+  public Environment<VARIABLE, ELEMENT> run(Environment<VARIABLE, ELEMENT> startingState) {
+    for (Program<VARIABLE, ELEMENT> s : statements) {
       startingState = s.run(startingState);
     }
     return startingState;
