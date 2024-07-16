@@ -20,22 +20,17 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
 
   @Override
   public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
-
-    var previousState = condition.satisfy(startingState);
-    var currentState = condition.satisfy(startingState);
-
+    var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
-      currentState = condition.satisfy(startingState);
-      currentState = program.run(currentState);
-      currentState = previousState.widen(currentState, unreachable);
-
-      if (previousState.equals(currentState)) {
+      var satisfiedState = condition.satisfy(state);
+      var modifiedState = program.run(satisfiedState);
+      var nextState = state.widen(modifiedState, unreachable);
+      if (state.equals(nextState)) {
         // fixpoint has been reached
-        return condition.satisfyComplement(currentState);
+        return condition.satisfy(state);
       }
-      previousState = currentState;
+      state = nextState;
     }
-
     throw new RuntimeException("Could not find fixpoint after %d widenings.".formatted(WIDENING_LOOP_HARD_LIMIT));
   }
 }
