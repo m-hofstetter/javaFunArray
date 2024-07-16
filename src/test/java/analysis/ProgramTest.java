@@ -1,9 +1,9 @@
 package analysis;
 
-import analysis.common.IfThenElse;
-import analysis.common.While;
 import analysis.common.condition.ArrayElementLessThanExpression;
 import analysis.common.condition.ExpressionLessThanExpression;
+import analysis.common.controlstructure.IfThenElse;
+import analysis.common.controlstructure.While;
 import analysis.common.statement.AssignArrayElementValueToArrayElement;
 import analysis.common.statement.AssignArrayElementValueToVariable;
 import analysis.common.statement.AssignVariableValueToArrayElement;

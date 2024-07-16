@@ -1,5 +1,6 @@
-package analysis.common;
+package analysis.common.controlstructure;
 
+import analysis.common.Program;
 import analysis.common.condition.Condition;
 import base.DomainValue;
 import funarray.Environment;
