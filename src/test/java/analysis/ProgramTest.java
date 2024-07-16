@@ -60,6 +60,6 @@ public class ProgramTest {
                     Interval.unreachable()),
             Interval.unreachable());
 
-    program.run(environment);
+    System.out.println(program.run(environment).protocol());
   }
 }

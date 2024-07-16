@@ -1,5 +1,6 @@
 package analysis.common.controlstructure;
 
+import analysis.common.AnalysisResult;
 import analysis.common.Program;
 import analysis.common.condition.Condition;
 import base.DomainValue;
@@ -10,6 +11,18 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
         Condition<ELEMENT, VARIABLE> condition, Program<ELEMENT, VARIABLE> ifProgram,
         Program<ELEMENT, VARIABLE> elseProgram,
         ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
+
+  public static final String PROTOCOL_TEMPLATE = """
+          IF %s THEN:
+          %s
+          %s
+          ELSE:
+          %s
+          %s
+          END IF-ELSE
+          %s
+          """;
+  public static final int INDENTATION = 4;
 
   public IfThenElse(
           Condition<ELEMENT, VARIABLE> condition,
@@ -36,9 +49,20 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
   }
 
   @Override
-  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
-    var stateIf = ifProgram.run(condition.satisfy(startingState));
-    var stateElse = elseProgram.run(condition.satisfyComplement(startingState));
-    return stateIf.join(stateElse, unreachable);
+  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+    var satisfiedState = condition.satisfy(startingState);
+    var resultIf = ifProgram.run(satisfiedState);
+    var complementSatisfiedState = condition.satisfyComplement(startingState);
+    var resultElse = elseProgram.run(complementSatisfiedState);
+    var joinedState = resultIf.resultState().join(resultElse.resultState(), unreachable);
+
+    var protocol = PROTOCOL_TEMPLATE.formatted(condition,
+            satisfiedState.toString().indent(INDENTATION),
+            resultIf.protocol().indent(INDENTATION),
+            complementSatisfiedState.toString().indent(INDENTATION),
+            resultElse.protocol().indent(INDENTATION),
+            joinedState.toString());
+
+    return new AnalysisResult<>(joinedState, protocol);
   }
 }

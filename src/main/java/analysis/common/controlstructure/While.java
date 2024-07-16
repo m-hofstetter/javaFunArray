@@ -1,5 +1,6 @@
 package analysis.common.controlstructure;
 
+import analysis.common.AnalysisResult;
 import analysis.common.Program;
 import analysis.common.condition.Condition;
 import base.DomainValue;
@@ -11,6 +12,14 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
         ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
+  public static final String PROTOCOL_TEMPLATE = """
+          WHILE %s DO;
+          %s
+          %s
+          END WHILE
+          %s
+          """;
+  public static final int INDENTATION = 4;
 
   public While(Condition<ELEMENT, VARIABLE> condition,
                List<Program<ELEMENT, VARIABLE>> programs,
@@ -19,15 +28,16 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
   }
 
   @Override
-  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);
-      var modifiedState = program.run(satisfiedState);
-      var nextState = state.widen(modifiedState, unreachable);
+      var result = program.run(satisfiedState);
+      var nextState = state.widen(result.resultState(), unreachable);
       if (state.equals(nextState)) {
         // fixpoint has been reached
-        return condition.satisfy(state);
+        var resultState = condition.satisfyComplement(state);
+        return new AnalysisResult<>(resultState, PROTOCOL_TEMPLATE.formatted(condition, state.toString().indent(INDENTATION), result.protocol().indent(INDENTATION), resultState));
       }
       state = nextState;
     }

@@ -2,7 +2,6 @@ package funarray;
 
 import base.DomainValue;
 import base.infint.InfInt;
-import base.interval.Interval;
 
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
@@ -27,9 +26,6 @@ public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt 
   public String toString() {
     if (constant.equals(InfInt.of(0))) {
       return variable.toString();
-    }
-    if (variable.value().equals(Interval.of(0))) {
-      return constant().toString();
     }
     if (constant.isLessThan(InfInt.of(0))) {
       return "%s%s".formatted(variable, constant);

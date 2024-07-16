@@ -1,8 +1,10 @@
 package analysis.common.controlstructure;
 
+import analysis.common.AnalysisResult;
 import analysis.common.Program;
 import base.DomainValue;
 import funarray.Environment;
+import java.util.ArrayList;
 import java.util.List;
 
 public record Block<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
@@ -13,10 +15,13 @@ public record Block<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
   }
 
   @Override
-  public Environment<VARIABLE, ELEMENT> run(Environment<VARIABLE, ELEMENT> startingState) {
+  public AnalysisResult<VARIABLE, ELEMENT> run(Environment<VARIABLE, ELEMENT> startingState) {
+    var protocolSteps = new ArrayList<String>();
     for (Program<VARIABLE, ELEMENT> s : statements) {
-      startingState = s.run(startingState);
+      var stepResult = s.run(startingState);
+      protocolSteps.add(stepResult.protocol());
+      startingState = stepResult.resultState();
     }
-    return startingState;
+    return new AnalysisResult<>(startingState, String.join("\n", protocolSteps));
   }
 }

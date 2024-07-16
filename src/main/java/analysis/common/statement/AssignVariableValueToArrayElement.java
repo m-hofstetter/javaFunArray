@@ -1,5 +1,6 @@
 package analysis.common.statement;
 
+import analysis.common.AnalysisResult;
 import analysis.common.Program;
 import base.DomainValue;
 import funarray.Environment;
@@ -13,8 +14,10 @@ public record AssignVariableValueToArrayElement<ELEMENT extends DomainValue<ELEM
         Function<VARIABLE, ELEMENT> variableToElementValueConversion) implements Program<ELEMENT, VARIABLE> {
 
   @Override
-  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     var value = startingState.getVariable(variable().name()).value();
-    return startingState.assignArrayElement(arrayIndex, variableToElementValueConversion.apply(value));
+    var resultState = startingState.assignArrayElement(arrayIndex, variableToElementValueConversion.apply(value));
+    var protocol = "A[%s] ← %s".formatted(arrayIndex, variable);
+    return new AnalysisResult<>(resultState, protocol);
   }
 }

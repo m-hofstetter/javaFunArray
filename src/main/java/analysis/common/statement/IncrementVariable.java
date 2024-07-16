@@ -1,5 +1,6 @@
 package analysis.common.statement;
 
+import analysis.common.AnalysisResult;
 import analysis.common.Program;
 import base.DomainValue;
 import base.infint.InfInt;
@@ -11,7 +12,9 @@ public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE e
         InfInt amount) implements Program<ELEMENT, VARIABLE> {
 
   @Override
-  public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
-    return startingState.addToVariable(variable, amount);
+  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+    var resultState = startingState.addToVariable(variable, amount);
+    var protocol = "%s ← %s + %s\n".formatted(variable, variable, amount);
+    return new AnalysisResult<>(resultState, protocol);
   }
 }

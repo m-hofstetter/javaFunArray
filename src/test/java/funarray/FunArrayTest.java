@@ -1,5 +1,6 @@
 package funarray;
 
+import static base.interval.Interval.unknown;
 import static funarray.util.FunArrayBuilder.buildFunArray;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,7 +21,7 @@ public class FunArrayTest {
     var funArray = new Environment(
             new FunArray<>(
                     List.of(new Bound(new Expression(new Variable(Interval.of(0), "0"), 0)), new Bound(length)),
-                    List.of(Interval.unknown()),
+                    List.of(unknown()),
                     List.of(false)
             ),
             List.of(length.variable())
@@ -38,7 +39,7 @@ public class FunArrayTest {
     var funArray = new Environment(
             new FunArray<>(
                     List.of(new Bound(new Expression(new Variable(Interval.of(0), "0"), 0)), new Bound(length)),
-                    List.of(Interval.unknown()),
+                    List.of(unknown()),
                     List.of(false)
             ),
             List.of(length.variable())
@@ -78,6 +79,8 @@ public class FunArrayTest {
     assertThat(funArray.funArray()).isEqualTo(
             buildFunArray()
                     .bound(0)
+                    .value(0)
+                    .bound(1)
                     .unknownValue()
                     .mightBeEmpty()
                     .bound(new Expression(LENGTH, -1))
@@ -92,8 +95,8 @@ public class FunArrayTest {
   @Test
   void unifyTest() {
 
-    var i = new Variable(Interval.unknown(), "i");
-    var n = new Variable(Interval.unknown(), "n");
+    var i = new Variable(unknown(), "i");
+    var n = new Variable(unknown(), "n");
 
     var arrayA = buildFunArray()
             .bound(new Variable(Interval.of(0), "0"), i)
@@ -131,9 +134,48 @@ public class FunArrayTest {
   }
 
   @Test
+  void complexUnifyTest() {
+    var a = new Variable(unknown(), "a");
+    var b = new Variable(unknown(), "b");
+    var zero = new Variable(unknown(), "0");
+    var length = new Variable(unknown(), "A.length");
+
+    var arrayA = buildFunArray()
+            .bound(zero)
+            .value(unknown())
+            .bound(new Expression(a, -1))
+            .value(unknown())
+            .bound(a)
+            .value(unknown())
+            .bound(b)
+            .value(unknown())
+            .bound(length)
+            .build();
+
+    var arrayB = buildFunArray()
+            .bound(zero)
+            .value(unknown())
+            .bound(a, b)
+            .value(unknown())
+            .bound(new Expression(b, 1))
+            .value(unknown())
+            .bound(length)
+            .build();
+
+    System.out.println(arrayA);
+    System.out.println(arrayB);
+
+    var unified = arrayA.unify(arrayB, Interval.unreachable(), Interval.unreachable());
+
+    System.out.println();
+    System.out.println("This: " + unified.resultThis());
+    System.out.println("Other: " + unified.resultOther());
+  }
+
+  @Test
   void joinTest() {
-    var i = new Variable(Interval.unknown(), "i");
-    var n = new Variable(Interval.unknown(), "n");
+    var i = new Variable(unknown(), "i");
+    var n = new Variable(unknown(), "n");
 
     var arrayA = buildFunArray()
             .bound(new Variable(Interval.of(0), "0"), i)
@@ -181,5 +223,37 @@ public class FunArrayTest {
     assertThat(
             funArray.get(new Expression(new Variable(Interval.of(0), "0"), 1))
     ).isEqualTo(secondValue);
+  }
+
+  @Test
+  void advancedInsertTest() {
+
+    var neg = Interval.of(-100, -1);
+    var pos = Interval.of(0, 100);
+
+    var a = new Variable<>(unknown(), "a");
+    var b = new Variable<>(unknown(), "b");
+    var lenght = new Variable<>(unknown(), "A.lenght");
+
+    var array = buildFunArray()
+            .bound(0)
+            .value(neg)
+            .mightBeEmpty()
+            .bound(a)
+            .value(unknown())
+            .bound(new Expression(a, 1))
+            .value(unknown())
+            .mightBeEmpty()
+            .bound(new Expression(b, 1))
+            .value(pos)
+            .mightBeEmpty()
+            .bound(lenght).build();
+
+    System.out.println(array);
+
+    array = array.insert(new Expression(b), pos);
+
+    System.out.println("=======");
+    System.out.println(array);
   }
 }
