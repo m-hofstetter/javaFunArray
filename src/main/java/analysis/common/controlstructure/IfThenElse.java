@@ -13,16 +13,11 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
         ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
 
   public static final String PROTOCOL_TEMPLATE = """
-          IF %s THEN:
-          %s
-          %s
-          ELSE:
-          %s
-          %s
-          END IF-ELSE
-          %s
-          """;
-  public static final int INDENTATION = 4;
+          \033[1mIF\033[22m %s \033[1mTHEN:\033[22m
+          \033[0;36m%s\033[0m%s\033[1mELSE:\033[22m
+          \033[0;36m%s\033[0m%s\033[1mEND IF-ELSE\033[22m
+          \033[0;36m%s\033[0m""";
+  public static final int INDENTATION = 6;
 
   public IfThenElse(
           Condition<ELEMENT, VARIABLE> condition,

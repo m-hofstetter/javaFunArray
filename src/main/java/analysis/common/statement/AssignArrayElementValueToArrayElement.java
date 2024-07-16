@@ -9,11 +9,14 @@ import funarray.Expression;
 public record AssignArrayElementValueToArrayElement<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
         Expression<VARIABLE> arrayIndexSource,
         Expression<VARIABLE> arrayIndexTarget) implements Program<ELEMENT, VARIABLE> {
+  public static final String PROTOCOL_TEMPLATE = """
+          A[%s] ← A[%s]
+          \033[0;36m%s\033[0m""";
 
   @Override
   public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     var resultState = startingState.assignArrayElement(arrayIndexTarget, startingState.getArrayElement(arrayIndexSource));
-    var protocol = "A[%s] ← A[%s]".formatted(arrayIndexTarget, arrayIndexSource);
+    var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndexTarget, arrayIndexSource, resultState);
     return new AnalysisResult<>(resultState, protocol);
   }
 }

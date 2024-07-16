@@ -13,11 +13,15 @@ public record AssignVariableValueToArrayElement<ELEMENT extends DomainValue<ELEM
         Variable<VARIABLE> variable,
         Function<VARIABLE, ELEMENT> variableToElementValueConversion) implements Program<ELEMENT, VARIABLE> {
 
+  public static final String PROTOCOL_TEMPLATE = """
+          A[%s] ← %s
+          \033[0;36m%s\033[0m""";
+
   @Override
   public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     var value = startingState.getVariable(variable().name()).value();
     var resultState = startingState.assignArrayElement(arrayIndex, variableToElementValueConversion.apply(value));
-    var protocol = "A[%s] ← %s".formatted(arrayIndex, variable);
+    var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndex, variable, resultState);
     return new AnalysisResult<>(resultState, protocol);
   }
 }

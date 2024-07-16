@@ -62,4 +62,9 @@ public class ProgramTest {
 
     System.out.println(program.run(environment).protocol());
   }
+
+  @Test
+  void test() {
+    System.out.println("\033[0;36m%s\033[0maasdf\033[0;36m%s\033[0m");
+  }
 }

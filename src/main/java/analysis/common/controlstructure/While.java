@@ -13,13 +13,10 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
   public static final String PROTOCOL_TEMPLATE = """
-          WHILE %s DO;
-          %s
-          %s
-          END WHILE
-          %s
-          """;
-  public static final int INDENTATION = 4;
+          \033[1mWHILE\033[22m %s \033[1mDO:\033[22m
+          \033[0;36m%s\033[0m%s\033[1mEND WHILE\033[22m
+          \033[0;36m%s\033[0m""";
+  public static final int INDENTATION = 6;
 
   public While(Condition<ELEMENT, VARIABLE> condition,
                List<Program<ELEMENT, VARIABLE>> programs,

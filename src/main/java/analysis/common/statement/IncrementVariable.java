@@ -11,10 +11,14 @@ public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE e
         Variable<VARIABLE> variable,
         InfInt amount) implements Program<ELEMENT, VARIABLE> {
 
+  public static final String PROTOCOL_TEMPLATE = """
+          %s ← %s + %s
+          \033[0;36m%s\033[0m""";
+
   @Override
   public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
     var resultState = startingState.addToVariable(variable, amount);
-    var protocol = "%s ← %s + %s\n".formatted(variable, variable, amount);
+    var protocol = PROTOCOL_TEMPLATE.formatted(variable, variable, amount, resultState);
     return new AnalysisResult<>(resultState, protocol);
   }
 }

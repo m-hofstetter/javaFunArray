@@ -22,4 +22,9 @@ public record ArrayElementLessThanExpression<ELEMENT extends DomainValue<ELEMENT
     value = value.satisfyGreaterEqualThan(valueConversion.apply(comparand.calculate()));
     return input.assignArrayElement(index, value);
   }
+
+  @Override
+  public String toString() {
+    return String.format("A[%s] < %s", index, comparand);
+  }
 }
