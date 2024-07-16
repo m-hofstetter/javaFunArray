@@ -11,10 +11,6 @@ public record Block<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
     statements = List.copyOf(statements);
   }
 
-  public Block(Program<VARIABLE, ELEMENT>... statements) {
-    this(List.of(statements));
-  }
-
   @Override
   public Environment<VARIABLE, ELEMENT> run(Environment<VARIABLE, ELEMENT> startingState) {
     for (Program<VARIABLE, ELEMENT> s : statements) {

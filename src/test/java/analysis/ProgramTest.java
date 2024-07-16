@@ -1,6 +1,5 @@
 package analysis;
 
-import analysis.common.Block;
 import analysis.common.IfThenElse;
 import analysis.common.While;
 import analysis.common.condition.ArrayElementLessThanExpression;
@@ -52,7 +51,7 @@ public class ProgramTest {
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new IncrementVariable<>(a, InfInt.of(1)),
-                    new Block<>(
+                    List.of(
                             new IncrementVariable<>(b, InfInt.of(-1)),
                             new AssignArrayElementValueToVariable<>(expA, temp, intervalToIntervalConversion),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
