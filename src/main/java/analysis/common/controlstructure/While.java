@@ -24,9 +24,6 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
     var previousState = condition.satisfy(startingState);
     var currentState = condition.satisfy(startingState);
 
-    System.out.printf("WHILE %s DO:\n", condition);
-    currentState.consolePrintOut();
-
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       currentState = condition.satisfy(startingState);
       currentState = program.run(currentState);
@@ -34,10 +31,7 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
 
       if (previousState.equals(currentState)) {
         // fixpoint has been reached
-        System.out.print("END WHILE\n");
-        var updatedState = condition.satisfyComplement(currentState);
-        updatedState.consolePrintOut();
-        return updatedState;
+        return condition.satisfyComplement(currentState);
       }
       previousState = currentState;
     }

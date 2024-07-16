@@ -37,22 +37,8 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
 
   @Override
   public Environment<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
-    System.out.printf("IF %s THEN DO:\n", condition.toString());
-
-    var satisifiedState = condition.satisfy(startingState);
-    satisifiedState.consolePrintOut();
-    var stateIf = ifProgram.run(satisifiedState);
-
-    System.out.print("ELSE DO:\n");
-
-    var satisfiedStateComplement = condition.satisfyComplement(startingState);
-    satisfiedStateComplement.consolePrintOut();
-    var stateElse = elseProgram.run(satisfiedStateComplement);
-
-    System.out.print("END ELSEIF\n");
-
-    var joinedState = stateIf.join(stateElse, unreachable);
-    joinedState.consolePrintOut();
-    return joinedState;
+    var stateIf = ifProgram.run(condition.satisfy(startingState));
+    var stateElse = elseProgram.run(condition.satisfyComplement(startingState));
+    return stateIf.join(stateElse, unreachable);
   }
 }
