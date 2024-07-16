@@ -139,16 +139,6 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     var leftAdjacent = bounds.get(greatestLowerBoundIndex).contains(index);
     var rightAdjacent = bounds.get(leastUpperBoundIndex).contains(trailingIndex);
 
-    var leftBound = new Bound<>(index);
-    if (leftAdjacent) {
-      leftBound = leftBound.intersect(bounds.get(greatestLowerBoundIndex));
-    }
-
-    var rightBound = new Bound<>(trailingIndex);
-    if (rightAdjacent) {
-      rightBound = rightBound.intersect(bounds.get(leastUpperBoundIndex));
-    }
-
     var rightSideStrictlyGreater = !newEmptiness.get(greatestLowerBoundIndex);
     var leftSideStrictlyLess = !newEmptiness.get(leastUpperBoundIndex - 1);
 
@@ -165,7 +155,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
       newEmptiness.set(greatestLowerBoundIndex, true);
       emptinessSubList.addFirst(false);
       valuesSubList.addFirst(value);
-      boundsSubList.addFirst(rightBound);
+      boundsSubList.addFirst(new Bound<>(trailingIndex));
       return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
@@ -173,7 +163,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
       newEmptiness.set(leastUpperBoundIndex, true);
       emptinessSubList.add(false);
       valuesSubList.add(value);
-      boundsSubList.add(leftBound);
+      boundsSubList.add(new Bound<>(index));
       return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
@@ -184,7 +174,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     if (!leftAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(leftBound);
+      boundsSubList.add(new Bound<>(index));
     }
 
     emptinessSubList.add(false);
@@ -193,7 +183,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     if (!rightAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(rightBound);
+      boundsSubList.add(new Bound<>(trailingIndex));
     }
 
     return new FunArray<>(newBounds, newValues, newEmptiness);
