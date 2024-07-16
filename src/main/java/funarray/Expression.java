@@ -114,4 +114,9 @@ public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt 
     }
     return false;
   }
+
+  @Override
+  public int hashCode() {
+    return (variable.name() + constant.toString()).hashCode();
+  }
 }

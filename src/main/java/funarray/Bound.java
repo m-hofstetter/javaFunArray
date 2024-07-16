@@ -58,6 +58,13 @@ public record Bound<T extends DomainValue<T>>(Set<Expression<T>> expressions) {
     return new Bound(modifiedExpressions);
   }
 
+  public Bound<T> restrictExpressionOccurrences(Set<Expression<T>> expressions) {
+    var modifiedExpressions = this.expressions.stream()
+            .filter(expressions::contains)
+            .collect(Collectors.toSet());
+    return new Bound<>(modifiedExpressions);
+  }
+
   public boolean contains(Expression<T> expression) {
     return expressions().stream().anyMatch(e -> e.equals(expression));
   }

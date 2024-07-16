@@ -4,7 +4,9 @@ import base.DomainValue;
 import base.infint.InfInt;
 import exception.FunArrayLogicException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -100,7 +102,17 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
   }
 
   public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> removeVariableOccurrences(Variable<VARIABLE_TYPE> variable) {
-    var newBounds = new ArrayList<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList());
+    return new FunArray<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList(), values, emptiness).removeEmptyBounds();
+  }
+
+
+  public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> restrictExpressionOccurrences(Set<Expression<VARIABLE_TYPE>> allowedExpressions) {
+    var newBounds = bounds.stream().map(b -> b.restrictExpressionOccurrences(allowedExpressions)).toList();
+    return new FunArray<>(newBounds, values, emptiness).removeEmptyBounds();
+  }
+
+  public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> removeEmptyBounds() {
+    var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
 
@@ -259,73 +271,57 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
   public UnifyResult<ELEMENT_TYPE, VARIABLE_TYPE> unify(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other,
                                                            ELEMENT_TYPE thisNeutralElement, ELEMENT_TYPE otherNeutralElement) {
 
-    List<Bound<VARIABLE_TYPE>> boundsL = new ArrayList<>(this.bounds);
-    List<ELEMENT_TYPE> valuesL = new ArrayList<>(this.values);
-    List<Boolean> emptinessL = new ArrayList<>(this.emptiness);
+    var thisExpressions = this.bounds.stream()
+            .flatMap(b -> b.expressions().stream())
+            .collect(Collectors.toSet());
 
-    List<Bound<VARIABLE_TYPE>> boundsR = new ArrayList<>(other.bounds);
-    List<ELEMENT_TYPE> valuesR = new ArrayList<>(other.values);
-    List<Boolean> emptinessR = new ArrayList<>(other.emptiness);
+    var otherExpressions = other.bounds.stream()
+            .flatMap(b -> b.expressions().stream())
+            .collect(Collectors.toSet());
+
+    var commonExpressions = new HashSet<>(thisExpressions);
+    commonExpressions.retainAll(otherExpressions);
+
+    var thisReduced = restrictExpressionOccurrences(commonExpressions);
+    var otherReduced = other.restrictExpressionOccurrences(commonExpressions);
+
+    List<Bound<VARIABLE_TYPE>> boundsThis = new ArrayList<>(thisReduced.bounds);
+    List<ELEMENT_TYPE> valuesThis = new ArrayList<>(thisReduced.values);
+    List<Boolean> emptinessThis = new ArrayList<>(thisReduced.emptiness);
+
+    List<Bound<VARIABLE_TYPE>> boundsOther = new ArrayList<>(otherReduced.bounds);
+    List<ELEMENT_TYPE> valuesOther = new ArrayList<>(otherReduced.values);
+    List<Boolean> emptinessOther = new ArrayList<>(otherReduced.emptiness);
+
 
     int i = 0;
-    while (i < boundsL.size() && i < boundsR.size()) {
+    while (i < boundsThis.size() && i < boundsOther.size()) {
+      var currentBoundThis = boundsThis.get(i);
+      var currentBoundOther = boundsOther.get(i);
 
-      var currentBoundL = boundsL.get(i);
-      var currentBoundR = boundsR.get(i);
+      var intersection = currentBoundThis.intersect(currentBoundOther);
+      var complementThis = currentBoundThis.getComplementBound(currentBoundOther);
+      var complementOther = currentBoundOther.getComplementBound(currentBoundThis);
 
-      var intersection = currentBoundR.intersect(currentBoundL);
-
-      if (intersection.isEmpty()) {
-        joinValueWithPredecessor(valuesL, i);
-        boundsL.remove(i);
-        emptinessL.remove(i);
-        joinValueWithPredecessor(valuesR, i);
-        boundsR.remove(i);
-        emptinessR.remove(i);
-        continue;
+      if (!complementThis.isEmpty()) {
+        boundsThis.set(i, complementThis);
+        boundsThis.add(i, intersection);
+        valuesThis.add(i, thisNeutralElement);
+        emptinessThis.add(i, true);
       }
 
-      var complementInThis = currentBoundL.getComplementBound(currentBoundR);
-      var complementInThisWithOccurrencesInOther = complementInThis
-              .intersect(boundsR.subList(i, boundsR.size()));
-
-      boundsL.remove(i);
-      boundsR.remove(i);
-
-      if (!complementInThisWithOccurrencesInOther.isEmpty()) {
-        boundsL.add(i, complementInThisWithOccurrencesInOther);
-        emptinessL.add(i, true);
-        valuesL.add(i, thisNeutralElement);
+      if (!complementOther.isEmpty()) {
+        boundsOther.set(i, complementOther);
+        boundsOther.add(i, intersection);
+        valuesOther.add(i, otherNeutralElement);
+        emptinessOther.add(i, true);
       }
-
-      var complementInOther = currentBoundR.getComplementBound(currentBoundL);
-      var complementInOtherWithOccurrencesInThis = complementInOther
-              .intersect(boundsL.subList(i, boundsL.size()));
-
-      if (!complementInOtherWithOccurrencesInThis.isEmpty()) {
-        boundsR.add(i, complementInOtherWithOccurrencesInThis);
-        emptinessR.add(i, true);
-        valuesR.add(i, otherNeutralElement);
-      }
-
-      boundsL.add(i, intersection);
-      boundsR.add(i, intersection);
       i++;
     }
 
-    i--;
-
-    joinRemainingBounds(boundsL, i);
-    joinRemainingBounds(boundsR, i);
-
-    prune(valuesL, i);
-    prune(valuesR, i);
-    prune(emptinessL, i);
-    prune(emptinessR, i);
-
     return new UnifyResult<>(
-            new FunArray<>(boundsL, valuesL, emptinessL),
-            new FunArray<>(boundsR, valuesR, emptinessR)
+            new FunArray<>(boundsThis, valuesThis, emptinessThis),
+            new FunArray<>(boundsOther, valuesOther, emptinessOther)
     );
   }
 
