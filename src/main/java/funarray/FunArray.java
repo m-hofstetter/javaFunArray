@@ -130,8 +130,6 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
 
-    var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
-
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(this.emptiness);
@@ -139,33 +137,34 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     var leftAdjacent = bounds.get(greatestLowerBoundIndex).contains(index);
     var rightAdjacent = bounds.get(leastUpperBoundIndex).contains(trailingIndex);
 
-    var rightSideStrictlyGreater = !newEmptiness.get(greatestLowerBoundIndex);
-    var leftSideStrictlyLess = !newEmptiness.get(leastUpperBoundIndex - 1);
-
     if (leftAdjacent && rightAdjacent) {
       newValues.set(greatestLowerBoundIndex, value);
       return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
+    if (rightAdjacent) {
+      for (int i = leastUpperBoundIndex - 1; i > greatestLowerBoundIndex; i--) {
+        if (!newEmptiness.get(i)) {
+          greatestLowerBoundIndex = i;
+          break;
+        }
+      }
+    }
+
+    if (leftAdjacent) {
+      for (int i = greatestLowerBoundIndex; i < leastUpperBoundIndex; i++) {
+        if (!newEmptiness.get(i)) {
+          leastUpperBoundIndex = i + 1;
+          break;
+        }
+      }
+    }
+
+    var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
+
     var boundsSubList = newBounds.subList(greatestLowerBoundIndex + 1, leastUpperBoundIndex);
     var valuesSubList = newValues.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
     var emptinessSubList = newEmptiness.subList(greatestLowerBoundIndex, leastUpperBoundIndex);
-
-    if (rightSideStrictlyGreater && leftAdjacent) {
-      newEmptiness.set(greatestLowerBoundIndex, true);
-      emptinessSubList.addFirst(false);
-      valuesSubList.addFirst(value);
-      boundsSubList.addFirst(new Bound<>(trailingIndex));
-      return new FunArray<>(newBounds, newValues, newEmptiness);
-    }
-
-    if (leftSideStrictlyLess && rightAdjacent) {
-      newEmptiness.set(leastUpperBoundIndex, true);
-      emptinessSubList.add(false);
-      valuesSubList.add(value);
-      boundsSubList.add(new Bound<>(index));
-      return new FunArray<>(newBounds, newValues, newEmptiness);
-    }
 
     boundsSubList.clear();
     valuesSubList.clear();
