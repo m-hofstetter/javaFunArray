@@ -1,6 +1,6 @@
 grammar FunArray;
 
-funArray: bound NON_EMPTY (interval bound emptiness)* ';' ;
+funArray: bound NON_EMPTY ' '? (interval ' '? bound emptiness ' '?)* ';' ;
 
 POS_INF : '∞';
 NEG_INF : '-∞';
@@ -20,7 +20,7 @@ expression: variableName '+' finiteInteger | variableName | finiteInteger;
 
 variableName: LETTER+;
 
-bound: '{' expression+;
+bound: '{' expression (' ' expression)*;
 
 EMPTY: '}?';
 NON_EMPTY: '}';
@@ -32,5 +32,3 @@ INTERVAL_DIVIDER: ', ';
 INTERVAL_END: ']';
 NEGATION: '-';
 UNREACHABLE: '⊥';
-
-WS  :   (' ')+ {skip();};

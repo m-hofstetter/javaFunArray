@@ -14,12 +14,29 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseTest() {
-    var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} ⊥ {c};");
+    var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} ⊥ {c d};");
     var comparand = new FunArray<Interval>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
-                    new Bound(new Expression(new VariableReference("c")))
+                    new Bound(new Expression(new VariableReference("c")), new Expression(new VariableReference("d")))
+            ), List.of(
+            Interval.of(0), Interval.unreachable()
+    ), List.of(
+            false, false
+    )
+    );
+    assertThat(f).isEqualTo(comparand);
+  }
+
+  @Test
+  void parseMissingWhitespaceTest() {
+    var f = IntervalFunArrayParser.parse("{a}[0, 0] {b} ⊥{c d};");
+    var comparand = new FunArray<Interval>(
+            List.of(
+                    new Bound(new Expression(new VariableReference("a"))),
+                    new Bound(new Expression(new VariableReference("b"))),
+                    new Bound(new Expression(new VariableReference("c")), new Expression(new VariableReference("d")))
             ), List.of(
             Interval.of(0), Interval.unreachable()
     ), List.of(
