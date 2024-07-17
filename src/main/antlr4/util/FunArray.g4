@@ -16,7 +16,7 @@ finiteInteger: DIGIT+ | NEGATION DIGIT+;
 
 interval: INTERVAL_START integer INTERVAL_DIVIDER integer INTERVAL_END | UNREACHABLE;
 
-expression: variableName '+' finiteInteger | variableName;
+expression: variableName '+' finiteInteger | variableName | finiteInteger;
 
 variableName: LETTER+;
 

@@ -13,12 +13,29 @@ import java.util.List;
 public class IntervalFunArrayParserTest {
 
   @Test
-  void test() {
+  void parseTest() {
     var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} ⊥ {c};");
     var comparand = new FunArray<Interval>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
+                    new Bound(new Expression(new VariableReference("c")))
+            ), List.of(
+            Interval.of(0), Interval.unreachable()
+    ), List.of(
+            false, false
+    )
+    );
+    assertThat(f).isEqualTo(comparand);
+  }
+
+  @Test
+  void parseConstantsInExpressionsTest() {
+    var f = IntervalFunArrayParser.parse("{0} [0, 0] {b+1} ⊥ {c};");
+    var comparand = new FunArray<Interval>(
+            List.of(
+                    new Bound(new Expression(new VariableReference("0"))),
+                    new Bound(new Expression(new VariableReference("b"), 1)),
                     new Bound(new Expression(new VariableReference("c")))
             ), List.of(
             Interval.of(0), Interval.unreachable()

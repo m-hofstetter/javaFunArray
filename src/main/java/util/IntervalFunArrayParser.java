@@ -50,9 +50,10 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
 
   @Override
   public Expression visitExpression(FunArrayParser.ExpressionContext ctx) {
-    var variable = new VariableReference(ctx.variableName().getText());
+    var variable = ctx.variableName() != null ? new VariableReference(ctx.variableName().getText()) : new VariableReference("0");
     if (ctx.finiteInteger() != null) {
-      return new Expression(variable, visitFiniteInteger(ctx.finiteInteger()));
+      var integer = visitFiniteInteger(ctx.finiteInteger());
+      return new Expression(variable, integer);
     }
     return new Expression(variable);
   }
