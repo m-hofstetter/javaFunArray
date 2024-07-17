@@ -1,6 +1,6 @@
 package base.infint;
 
-final class PositiveInfinity extends Infinity {
+public final class PositiveInfinity extends Infinity {
   @Override
   public String toString() {
     return "∞";

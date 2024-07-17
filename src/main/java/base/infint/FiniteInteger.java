@@ -4,11 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PRIVATE)
-final class FiniteInteger extends InfInt {
+public final class FiniteInteger extends InfInt {
 
   private final int value;
 
-  FiniteInteger(int value) {
+  public FiniteInteger(int value) {
     this.value = value;
   }
 
