@@ -12,10 +12,11 @@ import base.infint.InfInt;
 import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;
-import funarray.Variable;
+import funarray.VariableReference;
 import funarray.util.FunArrayBuilder;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class ProgramTest {
@@ -25,16 +26,16 @@ public class ProgramTest {
    */
   @Test
   void cousotExampleTest() {
-    var a = new Variable<>(Interval.of(0), "a");
-    var b = new Variable<>(Interval.of(0), "b");
-    var length = new Variable<>(Interval.of(1, InfInt.posInf()), "A.length");
-    var zero = new Variable<>(Interval.of(0), "0");
-    var temp = new Variable<>(Interval.unknown(), "temp");
+    var a = new VariableReference("a");
+    var b = new VariableReference("b");
+    var length = new VariableReference("A.length");
+    var zero = new VariableReference("0");
+    var temp = new VariableReference("temp");
 
-    var expA = new Expression<>(a);
-    var expB = new Expression<>(b);
-    var expLength = new Expression<>(length);
-    var expZero = new Expression<>(zero);
+    var expA = new Expression(a);
+    var expB = new Expression(b);
+    var expLength = new Expression(length);
+    var expZero = new Expression(zero);
 
     var funArray = FunArrayBuilder.buildFunArray()
             .bound(expZero, expA)
@@ -42,10 +43,15 @@ public class ProgramTest {
             .bound(expB, expLength)
             .build();
 
-    var environment = new Environment<Interval, Interval>(funArray, List.of(a, b, length, zero, temp));
+    var environment = new Environment<Interval, Interval>(funArray, Map.of(
+            a, Interval.unknown(),
+            b, Interval.unknown(),
+            length, Interval.unknown(),
+            zero, Interval.of(0),
+            temp, Interval.unknown()));
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression<>(a), new Expression<>(b));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>(new Expression<>(a), new Expression<>(zero, 0), value -> value);
+    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression(a), new Expression(b));
+    var positiveIntCondition = new ArrayElementLessThanExpression(new Expression(a), new Expression(zero, 0), value -> value);
     Function<Interval, Interval> intervalToIntervalConversion = e -> e;
 
     var program = new While<>(loopCondition,
@@ -61,10 +67,5 @@ public class ProgramTest {
             Interval.unreachable());
 
     System.out.println(program.run(environment).protocol());
-  }
-
-  @Test
-  void test() {
-    System.out.println("\033[0;36m%s\033[0maasdf\033[0;36m%s\033[0m");
   }
 }

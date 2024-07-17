@@ -4,7 +4,7 @@ import base.interval.Interval;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
-import funarray.Variable;
+import funarray.VariableReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,17 +33,17 @@ public class FunArrayBuilder {
   }
 
   public FunArrayBuilder bound(int boundValue) {
-    var bound = new Bound(new Expression(new Variable(Interval.of(0), "0"), boundValue));
+    var bound = new Bound(new Expression(new VariableReference("0"), boundValue));
     return bound(bound);
   }
 
-  public FunArrayBuilder bound(Variable variable) {
+  public FunArrayBuilder bound(VariableReference variable) {
     var expression = new Expression(variable, 0);
     var bound = new Bound(expression);
     return bound(bound);
   }
 
-  public FunArrayBuilder bound(Variable... variables) {
+  public FunArrayBuilder bound(VariableReference... variables) {
     var expressions = Arrays.stream(variables).map(Expression::new).collect(Collectors.toSet());
     var bound = new Bound(expressions);
     return bound(bound);

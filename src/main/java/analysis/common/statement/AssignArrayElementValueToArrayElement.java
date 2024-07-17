@@ -7,8 +7,8 @@ import funarray.Environment;
 import funarray.Expression;
 
 public record AssignArrayElementValueToArrayElement<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Expression<VARIABLE> arrayIndexSource,
-        Expression<VARIABLE> arrayIndexTarget) implements Program<ELEMENT, VARIABLE> {
+        Expression arrayIndexSource,
+        Expression arrayIndexTarget) implements Program<ELEMENT, VARIABLE> {
   public static final String PROTOCOL_TEMPLATE = """
           A[%s] ← A[%s]
           \033[0;36m%s\033[0m""";

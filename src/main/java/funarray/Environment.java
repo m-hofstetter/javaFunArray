@@ -2,26 +2,26 @@ package funarray;
 
 import base.DomainValue;
 import base.infint.InfInt;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * The environment in which an abstract analysis of an Array can be done, consisting of the abstract
- * representation of the array in the form of Cousot et al's FunArray and a variable environment.
+ * representation of the array in the form of Cousot et al.'s FunArray and a variable environment.
  *
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
 public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_TYPE extends DomainValue<VARIABLE_TYPE>>(
-        FunArray<ELEMENT_TYPE, VARIABLE_TYPE> funArray,
-        List<Variable<VARIABLE_TYPE>> variables) {
+        FunArray<ELEMENT_TYPE> funArray,
+        Map<VariableReference, VARIABLE_TYPE> variables) {
 
   private static final String CONSOLE_COLOR_CYAN = "\033[0;36m";
   private static final String CONSOLE_COLOR_RESET = "\033[0m";
 
   public Environment {
-    variables = List.copyOf(variables);
+    variables = Map.copyOf(variables);
   }
 
   /**
@@ -31,37 +31,31 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> addToVariable(Variable<VARIABLE_TYPE> variable, InfInt value) {
-    var newVariable = new Variable<>(variable.value().addConstant(value), variable.name());
-
-    var newVariables = new ArrayList<>(variables);
-
-    newVariables.remove(variable);
-    newVariables.add(newVariable);
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> addToVariable(VariableReference variable, InfInt value) {
+    var newVariables = new HashMap<>(variables);
+    var newVariableValue = variables.get(variable).addConstant(value);
+    newVariables.put(variable, newVariableValue);
     var newSegmentation = funArray.addToVariable(variable, value);
     return new Environment<>(newSegmentation, newVariables);
   }
 
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(Variable<VARIABLE_TYPE> variable, Expression<VARIABLE_TYPE> expression) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(VariableReference variable, Expression expression) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
     modifiedFunArray = modifiedFunArray.insertExpression(variable, expression);
 
-    var newVariables = new ArrayList<>(variables);
+    var modifiedVariables = new HashMap<>(variables);
+    modifiedVariables.put(variable, calculateExpression(expression));
 
-    newVariables.remove(variable);
-    newVariables.add(new Variable<>(expression.calculate(), variable.name()));
-
-    return new Environment<>(modifiedFunArray, newVariables);
+    return new Environment<>(modifiedFunArray, modifiedVariables);
   }
 
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(Variable<VARIABLE_TYPE> variable, VARIABLE_TYPE interval) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(VariableReference variable, VARIABLE_TYPE interval) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
 
-    var newVariables = new ArrayList<>(variables);
-    newVariables.remove(variable);
-    newVariables.add(new Variable<>(interval, variable.name()));
+    var modified = new HashMap<>(variables);
+    modified.put(variable, interval);
 
-    return new Environment<>(modifiedFunArray, newVariables);
+    return new Environment<>(modifiedFunArray, modified);
   }
 
   /**
@@ -71,7 +65,7 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
    * @param value the value.
    * @return the altered FunArray
    */
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignArrayElement(Expression<VARIABLE_TYPE> index, ELEMENT_TYPE value) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> assignArrayElement(Expression index, ELEMENT_TYPE value) {
     var modified = funArray.insert(index, value);
     return new Environment<>(modified, variables());
   }
@@ -82,14 +76,14 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
    * @param index the index.
    * @return the value.
    */
-  public ELEMENT_TYPE getArrayElement(Expression<VARIABLE_TYPE> index) {
+  public ELEMENT_TYPE getArrayElement(Expression index) {
     return funArray.get(index);
   }
 
   @Override
   public String toString() {
-    var variablesString = variables.stream()
-            .map(v -> "%s: %s".formatted(v.name(), v.value()))
+    var variablesString = variables.entrySet().stream()
+            .map(v -> "%s: %s".formatted(v.getKey(), v.getValue()))
             .collect(Collectors.joining(" "));
 
     return "A: %s\n%s".formatted(funArray, variablesString);
@@ -111,17 +105,26 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
     //TODO: proper widening
   }
 
-  public Variable<VARIABLE_TYPE> getVariable(String variableName) {
-    return variables.stream().filter(variable -> variable.name().equals(variableName)).findFirst().orElseThrow();
+  public VARIABLE_TYPE getVariableValue(VariableReference variable) {
+    return variables.get(variable);
   }
 
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessEqualThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+  public VARIABLE_TYPE getVariableValue(String variableName) {
+    return variables.get(new VariableReference(variableName));
+  }
+
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessEqualThan(Expression left, Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new Environment<>(funArray.satisfyBoundExpressionLessEqualThan(left, right), variables());
   }
 
-  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessThan(Expression<VARIABLE_TYPE> left, Expression<VARIABLE_TYPE> right) {
+  public Environment<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessThan(Expression left, Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new Environment<>(funArray.satisfyBoundExpressionLessThan(left, right), variables());
+  }
+
+  public VARIABLE_TYPE calculateExpression(Expression expression) {
+    var variableValue = variables.get(expression.variable());
+    return variableValue.addConstant(expression.constant());
   }
 }

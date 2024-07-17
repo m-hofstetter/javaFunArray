@@ -5,12 +5,12 @@ import analysis.common.Program;
 import base.DomainValue;
 import funarray.Environment;
 import funarray.Expression;
-import funarray.Variable;
+import funarray.VariableReference;
 import java.util.function.Function;
 
 public record AssignArrayElementValueToVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Expression<VARIABLE> arrayIndex,
-        Variable<VARIABLE> variable,
+        Expression arrayIndex,
+        VariableReference variable,
         Function<ELEMENT, VARIABLE> elementValueToVariableConversion) implements Program<ELEMENT, VARIABLE> {
 
   public static final String PROTOCOL_TEMPLATE = """

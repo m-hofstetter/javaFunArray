@@ -1,6 +1,5 @@
 package funarray;
 
-import base.DomainValue;
 import base.infint.InfInt;
 
 /**
@@ -12,13 +11,13 @@ import base.infint.InfInt;
  * @param variable the variable v
  * @param constant the constant k
  */
-public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt constant) {
+public record Expression(VariableReference variable, InfInt constant) {
 
-  public Expression(Variable<T> variable, int constant) {
+  public Expression(VariableReference variable, int constant) {
     this(variable, InfInt.of(constant));
   }
 
-  public Expression(Variable<T> variable) {
+  public Expression(VariableReference variable) {
     this(variable, InfInt.of(0));
   }
 
@@ -42,15 +41,15 @@ public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt 
    * @param value    the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression<T> addToVariableInFunArray(Variable<T> variable, InfInt value) {
+  public Expression addToVariableInFunArray(VariableReference variable, InfInt value) {
     if (this.variable().equals(variable)) {
-      return new Expression<>(variable, constant.subtract(value));
+      return new Expression(variable, constant.subtract(value));
     }
     return this;
   }
 
-  public Expression<T> increase(InfInt value) {
-    return new Expression<>(variable, constant.add(value));
+  public Expression increase(InfInt value) {
+    return new Expression(variable, constant.add(value));
   }
 
   /**
@@ -60,14 +59,14 @@ public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt 
    * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
    *         than the other and UNKNOWN if it can't be determined
    */
-  public boolean isLessThan(Expression<T> other) {
+  public boolean isLessThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return this.constant().isLessThan(other.constant());
   }
 
-  public boolean isLessEqualThan(Expression<T> other) {
+  public boolean isLessEqualThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
@@ -81,26 +80,22 @@ public record Expression<T extends DomainValue<T>>(Variable<T> variable, InfInt 
    * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
    *         greater than the other and UNKNOWN if it can't be determined
    */
-  public boolean isGreaterThan(Expression<T> other) {
+  public boolean isGreaterThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return this.constant().isGreaterThan(other.constant());
   }
 
-  public boolean isGreaterEqualThan(Expression<T> other) {
+  public boolean isGreaterEqualThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
     return !this.constant().isLessThan(other.constant());
   }
 
-  public boolean containsVariable(Variable<T> variable) {
+  public boolean containsVariable(VariableReference variable) {
     return this.variable.equals(variable);
-  }
-
-  public T calculate() {
-    return variable.value().addConstant(constant);
   }
 
   @Override

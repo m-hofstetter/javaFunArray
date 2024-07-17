@@ -5,8 +5,8 @@ import funarray.Environment;
 import funarray.Expression;
 
 public record ExpressionLessThanExpression<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Expression<VARIABLE> left,
-        Expression<VARIABLE> right) implements Condition<ELEMENT, VARIABLE> {
+        Expression left,
+        Expression right) implements Condition<ELEMENT, VARIABLE> {
 
   @Override
   public Environment<ELEMENT, VARIABLE> satisfy(Environment<ELEMENT, VARIABLE> input) {

@@ -9,22 +9,23 @@ import base.infint.InfInt;
 import base.interval.Interval;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Map;
 
 public class FunArrayTest {
 
-  static final Variable LENGTH = new Variable(Interval.of(0), "A.length");
+  static final VariableReference LENGTH = new VariableReference("A.length");
 
   @Test
   void addToVariableTest() {
     var interval = Interval.of(0, 10);
-    var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
-    var funArray = new Environment(
+    var length = new Expression(new VariableReference("A.length"), InfInt.of(0));
+    var funArray = new Environment<Interval, Interval>(
             new FunArray<>(
-                    List.of(new Bound(new Expression(new Variable(Interval.of(0), "0"), 0)), new Bound(length)),
+                    List.of(new Bound(new Expression(new VariableReference("0"), 0)), new Bound(length)),
                     List.of(unknown()),
                     List.of(false)
             ),
-            List.of(length.variable())
+            Map.of(new VariableReference("A.length"), interval)
     );
 
     var modified = funArray.addToVariable(length.variable(), InfInt.of(3));
@@ -35,14 +36,14 @@ public class FunArrayTest {
   @Test
   void insertTest() {
     var interval = Interval.of(0, 0);
-    var length = new Expression(new Variable(interval, "A.length"), InfInt.of(0));
+    var length = new Expression(new VariableReference("A.length"), InfInt.of(0));
     var funArray = new Environment(
             new FunArray<>(
-                    List.of(new Bound(new Expression(new Variable(Interval.of(0), "0"), 0)), new Bound(length)),
+                    List.of(new Bound(new Expression(new VariableReference("0"), 0)), new Bound(length)),
                     List.of(unknown()),
                     List.of(false)
             ),
-            List.of(length.variable())
+            Map.of(new VariableReference("A.length"), interval)
     );
     assertThat(funArray.funArray()).isEqualTo(
             buildFunArray()
@@ -51,7 +52,7 @@ public class FunArrayTest {
                     .bound(LENGTH).build()
     );
 
-    funArray = funArray.assignArrayElement(new Expression(new Variable(Interval.of(0), "0"), 0), Interval.of(0, 0));
+    funArray = funArray.assignArrayElement(new Expression(new VariableReference("0"), 0), Interval.of(0, 0));
     assertThat(funArray.funArray()).isEqualTo(
             buildFunArray()
                     .bound(0)
@@ -62,7 +63,7 @@ public class FunArrayTest {
                     .bound(LENGTH).build()
     );
 
-    funArray = funArray.assignArrayElement(new Expression(new Variable(Interval.of(0), "0"), 1), Interval.of(0, 0));
+    funArray = funArray.assignArrayElement(new Expression(new VariableReference("0"), 1), Interval.of(0, 0));
     assertThat(funArray.funArray()).isEqualTo(
             buildFunArray()
                     .bound(0)
@@ -95,18 +96,18 @@ public class FunArrayTest {
   @Test
   void unifyTest() {
 
-    var i = new Variable(unknown(), "i");
-    var n = new Variable(unknown(), "n");
+    var i = new VariableReference("i");
+    var n = new VariableReference("n");
 
     var arrayA = buildFunArray()
-            .bound(new Variable(Interval.of(0), "0"), i)
+            .bound(new VariableReference("0"), i)
             .unknownValue()
             .bound(n).build();
 
     var arrayB = buildFunArray()
-            .bound(new Expression(new Variable(Interval.of(0), "0"), 0), new Expression(i, -1))
+            .bound(new Expression(new VariableReference("0"), 0), new Expression(i, -1))
             .value(0)
-            .bound(new Expression(new Variable(Interval.of(0), "0"), 1), new Expression(i))
+            .bound(new Expression(new VariableReference("0"), 1), new Expression(i))
             .unknownValue()
             .mightBeEmpty()
             .bound(n).build();
@@ -135,10 +136,10 @@ public class FunArrayTest {
 
   @Test
   void complexUnifyTest() {
-    var a = new Variable(unknown(), "a");
-    var b = new Variable(unknown(), "b");
-    var zero = new Variable(unknown(), "0");
-    var length = new Variable(unknown(), "A.length");
+    var a = new VariableReference("a");
+    var b = new VariableReference("b");
+    var zero = new VariableReference("0");
+    var length = new VariableReference("A.length");
 
     var arrayA = buildFunArray()
             .bound(zero)
@@ -174,18 +175,18 @@ public class FunArrayTest {
 
   @Test
   void joinTest() {
-    var i = new Variable(unknown(), "i");
-    var n = new Variable(unknown(), "n");
+    var i = new VariableReference("i");
+    var n = new VariableReference("n");
 
     var arrayA = buildFunArray()
-            .bound(new Variable(Interval.of(0), "0"), i)
+            .bound(new VariableReference("0"), i)
             .unknownValue()
             .bound(n).build();
 
     var arrayB = buildFunArray()
-            .bound(new Expression(new Variable(Interval.of(0), "0"), 0), new Expression(i, -1))
+            .bound(new Expression(new VariableReference("0"), 0), new Expression(i, -1))
             .value(0)
-            .bound(new Expression(new Variable(Interval.of(0), "0"), 1), new Expression(i))
+            .bound(new Expression(new VariableReference("0"), 1), new Expression(i))
             .unknownValue()
             .mightBeEmpty()
             .bound(n).build();
@@ -217,43 +218,11 @@ public class FunArrayTest {
             .bound(2).build();
 
     assertThat(
-            funArray.get(new Expression(new Variable(Interval.of(0), "0"), 0))
+            funArray.get(new Expression(new VariableReference("0"), 0))
     ).isEqualTo(firstValue);
 
     assertThat(
-            funArray.get(new Expression(new Variable(Interval.of(0), "0"), 1))
+            funArray.get(new Expression(new VariableReference("0"), 1))
     ).isEqualTo(secondValue);
-  }
-
-  @Test
-  void advancedInsertTest() {
-
-    var neg = Interval.of(-100, -1);
-    var pos = Interval.of(0, 100);
-
-    var a = new Variable<>(unknown(), "a");
-    var b = new Variable<>(unknown(), "b");
-    var lenght = new Variable<>(unknown(), "A.lenght");
-
-    var array = buildFunArray()
-            .bound(0)
-            .value(neg)
-            .mightBeEmpty()
-            .bound(a)
-            .value(unknown())
-            .bound(new Expression(a, 1))
-            .value(unknown())
-            .mightBeEmpty()
-            .bound(new Expression(b, 1))
-            .value(pos)
-            .mightBeEmpty()
-            .bound(lenght).build();
-
-    System.out.println(array);
-
-    array = array.insert(new Expression(b), pos);
-
-    System.out.println("=======");
-    System.out.println(array);
   }
 }

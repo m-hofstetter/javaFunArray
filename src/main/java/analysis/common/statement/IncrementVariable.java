@@ -5,10 +5,10 @@ import analysis.common.Program;
 import base.DomainValue;
 import base.infint.InfInt;
 import funarray.Environment;
-import funarray.Variable;
+import funarray.VariableReference;
 
 public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Variable<VARIABLE> variable,
+        VariableReference variable,
         InfInt amount) implements Program<ELEMENT, VARIABLE> {
 
   public static final String PROTOCOL_TEMPLATE = """
