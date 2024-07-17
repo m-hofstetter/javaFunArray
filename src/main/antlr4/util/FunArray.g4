@@ -14,7 +14,7 @@ LETTER: [a-zA-Z0-9]| '.';
 integer: infinity | finiteInteger;
 finiteInteger: DIGIT+ | NEGATION DIGIT+;
 
-interval: INTERVAL_START integer INTERVAL_DIVIDER integer INTERVAL_END;
+interval: INTERVAL_START integer INTERVAL_DIVIDER integer INTERVAL_END | UNREACHABLE;
 
 expression: variableName '+' finiteInteger | variableName;
 
@@ -31,5 +31,6 @@ INTERVAL_START: '[';
 INTERVAL_DIVIDER: ', ';
 INTERVAL_END: ']';
 NEGATION: '-';
+UNREACHABLE: '⊥';
 
 WS  :   (' ')+ {skip();};

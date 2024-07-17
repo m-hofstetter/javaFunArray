@@ -42,6 +42,9 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
 
   @Override
   public Interval visitInterval(FunArrayParser.IntervalContext ctx) {
+    if (ctx.UNREACHABLE() != null) {
+      return Interval.unreachable();
+    }
     return Interval.of(visitInteger(ctx.integer(0)), visitInteger(ctx.integer(1)));
   }
 

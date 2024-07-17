@@ -14,14 +14,14 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void test() {
-    var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} [0, 0] {c};");
+    var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} ⊥ {c};");
     var comparand = new FunArray<Interval>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
                     new Bound(new Expression(new VariableReference("c")))
             ), List.of(
-            Interval.of(0), Interval.of(0)
+            Interval.of(0), Interval.unreachable()
     ), List.of(
             false, false
     )
