@@ -338,19 +338,6 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     list.add(i - 1, joinedValue);
   }
 
-  private static <VARIABLE_TYPE extends DomainValue<VARIABLE_TYPE>> void joinRemainingBounds(List<Bound> bounds, int i) {
-    var remainingBounds = bounds.subList(i, bounds.size());
-    var joinedBound = Bound.join(remainingBounds);
-    remainingBounds.clear();
-    remainingBounds.add(joinedBound);
-  }
-
-  private static <T> void prune(List<T> list, int i) {
-    if (i < list.size()) {
-      list.subList(i, list.size()).clear();
-    }
-  }
-
   /**
    * Utility function. The abstract domain functions join, meet, widen and narrow utilise the same
    * with only the neutral elements and the operation that is applied on the values is different.

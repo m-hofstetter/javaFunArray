@@ -19,7 +19,7 @@ public class FunArrayTest {
   void addToVariableTest() {
     var interval = Interval.of(0, 10);
     var length = new Expression(new VariableReference("A.length"), InfInt.of(0));
-    var funArray = new Environment<Interval, Interval>(
+    var funArray = new Environment<>(
             new FunArray<>(
                     List.of(new Bound(new Expression(new VariableReference("0"), 0)), new Bound(length)),
                     List.of(unknown()),

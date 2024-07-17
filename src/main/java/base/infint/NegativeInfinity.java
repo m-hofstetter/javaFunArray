@@ -16,6 +16,7 @@ final class NegativeInfinity extends Infinity {
     return other instanceof NegativeInfinity;
   }
 
+  @SuppressWarnings("ComparatorMethodParameterNotUsed")
   @Override
   public int compareTo(InfInt other) {
     if (other instanceof NegativeInfinity) {

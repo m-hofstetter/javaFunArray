@@ -125,7 +125,7 @@ public record Bound(Set<Expression> expressions) {
 
   /**
    * Returns a new bound containing all expressions from this, that are also present in one of the
-   * bounds in the specified lsit.
+   * bounds in the specified list.
    *
    * @param list the list of bounds.
    * @return the intersected bound.

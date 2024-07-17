@@ -17,9 +17,6 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
         FunArray<ELEMENT_TYPE> funArray,
         Map<VariableReference, VARIABLE_TYPE> variables) {
 
-  private static final String CONSOLE_COLOR_CYAN = "\033[0;36m";
-  private static final String CONSOLE_COLOR_RESET = "\033[0m";
-
   public Environment {
     variables = Map.copyOf(variables);
   }
@@ -87,10 +84,6 @@ public record Environment<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIAB
             .collect(Collectors.joining(" "));
 
     return "A: %s\n%s".formatted(funArray, variablesString);
-  }
-
-  public void consolePrintOut() {
-    System.out.printf("%s%s%s%n", CONSOLE_COLOR_CYAN, this, CONSOLE_COLOR_RESET);
   }
 
   public Environment<ELEMENT_TYPE, VARIABLE_TYPE> join(Environment<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {

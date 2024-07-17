@@ -15,6 +15,7 @@ public class BoundTest {
   static final Set<Expression> SET_AB = Set.of(A, B);
   static final Set<Expression> SET_B = Set.of(B);
 
+  @SuppressWarnings("EqualsWithItself")
   @Test
   void equalsTest() {
     assertThat(

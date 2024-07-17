@@ -13,20 +13,20 @@ import java.util.stream.Stream;
 
 public class IntervalTest {
 
-  static Interval ZERO = Interval.of(0, 0);
-  static Interval ONE = Interval.of(1, 1);
-  static Interval NEG_ONE = Interval.of(-1, -1);
-  static Interval ZERO_TO_ONE = Interval.of(0, 1);
-  static Interval ZERO_TO_TWO = Interval.of(0, 2);
-  static Interval NEG_ONE_TO_ONE = Interval.of(-1, 1);
-  static Interval ONE_TO_THREE = Interval.of(1, 3);
-  static Interval ZERO_TO_THREE = Interval.of(0, 3);
-  static Interval ONE_TO_TWO = Interval.of(1, 2);
-  static Interval NEG_INF_TO_POS_INF = Interval.of(InfInt.negInf(), InfInt.posInf());
-  static Interval ZERO_TO_POS_INF = Interval.of(0, InfInt.posInf());
-  static Interval NEG_INF_TO_ZERO = Interval.of(InfInt.negInf(), 0);
-  static Interval POS_ONE_TO_POS_INF = Interval.of(1, InfInt.posInf());
-  static Interval NEG_INF_TO_NEG_ONE = Interval.of(InfInt.negInf(), -1);
+  static final Interval ZERO = Interval.of(0, 0);
+  static final Interval ONE = Interval.of(1, 1);
+  static final Interval NEG_ONE = Interval.of(-1, -1);
+  static final Interval ZERO_TO_ONE = Interval.of(0, 1);
+  static final Interval ZERO_TO_TWO = Interval.of(0, 2);
+  static final Interval NEG_ONE_TO_ONE = Interval.of(-1, 1);
+  static final Interval ONE_TO_THREE = Interval.of(1, 3);
+  static final Interval ZERO_TO_THREE = Interval.of(0, 3);
+  static final Interval ONE_TO_TWO = Interval.of(1, 2);
+  static final Interval NEG_INF_TO_POS_INF = Interval.of(InfInt.negInf(), InfInt.posInf());
+  static final Interval ZERO_TO_POS_INF = Interval.of(0, InfInt.posInf());
+  static final Interval NEG_INF_TO_ZERO = Interval.of(InfInt.negInf(), 0);
+  static final Interval POS_ONE_TO_POS_INF = Interval.of(1, InfInt.posInf());
+  static final Interval NEG_INF_TO_NEG_ONE = Interval.of(InfInt.negInf(), -1);
 
 
   static Stream<Arguments> provideArgumentsForToStringTest() {
