@@ -1,6 +1,6 @@
 grammar FunArray;
 
-funArray: bound NON_EMPTY ' '? (interval ' '? bound emptiness ' '?)* ';' ;
+funArray: bound NON_EMPTY ' '? (interval ' '? bound emptiness ' '?)* EOF;
 
 POS_INF : '∞';
 NEG_INF : '-∞';

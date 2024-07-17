@@ -76,8 +76,6 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
 
     List<FunArrayParser.BoundContext> bs = ctx.bound();
 
-    var test = ctx.getText();
-
     List<Bound> bounds = ctx
             .bound().stream()
             .map(this::visitBound)
@@ -93,7 +91,7 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
     return (FunArray<Interval>) super.visit(tree);
   }
 
-  public static FunArray<Interval> parse(String s) {
+  public static FunArray<Interval> parseIntervalFunArray(String s) {
     FunArrayLexer lexer = new FunArrayLexer(CharStreams.fromString(s));
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     FunArrayParser parser = new FunArrayParser(tokens);

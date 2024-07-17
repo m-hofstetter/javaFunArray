@@ -14,8 +14,8 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseTest() {
-    var f = IntervalFunArrayParser.parse("{a} [0, 0] {b} ⊥ {c d};");
-    var comparand = new FunArray<Interval>(
+    var f = IntervalFunArrayParser.parseIntervalFunArray("{a} [0, 0] {b} ⊥ {c d}");
+    var comparand = new FunArray<>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
@@ -31,8 +31,8 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseMissingWhitespaceTest() {
-    var f = IntervalFunArrayParser.parse("{a}[0, 0] {b} ⊥{c d};");
-    var comparand = new FunArray<Interval>(
+    var f = IntervalFunArrayParser.parseIntervalFunArray("{a}[0, 0] {b} ⊥{c d}");
+    var comparand = new FunArray<>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
@@ -48,8 +48,8 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseConstantsInExpressionsTest() {
-    var f = IntervalFunArrayParser.parse("{0} [0, 0] {b+1} ⊥ {c};");
-    var comparand = new FunArray<Interval>(
+    var f = IntervalFunArrayParser.parseIntervalFunArray("{0} [0, 0] {b+1} ⊥ {c}");
+    var comparand = new FunArray<>(
             List.of(
                     new Bound(new Expression(new VariableReference("0"))),
                     new Bound(new Expression(new VariableReference("b"), 1)),
