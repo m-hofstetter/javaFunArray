@@ -335,7 +335,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     var joinedValue = list.get(i - 1).join(list.get(i));
     list.remove(i);
     list.remove(i - 1);
-    list.add(joinedValue);
+    list.add(i - 1, joinedValue);
   }
 
   private static <VARIABLE_TYPE extends DomainValue<VARIABLE_TYPE>> void joinRemainingBounds(List<Bound<VARIABLE_TYPE>> bounds, int i) {
