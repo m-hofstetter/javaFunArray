@@ -12,11 +12,11 @@ DIGIT: [0-9];
 LETTER: [a-zA-Z0-9]| '.';
 
 integer: infinity | finiteInteger;
-finiteInteger: DIGIT+ | NEGATION DIGIT+;
+finiteInteger: DIGIT+ | MINUS DIGIT+;
 
 interval: INTERVAL_START integer INTERVAL_DIVIDER integer INTERVAL_END | UNREACHABLE;
 
-expression: variableName '+' finiteInteger | variableName | finiteInteger;
+expression: variableName PLUS finiteInteger | variableName MINUS finiteInteger | variableName | finiteInteger;
 
 variableName: LETTER+;
 
@@ -30,5 +30,6 @@ emptiness: EMPTY | NON_EMPTY;
 INTERVAL_START: '[';
 INTERVAL_DIVIDER: ', ';
 INTERVAL_END: ']';
-NEGATION: '-';
 UNREACHABLE: '⊥';
+PLUS: '+';
+MINUS: '-';

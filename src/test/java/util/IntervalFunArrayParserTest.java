@@ -48,12 +48,12 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseConstantsInExpressionsTest() {
-    var f = IntervalFunArrayParser.parseIntervalFunArray("{0} [0, 0] {b+1} ⊥ {c}");
+    var f = IntervalFunArrayParser.parseIntervalFunArray("{0} [0, 0] {b+1} ⊥ {c-1}");
     var comparand = new FunArray<>(
             List.of(
                     new Bound(new Expression(new VariableReference("0"))),
                     new Bound(new Expression(new VariableReference("b"), 1)),
-                    new Bound(new Expression(new VariableReference("c")))
+                    new Bound(new Expression(new VariableReference("c"), -1))
             ), List.of(
             Interval.of(0), Interval.unreachable()
     ), List.of(

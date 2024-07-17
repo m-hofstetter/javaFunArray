@@ -52,7 +52,10 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   public Expression visitExpression(FunArrayParser.ExpressionContext ctx) {
     var variable = ctx.variableName() != null ? new VariableReference(ctx.variableName().getText()) : new VariableReference("0");
     if (ctx.finiteInteger() != null) {
-      var integer = visitFiniteInteger(ctx.finiteInteger());
+      InfInt integer = visitFiniteInteger(ctx.finiteInteger());
+      if (ctx.MINUS() != null) {
+        integer = integer.negate();
+      }
       return new Expression(variable, integer);
     }
     return new Expression(variable);
