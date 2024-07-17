@@ -34,7 +34,7 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
       if (state.equals(nextState)) {
         // fixpoint has been reached
         var resultState = condition.satisfyComplement(state);
-        return new AnalysisResult<>(resultState, PROTOCOL_TEMPLATE.formatted(condition, state.toString().indent(INDENTATION), result.protocol().indent(INDENTATION), resultState));
+        return new AnalysisResult<>(resultState, PROTOCOL_TEMPLATE.formatted(condition, satisfiedState.toString().indent(INDENTATION), result.protocol().indent(INDENTATION), resultState));
       }
       state = nextState;
     }
