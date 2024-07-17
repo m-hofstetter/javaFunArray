@@ -460,14 +460,14 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
   }
 
   public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> meet(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unknown) {
-    return unifyOperation(ELEMENT_TYPE::join, other, unknown, unknown);
+    return unifyOperation(ELEMENT_TYPE::meet, other, unknown, unknown);
   }
 
   public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> widen(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
-    return unifyOperation(ELEMENT_TYPE::join, other, unreachable, unreachable);
+    return unifyOperation(ELEMENT_TYPE::widen, other, unreachable, unreachable);
   }
 
   public FunArray<ELEMENT_TYPE, VARIABLE_TYPE> narrow(FunArray<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unknown) {
-    return unifyOperation(ELEMENT_TYPE::join, other, unknown, unknown);
+    return unifyOperation(ELEMENT_TYPE::narrow, other, unknown, unknown);
   }
 }
