@@ -1,5 +1,8 @@
 package analysis;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static util.IntervalFunArrayParser.parseIntervalFunArray;
+
 import analysis.common.condition.ArrayElementLessThanExpression;
 import analysis.common.condition.ExpressionLessThanExpression;
 import analysis.common.controlstructure.IfThenElse;
@@ -13,7 +16,6 @@ import base.interval.Interval;
 import funarray.Environment;
 import funarray.Expression;
 import funarray.VariableReference;
-import funarray.util.FunArrayBuilder;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
@@ -34,16 +36,10 @@ public class ProgramTest {
 
     var expA = new Expression(a);
     var expB = new Expression(b);
-    var expLength = new Expression(length);
-    var expZero = new Expression(zero);
 
-    var funArray = FunArrayBuilder.buildFunArray()
-            .bound(expZero, expA)
-            .value(Interval.of(-100, 100))
-            .bound(expB, expLength)
-            .build();
+    var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
-    var environment = new Environment<Interval, Interval>(funArray, Map.of(
+    var environment = new Environment<>(funArray, Map.of(
             a, Interval.unknown(),
             b, Interval.unknown(),
             length, Interval.unknown(),
@@ -51,7 +47,7 @@ public class ProgramTest {
             temp, Interval.unknown()));
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression(a), new Expression(b));
-    var positiveIntCondition = new ArrayElementLessThanExpression(new Expression(a), new Expression(zero, 0), value -> value);
+    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>(new Expression(a), new Expression(zero, 0), value -> value);
     Function<Interval, Interval> intervalToIntervalConversion = e -> e;
 
     var program = new While<>(loopCondition,
@@ -66,6 +62,8 @@ public class ProgramTest {
                     Interval.unreachable()),
             Interval.unreachable());
 
-    System.out.println(program.run(environment).protocol());
+    var result = program.run(environment);
+    var expected = parseIntervalFunArray("{0} [-100, -1] {a b}? [0, 100] {A.length}?");
+    assertThat(result.resultState().funArray()).isEqualTo(expected);
   }
 }
