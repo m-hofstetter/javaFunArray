@@ -1,7 +1,7 @@
 package analysis.common.condition;
 
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 import funarray.Expression;
 import java.util.function.Function;
 
@@ -10,17 +10,17 @@ public record ArrayElementLessThanExpression<ELEMENT extends DomainValue<ELEMENT
         Function<VARIABLE, ELEMENT> valueConversion) implements Condition<ELEMENT, VARIABLE> {
 
   @Override
-  public Environment<ELEMENT, VARIABLE> satisfy(Environment<ELEMENT, VARIABLE> input) {
-    var value = input.getArrayElement(index);
-    value = value.satisfyLessThan(valueConversion.apply(input.calculateExpression(comparand)));
-    return input.assignArrayElement(index, value);
+  public EnvState<ELEMENT, VARIABLE> satisfy(EnvState<ELEMENT, VARIABLE> state) {
+    var value = state.getArrayElement(index);
+    value = value.satisfyLessThan(valueConversion.apply(state.calculateExpression(comparand)));
+    return state.assignArrayElement(index, value);
   }
 
   @Override
-  public Environment<ELEMENT, VARIABLE> satisfyComplement(Environment<ELEMENT, VARIABLE> input) {
-    var value = input.getArrayElement(index);
-    value = value.satisfyGreaterEqualThan(valueConversion.apply(input.calculateExpression(comparand)));
-    return input.assignArrayElement(index, value);
+  public EnvState<ELEMENT, VARIABLE> satisfyComplement(EnvState<ELEMENT, VARIABLE> state) {
+    var value = state.getArrayElement(index);
+    value = value.satisfyGreaterEqualThan(valueConversion.apply(state.calculateExpression(comparand)));
+    return state.assignArrayElement(index, value);
   }
 
   @Override

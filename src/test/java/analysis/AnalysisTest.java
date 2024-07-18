@@ -16,7 +16,7 @@ import base.DomainValueConversion;
 import base.infint.InfInt;
 import base.interval.Interval;
 import base.sign.Sign;
-import funarray.Environment;
+import funarray.EnvState;
 import funarray.Expression;
 import funarray.VariableReference;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class AnalysisTest {
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
-    var environment = new Environment<>(funArray, Map.of(
+    var environment = new EnvState<>(funArray, Map.of(
             a, Interval.unknown(),
             b, Interval.unknown(),
             length, Interval.unknown(),
@@ -84,7 +84,7 @@ public class AnalysisTest {
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
-    var environment = new Environment<>(funArray, Map.of(
+    var environment = new EnvState<>(funArray, Map.of(
             a, Interval.unknown(),
             b, Interval.unknown(),
             length, Interval.unknown(),

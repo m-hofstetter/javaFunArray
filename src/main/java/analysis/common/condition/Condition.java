@@ -1,10 +1,10 @@
 package analysis.common.condition;
 
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 
 public interface Condition<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>> {
-  Environment<ELEMENT, VARIABLE> satisfy(Environment<ELEMENT, VARIABLE> input);
+  EnvState<ELEMENT, VARIABLE> satisfy(EnvState<ELEMENT, VARIABLE> state);
 
-  Environment<ELEMENT, VARIABLE> satisfyComplement(Environment<ELEMENT, VARIABLE> input);
+  EnvState<ELEMENT, VARIABLE> satisfyComplement(EnvState<ELEMENT, VARIABLE> state);
 }

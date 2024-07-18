@@ -4,7 +4,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 import java.util.List;
 
 public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
@@ -44,7 +44,7 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
   }
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
     var satisfiedState = condition.satisfy(startingState);
     var resultIf = ifAnalysis.run(satisfiedState);
     var complementSatisfiedState = condition.satisfyComplement(startingState);

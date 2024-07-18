@@ -4,7 +4,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 import java.util.List;
 
 public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
@@ -25,7 +25,7 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
   }
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
     var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);

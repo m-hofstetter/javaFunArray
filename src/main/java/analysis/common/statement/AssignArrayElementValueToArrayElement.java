@@ -3,7 +3,7 @@ package analysis.common.statement;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 import funarray.Expression;
 
 public record AssignArrayElementValueToArrayElement<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
@@ -14,7 +14,7 @@ public record AssignArrayElementValueToArrayElement<ELEMENT extends DomainValue<
           \033[0;36m%s\033[0m""";
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
     var resultState = startingState.assignArrayElement(arrayIndexTarget, startingState.getArrayElement(arrayIndexSource));
     var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndexTarget, arrayIndexSource, resultState);
     return new AnalysisResult<>(resultState, protocol);

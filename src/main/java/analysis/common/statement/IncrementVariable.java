@@ -4,7 +4,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import base.DomainValue;
 import base.infint.InfInt;
-import funarray.Environment;
+import funarray.EnvState;
 import funarray.VariableReference;
 
 public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
@@ -16,7 +16,7 @@ public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE e
           \033[0;36m%s\033[0m""";
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(Environment<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
     var resultState = startingState.addToVariable(variable, amount);
     var protocol = PROTOCOL_TEMPLATE.formatted(variable, variable, amount, resultState);
     return new AnalysisResult<>(resultState, protocol);

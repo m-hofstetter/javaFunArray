@@ -1,8 +1,8 @@
 package analysis.common;
 
 import base.DomainValue;
-import funarray.Environment;
+import funarray.EnvState;
 
 public record AnalysisResult<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Environment<ELEMENT, VARIABLE> resultState, String protocol) {
+        EnvState<ELEMENT, VARIABLE> resultState, String protocol) {
 }
