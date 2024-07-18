@@ -56,7 +56,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
   public String toString() {
     return IntStream.range(0, bounds.size())
             .mapToObj(i -> {
-              if (values().size() <= i || emptiness().size() <= i) {
+              if (values().size() <= i) {
                 return "%s%s".formatted(
                         bounds.get(i),
                         emptiness.get(i - 1) ? "?" : ""
