@@ -1,7 +1,7 @@
 package analysis.common.statement;
 
+import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import analysis.common.Program;
 import base.DomainValue;
 import funarray.Environment;
 import funarray.Expression;
@@ -11,7 +11,7 @@ import java.util.function.Function;
 public record AssignArrayElementValueToVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
         Expression arrayIndex,
         VariableReference variable,
-        Function<ELEMENT, VARIABLE> elementValueToVariableConversion) implements Program<ELEMENT, VARIABLE> {
+        Function<ELEMENT, VARIABLE> elementValueToVariableConversion) implements Analysis<ELEMENT, VARIABLE> {
 
   public static final String PROTOCOL_TEMPLATE = """
           %s ← A[%s]

@@ -1,15 +1,15 @@
 package analysis.common.controlstructure;
 
+import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import analysis.common.Program;
 import analysis.common.condition.Condition;
 import base.DomainValue;
 import funarray.Environment;
 import java.util.List;
 
 public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Condition<ELEMENT, VARIABLE> condition, Program<ELEMENT, VARIABLE> program,
-        ELEMENT unreachable) implements Program<ELEMENT, VARIABLE> {
+        Condition<ELEMENT, VARIABLE> condition, Analysis<ELEMENT, VARIABLE> bodyAnalysis,
+        ELEMENT unreachable) implements Analysis<ELEMENT, VARIABLE> {
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
   public static final String PROTOCOL_TEMPLATE = """
@@ -19,9 +19,9 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
   public static final int INDENTATION = 6;
 
   public While(Condition<ELEMENT, VARIABLE> condition,
-               List<Program<ELEMENT, VARIABLE>> programs,
+               List<Analysis<ELEMENT, VARIABLE>> bodyAnalyses,
                ELEMENT unreachable) {
-    this(condition, new Block<>(programs), unreachable);
+    this(condition, new Block<>(bodyAnalyses), unreachable);
   }
 
   @Override
@@ -29,7 +29,7 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
     var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);
-      var result = program.run(satisfiedState);
+      var result = bodyAnalysis.run(satisfiedState);
       var nextState = state.widen(result.resultState(), unreachable);
       if (state.equals(nextState)) {
         // fixpoint has been reached

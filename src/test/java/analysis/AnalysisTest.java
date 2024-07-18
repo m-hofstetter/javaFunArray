@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public class ProgramTest {
+public class AnalysisTest {
 
   /**
    * From Cousot, Cousot and Logozzo (2011) Array in-situ rearrangement example

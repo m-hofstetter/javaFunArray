@@ -1,7 +1,7 @@
 package analysis.common.statement;
 
+import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import analysis.common.Program;
 import base.DomainValue;
 import base.infint.InfInt;
 import funarray.Environment;
@@ -9,7 +9,7 @@ import funarray.VariableReference;
 
 public record IncrementVariable<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
         VariableReference variable,
-        InfInt amount) implements Program<ELEMENT, VARIABLE> {
+        InfInt amount) implements Analysis<ELEMENT, VARIABLE> {
 
   public static final String PROTOCOL_TEMPLATE = """
           %s ← %s + %s
