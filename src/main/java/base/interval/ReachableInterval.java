@@ -1,9 +1,11 @@
 package base.interval;
 
 import base.infint.InfInt;
+import lombok.Getter;
 
 
-final class ReachableInterval extends Interval {
+@Getter
+public final class ReachableInterval extends Interval {
 
   private final InfInt lowerLimit;
   private final InfInt upperLimit;

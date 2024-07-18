@@ -47,8 +47,16 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return this.compareTo(other) < 0;
   }
 
+  public boolean isLessEqualThan(InfInt other) {
+    return this.compareTo(other) <= 0;
+  }
+
   public boolean isGreaterThan(InfInt other) {
     return this.compareTo(other) > 0;
+  }
+
+  public boolean isGreaterEqualThan(InfInt other) {
+    return this.compareTo(other) >= 0;
   }
 
   @Override

@@ -4,12 +4,14 @@ import static base.sign.Sign.SignElement.*;
 
 import base.DomainValue;
 import base.infint.InfInt;
+import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Sign implements DomainValue<Sign> {
 
+  @Getter
   final Set<SignElement> elements;
 
   public Sign(Set<SignElement> elements) {
