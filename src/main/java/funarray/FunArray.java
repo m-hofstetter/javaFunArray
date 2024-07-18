@@ -154,6 +154,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
+    Bound leftBound = new Bound(index);
+    Bound rightBound = new Bound(trailingIndex);
+
     if (rightAdjacent) {
       for (int i = leastUpperBoundIndex - 1; i > greatestLowerBoundIndex; i--) {
         if (!newEmptiness.get(i)) {
@@ -161,6 +164,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
           break;
         }
       }
+      rightBound = newBounds.get(leastUpperBoundIndex);
+      leftBound = new Bound(rightBound.expressions().stream()
+              .map(e -> e.increase(InfInt.of(-1)))
+              .collect(Collectors.toSet()));
     }
 
     if (leftAdjacent) {
@@ -170,6 +177,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
           break;
         }
       }
+      leftBound = newBounds.get(greatestLowerBoundIndex);
+      rightBound = new Bound(leftBound.expressions().stream()
+              .map(e -> e.increase(InfInt.of(1)))
+              .collect(Collectors.toSet()));
     }
 
     var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
@@ -185,7 +196,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     if (!leftAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(new Bound(index));
+      boundsSubList.add(leftBound);
     }
 
     emptinessSubList.add(false);
@@ -194,7 +205,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     if (!rightAdjacent) {
       emptinessSubList.add(true);
       valuesSubList.add(jointValue);
-      boundsSubList.add(new Bound(trailingIndex));
+      boundsSubList.add(rightBound);
     }
 
     return new FunArray<>(newBounds, newValues, newEmptiness);
