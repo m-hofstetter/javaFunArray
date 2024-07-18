@@ -7,10 +7,10 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
-public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Condition<ELEMENT, VARIABLE> condition, Analysis<ELEMENT, VARIABLE> ifAnalysis,
-        Analysis<ELEMENT, VARIABLE> elseAnalysis,
-        ELEMENT unreachable) implements Analysis<ELEMENT, VARIABLE> {
+public record IfThenElse<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+        Condition<ElementT, VariableT> condition, Analysis<ElementT, VariableT> ifAnalysis,
+        Analysis<ElementT, VariableT> elseAnalysis,
+        ElementT unreachable) implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
           \033[1mIF\033[22m %s \033[1mTHEN DO:\033[22m
@@ -20,31 +20,31 @@ public record IfThenElse<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends 
   public static final int INDENTATION = 6;
 
   public IfThenElse(
-          Condition<ELEMENT, VARIABLE> condition,
-          Analysis<ELEMENT, VARIABLE> ifAnalysis,
-          List<Analysis<ELEMENT, VARIABLE>> elseAnalyses,
-          ELEMENT unreachable) {
+          Condition<ElementT, VariableT> condition,
+          Analysis<ElementT, VariableT> ifAnalysis,
+          List<Analysis<ElementT, VariableT>> elseAnalyses,
+          ElementT unreachable) {
     this(condition, ifAnalysis, new Block<>(elseAnalyses), unreachable);
   }
 
   public IfThenElse(
-          Condition<ELEMENT, VARIABLE> condition,
-          List<Analysis<ELEMENT, VARIABLE>> ifAnalyses,
-          Analysis<ELEMENT, VARIABLE> elseAnalysis,
-          ELEMENT unreachable) {
+          Condition<ElementT, VariableT> condition,
+          List<Analysis<ElementT, VariableT>> ifAnalyses,
+          Analysis<ElementT, VariableT> elseAnalysis,
+          ElementT unreachable) {
     this(condition, new Block<>(ifAnalyses), elseAnalysis, unreachable);
   }
 
   public IfThenElse(
-          Condition<ELEMENT, VARIABLE> condition,
-          List<Analysis<ELEMENT, VARIABLE>> ifAnalyses,
-          List<Analysis<ELEMENT, VARIABLE>> elseAnalyses,
-          ELEMENT unreachable) {
+          Condition<ElementT, VariableT> condition,
+          List<Analysis<ElementT, VariableT>> ifAnalyses,
+          List<Analysis<ElementT, VariableT>> elseAnalyses,
+          ElementT unreachable) {
     this(condition, new Block<>(ifAnalyses), new Block<>(elseAnalyses), unreachable);
   }
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var satisfiedState = condition.satisfy(startingState);
     var resultIf = ifAnalysis.run(satisfiedState);
     var complementSatisfiedState = condition.satisfyComplement(startingState);

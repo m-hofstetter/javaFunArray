@@ -7,9 +7,9 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
-public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        Condition<ELEMENT, VARIABLE> condition, Analysis<ELEMENT, VARIABLE> bodyAnalysis,
-        ELEMENT unreachable) implements Analysis<ELEMENT, VARIABLE> {
+public record While<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+        Condition<ElementT, VariableT> condition, Analysis<ElementT, VariableT> bodyAnalysis,
+        ElementT unreachable) implements Analysis<ElementT, VariableT> {
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
   public static final String PROTOCOL_TEMPLATE = """
@@ -18,14 +18,14 @@ public record While<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends Domai
           \033[0;36m%s\033[0m""";
   public static final int INDENTATION = 6;
 
-  public While(Condition<ELEMENT, VARIABLE> condition,
-               List<Analysis<ELEMENT, VARIABLE>> bodyAnalyses,
-               ELEMENT unreachable) {
+  public While(Condition<ElementT, VariableT> condition,
+               List<Analysis<ElementT, VariableT>> bodyAnalyses,
+               ElementT unreachable) {
     this(condition, new Block<>(bodyAnalyses), unreachable);
   }
 
   @Override
-  public AnalysisResult<ELEMENT, VARIABLE> run(EnvState<ELEMENT, VARIABLE> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);

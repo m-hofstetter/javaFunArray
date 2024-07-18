@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
-public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_TYPE extends DomainValue<VARIABLE_TYPE>>(
-        FunArray<ELEMENT_TYPE> funArray,
-        Map<VariableReference, VARIABLE_TYPE> variables) {
+public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+        FunArray<ElementT> funArray,
+        Map<VariableReference, VariableT> variables) {
 
   public EnvState {
     variables = Map.copyOf(variables);
@@ -28,7 +28,7 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> addToVariable(VariableReference variable, InfInt value) {
+  public EnvState<ElementT, VariableT> addToVariable(VariableReference variable, InfInt value) {
     var newVariables = new HashMap<>(variables);
     var newVariableValue = variables.get(variable).addConstant(value);
     newVariables.put(variable, newVariableValue);
@@ -36,7 +36,7 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     return new EnvState<>(newSegmentation, newVariables);
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(VariableReference variable, Expression expression) {
+  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable, Expression expression) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
     modifiedFunArray = modifiedFunArray.insertExpression(variable, expression);
 
@@ -46,7 +46,7 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     return new EnvState<>(modifiedFunArray, modifiedVariables);
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> assignVariable(VariableReference variable, VARIABLE_TYPE interval) {
+  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable, VariableT interval) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
 
     var modified = new HashMap<>(variables);
@@ -62,7 +62,7 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
    * @param value the value.
    * @return the altered FunArray
    */
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> assignArrayElement(Expression index, ELEMENT_TYPE value) {
+  public EnvState<ElementT, VariableT> assignArrayElement(Expression index, ElementT value) {
     var modified = funArray.insert(index, value);
     return new EnvState<>(modified, variables());
   }
@@ -73,7 +73,7 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
    * @param index the index.
    * @return the value.
    */
-  public ELEMENT_TYPE getArrayElement(Expression index) {
+  public ElementT getArrayElement(Expression index) {
     return funArray.get(index);
   }
 
@@ -86,37 +86,37 @@ public record EnvState<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>, VARIABLE_
     return "A: %s\n%s".formatted(funArray, variablesString);
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> join(EnvState<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
+  public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other, ElementT unreachable) {
     var joinedFunArray = funArray.join(other.funArray, unreachable);
     return new EnvState<>(joinedFunArray, variables);
     //TODO: join variables
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> widen(EnvState<ELEMENT_TYPE, VARIABLE_TYPE> other, ELEMENT_TYPE unreachable) {
+  public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other, ElementT unreachable) {
     var widenedFunArray = funArray.widen(other.funArray, unreachable);
     return new EnvState<>(widenedFunArray, variables);
     //TODO: proper widening
   }
 
-  public VARIABLE_TYPE getVariableValue(VariableReference variable) {
+  public VariableT getVariableValue(VariableReference variable) {
     return variables.get(variable);
   }
 
-  public VARIABLE_TYPE getVariableValue(String variableName) {
+  public VariableT getVariableValue(String variableName) {
     return variables.get(new VariableReference(variableName));
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessEqualThan(Expression left, Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(Expression left, Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(funArray.satisfyBoundExpressionLessEqualThan(left, right), variables());
   }
 
-  public EnvState<ELEMENT_TYPE, VARIABLE_TYPE> satisfyExpressionLessThan(Expression left, Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(Expression left, Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(funArray.satisfyBoundExpressionLessThan(left, right), variables());
   }
 
-  public VARIABLE_TYPE calculateExpression(Expression expression) {
+  public VariableT calculateExpression(Expression expression) {
     var variableValue = variables.get(expression.variable());
     return variableValue.addConstant(expression.constant());
   }

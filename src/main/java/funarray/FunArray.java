@@ -22,8 +22,8 @@ import java.util.stream.IntStream;
  * @param values    the FunArray's values.
  * @param emptiness a list determining whether a segment might be empty.
  */
-public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
-        List<Bound> bounds, List<ELEMENT_TYPE> values,
+public record FunArray<ElementT extends DomainValue<ElementT>>(
+        List<Bound> bounds, List<ElementT> values,
         List<Boolean> emptiness) {
 
   /**
@@ -33,7 +33,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param values    the FunArray's values.
    * @param emptiness a list determining whether a segment might be empty.
    */
-  public FunArray(List<Bound> bounds, List<ELEMENT_TYPE> values, List<Boolean> emptiness) {
+  public FunArray(List<Bound> bounds, List<ElementT> values, List<Boolean> emptiness) {
 
     if (bounds.size() < 2) {
       throw new IllegalArgumentException("FunArray requires at least two bounds.");
@@ -84,14 +84,14 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param value    the value.
    * @return the altered FunArray.
    */
-  public FunArray<ELEMENT_TYPE> addToVariable(VariableReference variable, InfInt value) {
+  public FunArray<ElementT> addToVariable(VariableReference variable, InfInt value) {
     var newBounds = bounds.stream()
             .map(s -> s.addToVariableInFunArray(variable, value))
             .toList();
     return new FunArray<>(newBounds, values, emptiness);
   }
 
-  public FunArray<ELEMENT_TYPE> insertExpression(VariableReference variable, Expression expression) {
+  public FunArray<ElementT> insertExpression(VariableReference variable, Expression expression) {
     var newBounds = new ArrayList<>(bounds.stream()
             .map(b -> b.insertExpression(variable, expression))
             .toList());
@@ -101,17 +101,17 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public FunArray<ELEMENT_TYPE> removeVariableOccurrences(VariableReference variable) {
+  public FunArray<ElementT> removeVariableOccurrences(VariableReference variable) {
     return new FunArray<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList(), values, emptiness).removeEmptyBounds();
   }
 
 
-  public FunArray<ELEMENT_TYPE> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
+  public FunArray<ElementT> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
     var newBounds = bounds.stream().map(b -> b.restrictExpressionOccurrences(allowedExpressions)).toList();
     return new FunArray<>(newBounds, values, emptiness).removeEmptyBounds();
   }
 
-  public FunArray<ELEMENT_TYPE> removeEmptyBounds() {
+  public FunArray<ElementT> removeEmptyBounds() {
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
@@ -137,7 +137,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param value the value to be inserted.
    * @return the modified Segmentation.
    */
-  public FunArray<ELEMENT_TYPE> insert(Expression index, ELEMENT_TYPE value) {
+  public FunArray<ElementT> insert(Expression index, ElementT value) {
     var trailingIndex = index.increase(InfInt.of(1));
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
@@ -200,7 +200,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public ELEMENT_TYPE get(Expression abstractIndex) {
+  public ElementT get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(InfInt.of(1)));
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
@@ -247,7 +247,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param to   the index of the last segment (inclusive).
    * @return the joint of all values.
    */
-  private ELEMENT_TYPE getJointValue(int from, int to) {
+  private ElementT getJointValue(int from, int to) {
     var jointValue = values.get(from);
     for (int i = from + 1; i < to; i++) {
       jointValue = jointValue.join(values.get(i));
@@ -268,8 +268,8 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param otherNeutralElement the neutral element for the other.
    * @return two unified FunArrays.
    */
-  public UnifyResult<ELEMENT_TYPE> unify(FunArray<ELEMENT_TYPE> other,
-                                                           ELEMENT_TYPE thisNeutralElement, ELEMENT_TYPE otherNeutralElement) {
+  public UnifyResult<ElementT> unify(FunArray<ElementT> other,
+                                     ElementT thisNeutralElement, ElementT otherNeutralElement) {
 
     var thisExpressions = this.bounds.stream()
             .flatMap(b -> b.expressions().stream())
@@ -286,11 +286,11 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     var otherReduced = other.restrictExpressionOccurrences(commonExpressions);
 
     List<Bound> boundsThis = new ArrayList<>(thisReduced.bounds);
-    List<ELEMENT_TYPE> valuesThis = new ArrayList<>(thisReduced.values);
+    List<ElementT> valuesThis = new ArrayList<>(thisReduced.values);
     List<Boolean> emptinessThis = new ArrayList<>(thisReduced.emptiness);
 
     List<Bound> boundsOther = new ArrayList<>(otherReduced.bounds);
-    List<ELEMENT_TYPE> valuesOther = new ArrayList<>(otherReduced.values);
+    List<ElementT> valuesOther = new ArrayList<>(otherReduced.values);
     List<Boolean> emptinessOther = new ArrayList<>(otherReduced.emptiness);
 
 
@@ -331,7 +331,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param list the list.
    * @param i    the index.
    */
-  private static <ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>> void joinValueWithPredecessor(List<ELEMENT_TYPE> list, int i) {
+  private static <ElementT extends DomainValue<ElementT>> void joinValueWithPredecessor(List<ElementT> list, int i) {
     var joinedValue = list.get(i - 1).join(list.get(i));
     list.remove(i);
     list.remove(i - 1);
@@ -348,8 +348,8 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
    * @param otherNeutralElement the neutral element for unifying of the other FunArray.
    * @return the joined/met/widened/narrowed FunArray
    */
-  private FunArray<ELEMENT_TYPE> unifyOperation(BinaryOperator<ELEMENT_TYPE> operation, FunArray<ELEMENT_TYPE> other,
-                                                               ELEMENT_TYPE thisNeutralElement, ELEMENT_TYPE otherNeutralElement) {
+  private FunArray<ElementT> unifyOperation(BinaryOperator<ElementT> operation, FunArray<ElementT> other,
+                                            ElementT thisNeutralElement, ElementT otherNeutralElement) {
 
     var unifiedArrays = this.unify(other, thisNeutralElement, otherNeutralElement);
     var thisUnified = unifiedArrays.resultThis();
@@ -366,7 +366,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
 
-  public FunArray<ELEMENT_TYPE> satisfyBoundExpressionLessEqualThan(Expression left, Expression right) {
+  public FunArray<ElementT> satisfyBoundExpressionLessEqualThan(Expression left, Expression right) {
     int leftIndex;
     int rightIndex;
     try {
@@ -406,7 +406,7 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
     }
   }
 
-  public FunArray<ELEMENT_TYPE> satisfyBoundExpressionLessThan(Expression left, Expression right) {
+  public FunArray<ElementT> satisfyBoundExpressionLessThan(Expression left, Expression right) {
     int leftIndex;
     int rightIndex;
     try {
@@ -442,19 +442,19 @@ public record FunArray<ELEMENT_TYPE extends DomainValue<ELEMENT_TYPE>>(
   }
 
 
-  public FunArray<ELEMENT_TYPE> join(FunArray<ELEMENT_TYPE> other, ELEMENT_TYPE unreachable) {
-    return unifyOperation(ELEMENT_TYPE::join, other, unreachable, unreachable);
+  public FunArray<ElementT> join(FunArray<ElementT> other, ElementT unreachable) {
+    return unifyOperation(ElementT::join, other, unreachable, unreachable);
   }
 
-  public FunArray<ELEMENT_TYPE> meet(FunArray<ELEMENT_TYPE> other, ELEMENT_TYPE unknown) {
-    return unifyOperation(ELEMENT_TYPE::meet, other, unknown, unknown);
+  public FunArray<ElementT> meet(FunArray<ElementT> other, ElementT unknown) {
+    return unifyOperation(ElementT::meet, other, unknown, unknown);
   }
 
-  public FunArray<ELEMENT_TYPE> widen(FunArray<ELEMENT_TYPE> other, ELEMENT_TYPE unreachable) {
-    return unifyOperation(ELEMENT_TYPE::widen, other, unreachable, unreachable);
+  public FunArray<ElementT> widen(FunArray<ElementT> other, ElementT unreachable) {
+    return unifyOperation(ElementT::widen, other, unreachable, unreachable);
   }
 
-  public FunArray<ELEMENT_TYPE> narrow(FunArray<ELEMENT_TYPE> other, ELEMENT_TYPE unknown) {
-    return unifyOperation(ELEMENT_TYPE::narrow, other, unknown, unknown);
+  public FunArray<ElementT> narrow(FunArray<ElementT> other, ElementT unknown) {
+    return unifyOperation(ElementT::narrow, other, unknown, unknown);
   }
 }

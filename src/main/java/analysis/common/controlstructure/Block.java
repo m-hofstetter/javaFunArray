@@ -7,17 +7,17 @@ import funarray.EnvState;
 import java.util.ArrayList;
 import java.util.List;
 
-public record Block<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>>(
-        List<Analysis<VARIABLE, ELEMENT>> statements) implements Analysis<VARIABLE, ELEMENT> {
+public record Block<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+        List<Analysis<VariableT, ElementT>> statements) implements Analysis<VariableT, ElementT> {
 
   public Block {
     statements = List.copyOf(statements);
   }
 
   @Override
-  public AnalysisResult<VARIABLE, ELEMENT> run(EnvState<VARIABLE, ELEMENT> startingState) {
+  public AnalysisResult<VariableT, ElementT> run(EnvState<VariableT, ElementT> startingState) {
     var protocolSteps = new ArrayList<String>();
-    for (Analysis<VARIABLE, ELEMENT> s : statements) {
+    for (Analysis<VariableT, ElementT> s : statements) {
       var stepResult = s.run(startingState);
       protocolSteps.add(stepResult.protocol());
       startingState = stepResult.resultState();

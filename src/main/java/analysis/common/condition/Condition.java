@@ -3,8 +3,8 @@ package analysis.common.condition;
 import base.DomainValue;
 import funarray.EnvState;
 
-public interface Condition<ELEMENT extends DomainValue<ELEMENT>, VARIABLE extends DomainValue<VARIABLE>> {
-  EnvState<ELEMENT, VARIABLE> satisfy(EnvState<ELEMENT, VARIABLE> state);
+public interface Condition<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>> {
+  EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state);
 
-  EnvState<ELEMENT, VARIABLE> satisfyComplement(EnvState<ELEMENT, VARIABLE> state);
+  EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state);
 }
