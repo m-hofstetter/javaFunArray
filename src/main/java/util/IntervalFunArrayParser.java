@@ -1,7 +1,11 @@
 package util;
 
+import static base.sign.Sign.SignElement.*;
+
+import base.DomainValue;
 import base.infint.*;
 import base.interval.Interval;
+import base.sign.Sign;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
@@ -10,6 +14,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class IntervalFunArrayParser extends FunArrayBaseVisitor {
@@ -75,7 +80,7 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   }
 
   @Override
-  public FunArray<Interval> visitFunArray(FunArrayParser.FunArrayContext ctx) {
+  public FunArray visitFunArray(FunArrayParser.FunArrayContext ctx) {
 
     List<FunArrayParser.BoundContext> bs = ctx.bound();
 
@@ -84,17 +89,56 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
             .map(this::visitBound)
             .toList();
 
-    var intervals = ctx.interval().stream().map(this::visitInterval).toList();
+    List<? extends DomainValue<?>> values = ctx.value().stream().map(this::visitValue).toList();
     var emptiness = ctx.emptiness().stream().map(this::visitEmptiness).toList();
-    return new FunArray<>(bounds, intervals, emptiness);
+    return new FunArray(bounds, values, emptiness);
   }
 
   @Override
-  public FunArray<Interval> visit(ParseTree tree) {
-    return (FunArray<Interval>) super.visit(tree);
+  public DomainValue<?> visitValue(FunArrayParser.ValueContext ctx) {
+    if (ctx.interval() != null) {
+      return visitInterval(ctx.interval());
+    } else if (ctx.sign() != null) {
+      return visitSign(ctx.sign());
+    }
+    return null;
   }
 
-  public static FunArray<Interval> parseIntervalFunArray(String s) {
+  @Override
+  public Sign visitSign(FunArrayParser.SignContext ctx) {
+    if (ctx.UNREACHABLE() != null) {
+      return new Sign(Set.of());
+    }
+    if (ctx.GREATER_ZERO() != null) {
+      return new Sign(Set.of(POSITIVE));
+    }
+    if (ctx.LESS_ZERO() != null) {
+      return new Sign(Set.of(NEGATIVE));
+    }
+    if (ctx.ZERO() != null) {
+      return new Sign(Set.of(ZERO));
+    }
+    if (ctx.NOT_ZERO() != null) {
+      return new Sign(Set.of(NEGATIVE, POSITIVE));
+    }
+    if (ctx.GREATER_EQUAL_ZERO() != null) {
+      return new Sign(Set.of(ZERO, POSITIVE));
+    }
+    if (ctx.LESS_EQUAL_ZERO() != null) {
+      return new Sign(Set.of(NEGATIVE, ZERO));
+    }
+    if (ctx.UNKNOWN() != null) {
+      return new Sign(Set.of(NEGATIVE, ZERO, POSITIVE));
+    }
+    return null;
+  }
+
+  @Override
+  public FunArray<? extends DomainValue<?>> visit(ParseTree tree) {
+    return (FunArray) super.visit(tree);
+  }
+
+  private static FunArray<? extends DomainValue<?>> parseFunArray(String s) {
     FunArrayLexer lexer = new FunArrayLexer(CharStreams.fromString(s));
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     FunArrayParser parser = new FunArrayParser(tokens);
@@ -103,5 +147,12 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
     return visitor.visit(tree);
   }
 
+  public static FunArray<Interval> parseIntervalFunArray(String s) {
+    return (FunArray<Interval>) parseFunArray(s);
+  }
+
+  public static FunArray<Sign> parseSignFunArray(String s) {
+    return (FunArray<Sign>) parseFunArray(s);
+  }
 
 }

@@ -1,6 +1,8 @@
 grammar FunArray;
 
-funArray: bound NON_EMPTY ' '? (interval ' '? bound emptiness ' '?)* EOF;
+funArray: bound NON_EMPTY ' '? (value ' '? bound emptiness ' '?)* EOF;
+
+value: interval | sign;
 
 POS_INF : '∞';
 NEG_INF : '-∞';
@@ -33,3 +35,13 @@ INTERVAL_END: ']';
 UNREACHABLE: '⊥';
 PLUS: '+';
 MINUS: '-';
+
+GREATER_ZERO: '>0';
+LESS_ZERO: '<0';
+ZERO: '0';
+NOT_ZERO: '≠0';
+GREATER_EQUAL_ZERO: '≥0';
+LESS_EQUAL_ZERO: '≤0';
+UNKNOWN: '⊤';
+
+sign: UNREACHABLE | GREATER_ZERO | LESS_ZERO | ZERO | NOT_ZERO | GREATER_EQUAL_ZERO | LESS_EQUAL_ZERO | UNKNOWN |;
