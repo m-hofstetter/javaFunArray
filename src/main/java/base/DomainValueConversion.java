@@ -47,4 +47,8 @@ public class DomainValueConversion {
     return combined;
   }
 
+  public static Interval keepInterval(Interval interval) {
+    return interval;
+  }
+
 }

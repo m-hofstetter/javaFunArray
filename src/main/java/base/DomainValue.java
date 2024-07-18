@@ -21,4 +21,8 @@ public interface DomainValue<T extends DomainValue<T>> {
   T satisfyLessThan(T other);
 
   T satisfyGreaterThan(T other);
+
+  T satisfyEqual(T other);
+
+  T satisfyNotEqual(T other);
 }

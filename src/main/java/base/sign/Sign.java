@@ -235,4 +235,16 @@ public class Sign implements DomainValue<Sign> {
     }
     return new Sign(modifiedSet);
   }
+
+  @Override
+  public Sign satisfyEqual(Sign other) {
+    return new Sign(other.elements);
+  }
+
+  @Override
+  public Sign satisfyNotEqual(Sign other) {
+    return new Sign(Set.of(NEGATIVE, ZERO, POSITIVE).stream()
+            .filter(e -> !other.elements.contains(e))
+            .collect(Collectors.toSet()));
+  }
 }

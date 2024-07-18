@@ -151,4 +151,18 @@ public class IntervalTest {
     assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, InfInt.posInf()))).isEqualTo(Interval.unreachable());
     assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
   }
+
+  @Test
+  public void satisfyNotEqualTest() {
+    assertThat(Interval.of(0, 3).satisfyNotEqual(Interval.of(1, 2))).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(0, 2).satisfyNotEqual(Interval.of(1, 3))).isEqualTo(Interval.of(0, 0));
+    assertThat(Interval.of(1, 3).satisfyNotEqual(Interval.of(0, 2))).isEqualTo(Interval.of(3, 3));
+    assertThat(Interval.of(0, 1).satisfyNotEqual(Interval.of(1, 2))).isEqualTo(Interval.of(0, 0));
+    assertThat(Interval.of(1, 2).satisfyNotEqual(Interval.of(0, 1))).isEqualTo(Interval.of(2, 2));
+    assertThat(Interval.of(0, 1).satisfyNotEqual(Interval.of(2, 3))).isEqualTo(Interval.of(0, 1));
+    assertThat(Interval.of(2, 3).satisfyNotEqual(Interval.of(0, 1))).isEqualTo(Interval.of(2, 3));
+    assertThat(Interval.of(0, 100).satisfyNotEqual(Interval.of(0, 0))).isEqualTo(Interval.of(1, 100));
+    assertThat(Interval.of(1, 2).satisfyNotEqual(Interval.of(0, 3))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(1, 2).satisfyNotEqual(Interval.of(1, 2))).isEqualTo(Interval.unreachable());
+  }
 }

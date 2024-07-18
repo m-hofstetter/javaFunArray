@@ -78,4 +78,14 @@ final class Unreachable extends Interval {
   public Interval satisfyGreaterThan(Interval other) {
     return this;
   }
+
+  @Override
+  public Interval satisfyEqual(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval satisfyNotEqual(Interval other) {
+    return this;
+  }
 }

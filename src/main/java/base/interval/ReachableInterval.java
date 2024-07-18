@@ -158,4 +158,27 @@ public final class ReachableInterval extends Interval {
     }
     return new Unreachable();
   }
+
+  @Override
+  public Interval satisfyEqual(Interval other) {
+    return this.meet(other);
+  }
+
+  @Override
+  public Interval satisfyNotEqual(Interval other) {
+    if (other instanceof ReachableInterval reachableOther) {
+      if (this.lowerLimit.isLessThan(reachableOther.lowerLimit)) {
+        if (this.upperLimit.isGreaterThan(reachableOther.upperLimit)) {
+          return new ReachableInterval(this.lowerLimit, this.upperLimit);
+        } else {
+          return new ReachableInterval(this.lowerLimit, InfInt.min(this.upperLimit, reachableOther.lowerLimit.subtract(1)));
+        }
+      } else {
+        if (this.upperLimit.isGreaterThan(reachableOther.upperLimit)) {
+          return new ReachableInterval(InfInt.max(reachableOther.upperLimit.add(1), this.lowerLimit), this.upperLimit);
+        }
+      }
+    }
+    return new Unreachable();
+  }
 }
