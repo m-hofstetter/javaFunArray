@@ -20,26 +20,26 @@ public class FunArrayTest {
 
   @Test
   void insertTest() {
-    var funArray = parseIntervalFunArray("{0} [-∞, ∞] {A.length}");
+    var funArray = parseIntervalFunArray("{0} [-∞, ∞] {x A.length}");
 
     funArray = funArray.insert(new Expression(new VariableReference("0")), Interval.of(0));
     assertThat(funArray).isEqualTo(
-            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {A.length}?")
+            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x A.length}?")
     );
 
     funArray = funArray.insert(new Expression(new VariableReference("0"), 1), Interval.of(0, 0));
     assertThat(funArray).isEqualTo(
-            parseIntervalFunArray("{0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {A.length}?")
+            parseIntervalFunArray("{0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {x A.length}?")
     );
 
     funArray = funArray.insert(new Expression(new VariableReference("A.length"), -1), Interval.of(0));
     assertThat(funArray).isEqualTo(
-            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {A.length-1}? [0, 0] {A.length}")
+            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
 
     funArray = funArray.insert(new Expression(new VariableReference("0")), Interval.of(0));
     assertThat(funArray).isEqualTo(
-            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {A.length-1}? [0, 0] {A.length}")
+            parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
   }
 
