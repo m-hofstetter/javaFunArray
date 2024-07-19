@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 public class AnalysisTest {
 
@@ -52,16 +51,15 @@ public class AnalysisTest {
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression(a), new Expression(b));
     var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>(new Expression(a), new Expression(zero, 0), value -> value);
-    Function<Interval, Interval> intervalToIntervalConversion = e -> e;
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new IncrementVariable<>(a, InfInt.of(1)),
                     List.of(
                             new IncrementVariable<>(b, InfInt.of(-1)),
-                            new AssignArrayElementValueToVariable<>(expA, temp, intervalToIntervalConversion),
+                            new AssignArrayElementValueToVariable<>(expA, temp, DomainValueConversion::keepInterval),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
-                            new AssignVariableValueToArrayElement<>(expB, temp, intervalToIntervalConversion)
+                            new AssignVariableValueToArrayElement<>(expB, temp, DomainValueConversion::keepInterval)
                     ),
                     Interval.unreachable()),
             Interval.unreachable());
