@@ -122,7 +122,7 @@ public class Sign implements DomainValue<Sign> {
 
   @Override
   public Sign subtract(Sign other) {
-    return add(other.inverse());
+    return add(other.negate());
   }
 
   @Override
@@ -144,7 +144,7 @@ public class Sign implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign inverse() {
+  public Sign negate() {
     var modifiedSet = new HashSet<>(elements);
     if (elements.contains(NEGATIVE)) {
       modifiedSet.add(POSITIVE);

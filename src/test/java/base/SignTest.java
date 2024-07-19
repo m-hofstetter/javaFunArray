@@ -91,15 +91,15 @@ public class SignTest {
   }
 
   @Test
-  public void testInverse() {
-    assertThat(NONE.inverse()).isEqualTo(NONE);
-    assertThat(NEG.inverse()).isEqualTo(POS);
-    assertThat(ZER.inverse()).isEqualTo(ZER);
-    assertThat(POS.inverse()).isEqualTo(NEG);
-    assertThat(NEG_ZER.inverse()).isEqualTo(POS_ZER);
-    assertThat(POS_ZER.inverse()).isEqualTo(NEG_ZER);
-    assertThat(POS_NEG.inverse()).isEqualTo(POS_NEG);
-    assertThat(ALL.inverse()).isEqualTo(ALL);
+  public void testNegate() {
+    assertThat(NONE.negate()).isEqualTo(NONE);
+    assertThat(NEG.negate()).isEqualTo(POS);
+    assertThat(ZER.negate()).isEqualTo(ZER);
+    assertThat(POS.negate()).isEqualTo(NEG);
+    assertThat(NEG_ZER.negate()).isEqualTo(POS_ZER);
+    assertThat(POS_ZER.negate()).isEqualTo(NEG_ZER);
+    assertThat(POS_NEG.negate()).isEqualTo(POS_NEG);
+    assertThat(ALL.negate()).isEqualTo(ALL);
   }
 
   @Test

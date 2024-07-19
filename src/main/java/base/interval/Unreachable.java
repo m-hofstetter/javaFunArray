@@ -38,7 +38,7 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval inverse() {
+  public Interval negate() {
     return this;
   }
 

@@ -40,6 +40,16 @@ public final class ReachableInterval extends Interval {
     return new Unreachable();
   }
 
+  /**
+   * The abstract widening operator. See: Cousot, P., Cousot, R. (1992). Comparing the Galois
+   * connection and widening/narrowing approaches to abstract interpretation. In: Bruynooghe, M.,
+   * Wirsing, M. (eds) Programming Language Implementation and Logic Programming. PLILP 1992.
+   * Lecture Notes in Computer Science, vol 631. Springer, Berlin, Heidelberg. <a
+   * href="https://doi.org/10.1007/3-540-55844-6_142">https://doi.org/10.1007/3-540-55844-6_142</a>.
+   *
+   * @param other the interval to widen this with.
+   * @return the widened interval.
+   */
   @Override
   public Interval widen(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
@@ -57,6 +67,16 @@ public final class ReachableInterval extends Interval {
     return this;
   }
 
+  /**
+   * The abstract narrowing operator. See: Cousot, P., Cousot, R. (1992). Comparing the Galois
+   * connection and widening/narrowing approaches to abstract interpretation. In: Bruynooghe, M.,
+   * Wirsing, M. (eds) Programming Language Implementation and Logic Programming. PLILP 1992.
+   * Lecture Notes in Computer Science, vol 631. Springer, Berlin, Heidelberg. <a
+   * href="https://doi.org/10.1007/3-540-55844-6_142">https://doi.org/10.1007/3-540-55844-6_142</a>.
+   *
+   * @param other the interval to narrow this with.
+   * @return the narrowed interval.
+   */
   @Override
   public Interval narrow(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
@@ -96,13 +116,13 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval inverse() {
+  public Interval negate() {
     return new ReachableInterval(upperLimit.negate(), lowerLimit.negate());
   }
 
   @Override
   public Interval subtract(Interval value) {
-    return add(value.inverse());
+    return add(value.negate());
   }
 
   @Override

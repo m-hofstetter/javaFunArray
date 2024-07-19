@@ -120,9 +120,9 @@ public class IntervalTest {
 
   @Test
   public void inverseTest() {
-    assertThat(Interval.of(0).inverse()).isEqualTo(Interval.of(0));
-    assertThat(Interval.of(1, 2).inverse()).isEqualTo(Interval.of(-2, -1));
-    assertThat(Interval.of(0, InfInt.posInf()).inverse()).isEqualTo(Interval.of(InfInt.negInf(), 0));
+    assertThat(Interval.of(0).negate()).isEqualTo(Interval.of(0));
+    assertThat(Interval.of(1, 2).negate()).isEqualTo(Interval.of(-2, -1));
+    assertThat(Interval.of(0, InfInt.posInf()).negate()).isEqualTo(Interval.of(InfInt.negInf(), 0));
   }
 
   @Test
