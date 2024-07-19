@@ -98,7 +98,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   public FunArray<ElementT> insertExpression(VariableReference variable, Expression expression) {
     var newBounds = new ArrayList<>(bounds.stream()
-            .map(b -> b.insertExpression(variable, expression))
+            .map(b -> b.insertExpressionIfVariablePresent(variable, expression))
             .toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
@@ -116,7 +116,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   public FunArray<ElementT> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
     var newBounds = bounds.stream()
-            .map(b -> b.restrictExpressionOccurrences(allowedExpressions))
+            .map(b -> b.intersectExpressions(allowedExpressions))
             .toList();
     return new FunArray<>(newBounds, values, emptiness)
             .removeEmptyBounds();

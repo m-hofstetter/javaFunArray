@@ -7,6 +7,17 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
+/**
+ * A control structure that executes either one of two given statements depending on whether a
+ * condition is satisfied.
+ *
+ * @param condition    the condition.
+ * @param ifAnalysis   the statement to execute if the condition is true.
+ * @param elseAnalysis the statement to execute if the condition is false.
+ * @param unreachable  the unreachable element for abstract joining.
+ * @param <ElementT>   the domain to abstract array element values with.
+ * @param <VariableT>  the domain to abstract variable values with.
+ */
 public record IfThenElse<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(

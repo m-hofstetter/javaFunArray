@@ -5,6 +5,15 @@ import funarray.EnvState;
 import funarray.Expression;
 import java.util.function.Function;
 
+/**
+ * A condition deciding whether an array element is equal to an expression.
+ *
+ * @param index           the index of the array element.
+ * @param comparand       the expression comparand on the right side of the comparison.
+ * @param valueConversion a translation function from the variable to the array element domain.
+ * @param <ElementT>      the domain to abstract array element values with.
+ * @param <VariableT>     the domain to abstract variable values with.
+ */
 public record ArrayElementEqualToExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(

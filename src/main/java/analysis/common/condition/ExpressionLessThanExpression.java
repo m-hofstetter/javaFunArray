@@ -4,6 +4,14 @@ import base.DomainValue;
 import funarray.EnvState;
 import funarray.Expression;
 
+/**
+ * A condition deciding whether an expression is less than another expression.
+ *
+ * @param left        the expression on the left side of the comparison.
+ * @param right       the expression on the right side of the comparison.
+ * @param <ElementT>  the domain to abstract array element values with.
+ * @param <VariableT> the domain to abstract variable values with.
+ */
 public record ExpressionLessThanExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(

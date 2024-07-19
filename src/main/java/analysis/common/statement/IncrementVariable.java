@@ -6,6 +6,14 @@ import base.DomainValue;
 import funarray.EnvState;
 import funarray.VariableReference;
 
+/**
+ * Atomic statement for incrementing a variable.
+ *
+ * @param variable    the variable.
+ * @param amount      the amount.
+ * @param <ElementT>  the domain to abstract array element values with.
+ * @param <VariableT> the domain to abstract variable values with.
+ */
 public record IncrementVariable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(

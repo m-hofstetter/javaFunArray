@@ -36,7 +36,18 @@ public record Bound(Set<Expression> expressions) {
     );
   }
 
-  public Bound insertExpression(VariableReference variable, Expression expression) {
+  /**
+   * Inserts a new expression if a specified variable is present in its expressions. Is needed for
+   * assigning a value to a variable that might be contained in a {@link FunArray}.
+   *
+   * @param variable   the variable.
+   * @param expression the expression
+   * @return the modified bound.
+   */
+  public Bound insertExpressionIfVariablePresent(
+          VariableReference variable,
+          Expression expression
+  ) {
     var modifiedExpressions = new HashSet<>(removeVariableOccurrences(variable).expressions);
 
     modifiedExpressions.stream()
@@ -49,6 +60,12 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
+  /**
+   * Removes all expressions containing the specified variable.
+   *
+   * @param variable the variable.
+   * @return the modified bound.
+   */
   public Bound removeVariableOccurrences(VariableReference variable) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(variable))
@@ -56,11 +73,27 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  public Bound restrictExpressionOccurrences(Set<Expression> expressions) {
+  /**
+   * Returns a bound containing only expressions from this that are present in a specified list.
+   *
+   * @param expressions the list of allowed expressions.
+   * @return the intersection of both bound.
+   */
+  public Bound intersectExpressions(Set<Expression> expressions) {
     var modifiedExpressions = this.expressions.stream()
             .filter(expressions::contains)
             .collect(Collectors.toSet());
     return new Bound(modifiedExpressions);
+  }
+
+  /**
+   * Returns a new bound containing only expressions that are present in both bounds.
+   *
+   * @param other the other bound.
+   * @return the intersection of both bound.
+   */
+  public Bound intersect(Bound other) {
+    return intersectExpressions(other.expressions);
   }
 
   public boolean contains(Expression expression) {
@@ -73,12 +106,6 @@ public record Bound(Set<Expression> expressions) {
 
   public boolean expressionIsGreaterEqualThan(Expression expression) {
     return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression));
-  }
-
-  @Override
-  public String toString() {
-    return "{%s}".formatted(
-            String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
   }
 
   /**
@@ -108,34 +135,14 @@ public record Bound(Set<Expression> expressions) {
     );
   }
 
-  /**
-   * Returns a new bound containing all expressions that are present in both bounds.
-   *
-   * @param other the other bound.
-   * @return the intersection of both bound.
-   */
-  public Bound intersect(Bound other) {
-    var meetExpressionSet = other.expressions.stream()
-            .filter(this.expressions::contains)
-            .collect(Collectors.toSet());
-
-    return new Bound(meetExpressionSet);
-  }
-
-  /**
-   * Returns a new bound containing all expressions from this, that are also present in one of the
-   * bounds in the specified list.
-   *
-   * @param list the list of bounds.
-   * @return the intersected bound.
-   */
-  public Bound intersect(List<Bound> list) {
-    var joinedList = join(list);
-    return this.intersect(joinedList);
-  }
-
   public boolean isEmpty() {
     return expressions.isEmpty();
+  }
+
+  @Override
+  public String toString() {
+    return "{%s}".formatted(
+            String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
   }
 
   @Override

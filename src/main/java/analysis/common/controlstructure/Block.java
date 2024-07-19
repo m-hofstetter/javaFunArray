@@ -7,6 +7,13 @@ import funarray.EnvState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A control structure that executes multiple statements subsequently.
+ *
+ * @param statements  a list of the statements to execute in order.
+ * @param <ElementT>  the domain to abstract array element values with.
+ * @param <VariableT> the domain to abstract variable values with.
+ */
 public record Block<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(

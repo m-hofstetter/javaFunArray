@@ -7,6 +7,15 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
+/**
+ * A control structure that executes a statement as long as a given condition is satisfied.
+ *
+ * @param condition    the condition.
+ * @param bodyAnalysis the statement to execute while the condition is true.
+ * @param unreachable  the unreachable element for abstract joining.
+ * @param <ElementT>   the domain to abstract array element values with.
+ * @param <VariableT>  the domain to abstract variable values with.
+ */
 public record While<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
