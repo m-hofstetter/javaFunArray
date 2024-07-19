@@ -61,7 +61,7 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
       if (ctx.MINUS() != null) {
         integer = integer.negate();
       }
-      return new Expression(variable, integer);
+      return new Expression(variable, ((FiniteInteger) integer).getValue());
     }
     return new Expression(variable);
   }

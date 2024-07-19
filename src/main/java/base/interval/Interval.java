@@ -83,7 +83,7 @@ public abstract sealed class Interval implements DomainValue<Interval> permits R
   public abstract boolean equals(Object other);
 
   @Override
-  public abstract Interval addConstant(InfInt value);
+  public abstract Interval addConstant(int value);
 
   @Override
   public abstract Interval add(Interval value);

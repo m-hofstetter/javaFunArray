@@ -1,6 +1,5 @@
 package funarray;
 
-import base.infint.InfInt;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +28,7 @@ public record Bound(Set<Expression> expressions) {
    * @param value    the value by which it is being increased.
    * @return the altered bound.
    */
-  public Bound addToVariableInFunArray(VariableReference variable, InfInt value) {
+  public Bound addToVariableInFunArray(VariableReference variable, int value) {
     return new Bound(
             expressions.stream()
                     .map(e -> e.addToVariableInFunArray(variable, value))
@@ -45,7 +44,7 @@ public record Bound(Set<Expression> expressions) {
     modifiedExpressions.stream()
             .filter(e -> e.containsVariable(expression.variable()))
             .findAny()
-            .ifPresent(e -> modifiedExpressions.add(new Expression(variable, e.constant().subtract(expression.constant()))));
+            .ifPresent(e -> modifiedExpressions.add(new Expression(variable, e.constant() - expression.constant())));
 
     return new Bound(modifiedExpressions);
   }

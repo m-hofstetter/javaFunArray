@@ -1,7 +1,5 @@
 package base.interval;
 
-import base.infint.InfInt;
-
 final class Unreachable extends Interval {
 
   @Override
@@ -50,12 +48,12 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval addConstant(InfInt constant) {
+  public Interval addConstant(int constant) {
     return this;
   }
 
   @Override
-  public Interval subtractConstant(InfInt constant) {
+  public Interval subtractConstant(int constant) {
     return this;
   }
 

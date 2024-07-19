@@ -11,6 +11,10 @@ public record VariableReference(String name) {
     return this.name.equals(other.name);
   }
 
+  public static VariableReference zero() {
+    return new VariableReference("0");
+  }
+
   @Override
   public String toString() {
     return name();

@@ -1,7 +1,6 @@
 package funarray;
 
 import base.DomainValue;
-import base.infint.InfInt;
 import exception.FunArrayLogicException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -84,7 +83,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param value    the value.
    * @return the altered FunArray.
    */
-  public FunArray<ElementT> addToVariable(VariableReference variable, InfInt value) {
+  public FunArray<ElementT> addToVariable(VariableReference variable, int value) {
     var newBounds = bounds.stream()
             .map(s -> s.addToVariableInFunArray(variable, value))
             .toList();
@@ -138,7 +137,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @return the modified Segmentation.
    */
   public FunArray<ElementT> insert(Expression index, ElementT value) {
-    var trailingIndex = index.increase(InfInt.of(1));
+    var trailingIndex = index.increase(1);
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
 
@@ -166,7 +165,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       }
       rightBound = newBounds.get(leastUpperBoundIndex);
       leftBound = new Bound(rightBound.expressions().stream()
-              .map(e -> e.increase(InfInt.of(-1)))
+              .map(e -> e.increase(-1))
               .collect(Collectors.toSet()));
     }
 
@@ -179,7 +178,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       }
       leftBound = newBounds.get(greatestLowerBoundIndex);
       rightBound = new Bound(leftBound.expressions().stream()
-              .map(e -> e.increase(InfInt.of(1)))
+              .map(e -> e.increase(1))
               .collect(Collectors.toSet()));
     }
 
@@ -213,7 +212,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   public ElementT get(Expression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
-    int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(InfInt.of(1)));
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(1));
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
   }
 

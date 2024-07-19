@@ -3,7 +3,6 @@ package base.sign;
 import static base.sign.Sign.SignElement.*;
 
 import base.DomainValue;
-import base.infint.InfInt;
 import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
@@ -127,11 +126,11 @@ public class Sign implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign addConstant(InfInt constant) {
+  public Sign addConstant(int constant) {
     SignElement constantSign;
-    if (constant.equals(InfInt.of(0))) {
+    if (constant == 0) {
       constantSign = SignElement.ZERO;
-    } else if (constant.isLessThan(InfInt.of(0))) {
+    } else if (constant < 0) {
       constantSign = NEGATIVE;
     } else {
       constantSign = POSITIVE;
@@ -140,8 +139,8 @@ public class Sign implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign subtractConstant(InfInt constant) {
-    return addConstant(constant.negate());
+  public Sign subtractConstant(int constant) {
+    return addConstant(-constant);
   }
 
   @Override

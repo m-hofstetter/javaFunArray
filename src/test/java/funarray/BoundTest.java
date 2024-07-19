@@ -2,14 +2,13 @@ package funarray;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import base.infint.InfInt;
 import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 public class BoundTest {
 
-  static final Expression A = new Expression(new VariableReference("A"), InfInt.of(0));
-  static final Expression B = new Expression(new VariableReference("B"), InfInt.of(0));
+  static final Expression A = new Expression(new VariableReference("A"));
+  static final Expression B = new Expression(new VariableReference("B"));
 
   static final Set<Expression> SET_A = Set.of(A);
   static final Set<Expression> SET_AB = Set.of(A, B);

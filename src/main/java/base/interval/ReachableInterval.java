@@ -106,13 +106,13 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval addConstant(InfInt constant) {
+  public Interval addConstant(int constant) {
     return add(Interval.of(constant, constant));
   }
 
   @Override
-  public Interval subtractConstant(InfInt constant) {
-    return addConstant(constant.negate());
+  public Interval subtractConstant(int constant) {
+    return addConstant(-constant);
   }
 
   @Override

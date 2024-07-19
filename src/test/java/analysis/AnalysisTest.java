@@ -13,7 +13,6 @@ import analysis.common.statement.AssignArrayElementValueToVariable;
 import analysis.common.statement.AssignVariableValueToArrayElement;
 import analysis.common.statement.IncrementVariable;
 import base.DomainValueConversion;
-import base.infint.InfInt;
 import base.interval.Interval;
 import base.sign.Sign;
 import funarray.EnvState;
@@ -54,9 +53,9 @@ public class AnalysisTest {
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new IncrementVariable<>(a, InfInt.of(1)),
+                    new IncrementVariable<>(a, 1),
                     List.of(
-                            new IncrementVariable<>(b, InfInt.of(-1)),
+                            new IncrementVariable<>(b, -1),
                             new AssignArrayElementValueToVariable<>(expA, temp, DomainValueConversion::keepInterval),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
                             new AssignVariableValueToArrayElement<>(expB, temp, DomainValueConversion::keepInterval)
@@ -96,9 +95,9 @@ public class AnalysisTest {
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new IncrementVariable<>(a, InfInt.of(1)),
+                    new IncrementVariable<>(a, 1),
                     List.of(
-                            new IncrementVariable<>(b, InfInt.of(-1)),
+                            new IncrementVariable<>(b, -1),
                             new AssignArrayElementValueToVariable<>(expA, temp, DomainValueConversion::convertSignToInterval),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
                             new AssignVariableValueToArrayElement<>(expB, temp, DomainValueConversion::convertIntervalToSign)

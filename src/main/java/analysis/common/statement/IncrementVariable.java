@@ -3,13 +3,12 @@ package analysis.common.statement;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import base.DomainValue;
-import base.infint.InfInt;
 import funarray.EnvState;
 import funarray.VariableReference;
 
 public record IncrementVariable<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
         VariableReference variable,
-        InfInt amount) implements Analysis<ElementT, VariableT> {
+        int amount) implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
           %s ← %s + %s

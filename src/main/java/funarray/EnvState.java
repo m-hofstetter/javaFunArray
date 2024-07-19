@@ -1,7 +1,6 @@
 package funarray;
 
 import base.DomainValue;
-import base.infint.InfInt;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends
    * @param value    the amount by which to increase it
    * @return the altered FunArray
    */
-  public EnvState<ElementT, VariableT> addToVariable(VariableReference variable, InfInt value) {
+  public EnvState<ElementT, VariableT> addToVariable(VariableReference variable, int value) {
     var newVariables = new HashMap<>(variables);
     var newVariableValue = variables.get(variable).addConstant(value);
     newVariables.put(variable, newVariableValue);

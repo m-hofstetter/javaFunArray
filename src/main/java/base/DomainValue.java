@@ -1,7 +1,5 @@
 package base;
 
-import base.infint.InfInt;
-
 public interface DomainValue<T extends DomainValue<T>> {
   T join(T other);
   T meet(T other);
@@ -10,8 +8,10 @@ public interface DomainValue<T extends DomainValue<T>> {
 
   T add(T other);
   T subtract(T other);
-  T addConstant(InfInt constant);
-  T subtractConstant(InfInt constant);
+
+  T addConstant(int constant);
+
+  T subtractConstant(int constant);
   T inverse();
 
   T satisfyLessEqualThan(T other);

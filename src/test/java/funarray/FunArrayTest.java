@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
-import base.infint.InfInt;
 import base.interval.Interval;
 import exception.FunArrayLogicException;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ public class FunArrayTest {
   @Test
   void addToVariableTest() {
     var funArray = parseIntervalFunArray("{a} [-∞, ∞] {b}");
-    var modified = funArray.addToVariable(new VariableReference("b"), InfInt.of(3));
+    var modified = funArray.addToVariable(new VariableReference("b"), 3);
     assertThat(modified).isEqualTo(parseIntervalFunArray("{a} [-∞, ∞] {b-3}"));
   }
 

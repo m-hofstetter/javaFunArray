@@ -1,9 +1,8 @@
 package base.infint;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 
-@Getter(AccessLevel.PRIVATE)
+@Getter
 public final class FiniteInteger extends InfInt {
 
   private final int value;

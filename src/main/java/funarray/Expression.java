@@ -1,7 +1,5 @@
 package funarray;
 
-import base.infint.InfInt;
-
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
  * 2011. A parametric segmentation functor for fully automatic and scalable array content analysis.
@@ -11,25 +9,25 @@ import base.infint.InfInt;
  * @param variable the variable v
  * @param constant the constant k
  */
-public record Expression(VariableReference variable, InfInt constant) {
-
-  public Expression(VariableReference variable, int constant) {
-    this(variable, InfInt.of(constant));
-  }
+public record Expression(VariableReference variable, int constant) {
 
   public Expression(VariableReference variable) {
-    this(variable, InfInt.of(0));
+    this(variable, 0);
+  }
+
+  public Expression(int constant) {
+    this(VariableReference.zero(), constant);
   }
 
   @Override
   public String toString() {
-    if (constant.equals(InfInt.of(0))) {
+    if (constant == 0) {
       return variable.toString();
     }
-    if (constant.isLessThan(InfInt.of(0))) {
-      return "%s%s".formatted(variable, constant);
+    if (variable.equals(VariableReference.zero())) {
+      return String.valueOf(constant);
     }
-    return "%s+%s".formatted(variable, constant);
+    return "%s%s%s".formatted(variable, constant < 0 ? "" : "+", constant);
   }
 
   /**
@@ -41,15 +39,15 @@ public record Expression(VariableReference variable, InfInt constant) {
    * @param value    the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression addToVariableInFunArray(VariableReference variable, InfInt value) {
+  public Expression addToVariableInFunArray(VariableReference variable, int value) {
     if (this.variable().equals(variable)) {
-      return new Expression(variable, constant.subtract(value));
+      return new Expression(variable, constant - value);
     }
     return this;
   }
 
-  public Expression increase(InfInt value) {
-    return new Expression(variable, constant.add(value));
+  public Expression increase(int value) {
+    return new Expression(variable, constant + value);
   }
 
   /**
@@ -63,14 +61,14 @@ public record Expression(VariableReference variable, InfInt constant) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
-    return this.constant().isLessThan(other.constant());
+    return this.constant() < other.constant();
   }
 
   public boolean isLessEqualThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
-    return !this.constant().isGreaterThan(other.constant());
+    return this.constant() <= other.constant();
   }
 
   /**
@@ -84,14 +82,14 @@ public record Expression(VariableReference variable, InfInt constant) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
-    return this.constant().isGreaterThan(other.constant());
+    return this.constant() > other.constant();
   }
 
   public boolean isGreaterEqualThan(Expression other) {
     if (!this.variable().equals(other.variable())) {
       return false;
     }
-    return !this.constant().isLessThan(other.constant());
+    return this.constant() >= other.constant();
   }
 
   public boolean containsVariable(VariableReference variable) {
@@ -101,13 +99,13 @@ public record Expression(VariableReference variable, InfInt constant) {
   @Override
   public boolean equals(Object o) {
     if (o instanceof Expression otherExpression) {
-      return this.variable().equals(otherExpression.variable()) && this.constant().equals(otherExpression.constant());
+      return this.variable().equals(otherExpression.variable()) && this.constant() == otherExpression.constant();
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return (variable.name() + constant.toString()).hashCode();
+    return (variable.name() + constant).hashCode();
   }
 }
