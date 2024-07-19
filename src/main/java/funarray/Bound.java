@@ -1,5 +1,6 @@
 package funarray;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,9 +37,7 @@ public record Bound(Set<Expression> expressions) {
   }
 
   public Bound insertExpression(VariableReference variable, Expression expression) {
-    var modifiedExpressions = expressions.stream()
-            .filter(e -> !e.containsVariable(variable))
-            .collect(Collectors.toSet());
+    var modifiedExpressions = new HashSet<>(removeVariableOccurrences(variable).expressions);
 
     modifiedExpressions.stream()
             .filter(e -> e.containsVariable(expression.variable()))
