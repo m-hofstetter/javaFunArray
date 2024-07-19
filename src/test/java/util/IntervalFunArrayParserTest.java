@@ -24,7 +24,7 @@ public class IntervalFunArrayParserTest {
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
-                    new Bound(new Expression(new VariableReference("c")), new Expression(new VariableReference("d")))
+                    new Bound(Set.of(new Expression(new VariableReference("c")), new Expression(new VariableReference("d"))))
             ), List.of(
             Interval.of(0), Interval.unreachable()
     ), List.of(
@@ -41,7 +41,7 @@ public class IntervalFunArrayParserTest {
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
                     new Bound(new Expression(new VariableReference("b"))),
-                    new Bound(new Expression(new VariableReference("c")), new Expression(new VariableReference("d")))
+                    new Bound(Set.of(new Expression(new VariableReference("c")), new Expression(new VariableReference("d"))))
             ), List.of(
             Interval.of(0), Interval.unreachable()
     ), List.of(

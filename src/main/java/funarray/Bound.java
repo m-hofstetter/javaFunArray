@@ -14,9 +14,8 @@ public record Bound(Set<Expression> expressions) {
     expressions = Set.copyOf(expressions);
   }
 
-  @SafeVarargs
-  public Bound(Expression... expressions) {
-    this(Set.of(expressions));
+  public Bound(Expression expression) {
+    this(Set.of(expression));
   }
 
   /**
