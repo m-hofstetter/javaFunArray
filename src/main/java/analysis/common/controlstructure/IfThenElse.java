@@ -7,8 +7,11 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
-public record IfThenElse<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
-        Condition<ElementT, VariableT> condition, Analysis<ElementT, VariableT> ifAnalysis,
+public record IfThenElse<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
+        Condition<ElementT, VariableT> condition,
+        Analysis<ElementT, VariableT> ifAnalysis,
         Analysis<ElementT, VariableT> elseAnalysis,
         ElementT unreachable) implements Analysis<ElementT, VariableT> {
 

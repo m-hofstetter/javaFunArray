@@ -99,7 +99,8 @@ public record Expression(VariableReference variable, int constant) {
   @Override
   public boolean equals(Object o) {
     if (o instanceof Expression otherExpression) {
-      return this.variable().equals(otherExpression.variable()) && this.constant() == otherExpression.constant();
+      return this.variable().equals(otherExpression.variable())
+              && this.constant() == otherExpression.constant();
     }
     return false;
   }

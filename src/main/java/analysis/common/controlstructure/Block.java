@@ -7,7 +7,9 @@ import funarray.EnvState;
 import java.util.ArrayList;
 import java.util.List;
 
-public record Block<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+public record Block<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
         List<Analysis<VariableT, ElementT>> statements) implements Analysis<VariableT, ElementT> {
 
   public Block {

@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
  * @param funArray  the FunArray
  * @param variables the variable environment
  */
-public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+public record EnvState<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
         FunArray<ElementT> funArray,
         Map<VariableReference, VariableT> variables) {
 
@@ -35,7 +37,8 @@ public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends
     return new EnvState<>(newSegmentation, newVariables);
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable, Expression expression) {
+  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable,
+                                                      Expression expression) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
     modifiedFunArray = modifiedFunArray.insertExpression(variable, expression);
 
@@ -45,7 +48,8 @@ public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends
     return new EnvState<>(modifiedFunArray, modifiedVariables);
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable, VariableT interval) {
+  public EnvState<ElementT, VariableT> assignVariable(VariableReference variable,
+                                                      VariableT interval) {
     var modifiedFunArray = funArray.removeVariableOccurrences(variable);
 
     var modified = new HashMap<>(variables);
@@ -85,13 +89,15 @@ public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends
     return "A: %s\n%s".formatted(funArray, variablesString);
   }
 
-  public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other, ElementT unreachable) {
+  public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other,
+                                            ElementT unreachable) {
     var joinedFunArray = funArray.join(other.funArray, unreachable);
     return new EnvState<>(joinedFunArray, variables);
     //TODO: join variables
   }
 
-  public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other, ElementT unreachable) {
+  public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other,
+                                             ElementT unreachable) {
     var widenedFunArray = funArray.widen(other.funArray, unreachable);
     return new EnvState<>(widenedFunArray, variables);
     //TODO: proper widening
@@ -105,12 +111,14 @@ public record EnvState<ElementT extends DomainValue<ElementT>, VariableT extends
     return variables.get(new VariableReference(variableName));
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(Expression left, Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(Expression left,
+                                                                      Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(funArray.satisfyBoundExpressionLessEqualThan(left, right), variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(Expression left, Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(Expression left,
+                                                                 Expression right) {
     //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(funArray.satisfyBoundExpressionLessThan(left, right), variables());
   }

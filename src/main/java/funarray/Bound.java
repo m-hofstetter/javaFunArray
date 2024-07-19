@@ -44,7 +44,9 @@ public record Bound(Set<Expression> expressions) {
     modifiedExpressions.stream()
             .filter(e -> e.containsVariable(expression.variable()))
             .findAny()
-            .ifPresent(e -> modifiedExpressions.add(new Expression(variable, e.constant() - expression.constant())));
+            .ifPresent(e -> modifiedExpressions.add(
+                    new Expression(variable, e.constant() - expression.constant())
+            ));
 
     return new Bound(modifiedExpressions);
   }

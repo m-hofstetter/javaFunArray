@@ -14,8 +14,8 @@ public final class FiniteInteger extends InfInt {
   @Override
   public int compareTo(InfInt other) {
     return switch (other) {
-      case NegativeInfinity _ -> 1;
-      case PositiveInfinity _ -> -1;
+      case NegativeInfinity n -> 1;
+      case PositiveInfinity p -> -1;
       case FiniteInteger f -> Integer.compare(value, f.getValue());
     };
   }

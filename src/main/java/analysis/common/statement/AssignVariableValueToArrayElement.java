@@ -8,10 +8,13 @@ import funarray.Expression;
 import funarray.VariableReference;
 import java.util.function.Function;
 
-public record AssignVariableValueToArrayElement<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+public record AssignVariableValueToArrayElement<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
         Expression arrayIndex,
         VariableReference variable,
-        Function<VariableT, ElementT> variableToElementValueConversion) implements Analysis<ElementT, VariableT> {
+        Function<VariableT, ElementT> variableToElementValueConversion)
+        implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
           A[%s] ← %s
@@ -20,7 +23,10 @@ public record AssignVariableValueToArrayElement<ElementT extends DomainValue<Ele
   @Override
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var value = startingState.getVariableValue(variable);
-    var resultState = startingState.assignArrayElement(arrayIndex, variableToElementValueConversion.apply(value));
+    var resultState = startingState.assignArrayElement(
+            arrayIndex,
+            variableToElementValueConversion.apply(value)
+    );
     var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndex, variable, resultState);
     return new AnalysisResult<>(resultState, protocol);
   }

@@ -6,7 +6,9 @@ import base.DomainValue;
 import funarray.EnvState;
 import funarray.VariableReference;
 
-public record IncrementVariable<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+public record IncrementVariable<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
         VariableReference variable,
         int amount) implements Analysis<ElementT, VariableT> {
 

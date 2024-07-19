@@ -5,8 +5,11 @@ import funarray.EnvState;
 import funarray.Expression;
 import java.util.function.Function;
 
-public record ArrayElementEqualToExpression<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
-        Expression index, Expression comparand,
+public record ArrayElementEqualToExpression<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
+        Expression index,
+        Expression comparand,
         Function<VariableT, ElementT> valueConversion) implements Condition<ElementT, VariableT> {
 
   @Override

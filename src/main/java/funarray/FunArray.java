@@ -39,11 +39,17 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
 
     if (values.size() != bounds.size() - 1) {
-      throw new IllegalArgumentException("Number of segment values does not match up with count of bound count. Needs to be exactly one less.");
+      throw new IllegalArgumentException(
+              "Number of segment values does not match up with count of bound count. Needs to be"
+                      + "exactly one less."
+      );
     }
 
     if (emptiness.size() != bounds.size() - 1) {
-      throw new IllegalArgumentException("Number of emptiness values does not match up with count of bound count. Needs to be exactly one less.");
+      throw new IllegalArgumentException(
+              "Number of emptiness values does not match up with count of bound count. Needs to be"
+                      + "exactly one less."
+      );
     }
 
     this.bounds = List.copyOf(bounds);
@@ -101,13 +107,19 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public FunArray<ElementT> removeVariableOccurrences(VariableReference variable) {
-    return new FunArray<>(bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList(), values, emptiness).removeEmptyBounds();
+    return new FunArray<>(
+            bounds.stream().map(b -> b.removeVariableOccurrences(variable)).toList(),
+            values, emptiness
+    ).removeEmptyBounds();
   }
 
 
   public FunArray<ElementT> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
-    var newBounds = bounds.stream().map(b -> b.restrictExpressionOccurrences(allowedExpressions)).toList();
-    return new FunArray<>(newBounds, values, emptiness).removeEmptyBounds();
+    var newBounds = bounds.stream()
+            .map(b -> b.restrictExpressionOccurrences(allowedExpressions))
+            .toList();
+    return new FunArray<>(newBounds, values, emptiness)
+            .removeEmptyBounds();
   }
 
   public FunArray<ElementT> removeEmptyBounds() {
@@ -341,7 +353,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param list the list.
    * @param i    the index.
    */
-  private static <ElementT extends DomainValue<ElementT>> void joinValueWithPredecessor(List<ElementT> list, int i) {
+  private static <ElementT extends DomainValue<ElementT>>
+  void joinValueWithPredecessor(List<ElementT> list, int i) {
+
     var joinedValue = list.get(i - 1).join(list.get(i));
     list.remove(i);
     list.remove(i - 1);
@@ -358,8 +372,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param otherNeutralElement the neutral element for unifying of the other FunArray.
    * @return the joined/met/widened/narrowed FunArray
    */
-  private FunArray<ElementT> unifyOperation(BinaryOperator<ElementT> operation, FunArray<ElementT> other,
-                                            ElementT thisNeutralElement, ElementT otherNeutralElement) {
+  private FunArray<ElementT> unifyOperation(BinaryOperator<ElementT> operation,
+                                            FunArray<ElementT> other,
+                                            ElementT thisNeutralElement,
+                                            ElementT otherNeutralElement) {
 
     var unifiedArrays = this.unify(other, thisNeutralElement, otherNeutralElement);
     var thisUnified = unifiedArrays.resultThis();
@@ -427,12 +443,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
 
     if (leftIndex + 1 == rightIndex) {
-      // Since the condition requires strict inequality, a single segment between the expressions cannot be empty.
+      // Since the condition requires strict inequality, a single segment between the expressions
+      // cannot be empty.
       var modifiedEmptiness = new ArrayList<>(emptiness);
       modifiedEmptiness.set(leftIndex, false);
       return new FunArray<>(bounds, values, modifiedEmptiness);
     } else if (leftIndex < rightIndex) {
-      // If there is more than one segment in between the expressions it cannot be decided which one is not empty.
+      // If there is more than one segment in between the expressions it cannot be decided which one
+      // is not empty.
       return this;
     } else {
       // Bound order states that left expression is greater than right expression

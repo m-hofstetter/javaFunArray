@@ -1,17 +1,15 @@
 package base.sign;
 
-import static base.sign.Sign.SignElement.*;
+import static base.sign.Sign.SignElement.NEGATIVE;
+import static base.sign.Sign.SignElement.POSITIVE;
+import static base.sign.Sign.SignElement.ZERO;
 
 import base.DomainValue;
-import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Sign implements DomainValue<Sign> {
-
-  @Getter
-  final Set<SignElement> elements;
+public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
 
   public Sign(Set<SignElement> elements) {
     this.elements = Set.copyOf(elements);

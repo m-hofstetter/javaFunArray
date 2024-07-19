@@ -4,7 +4,9 @@ import base.DomainValue;
 import funarray.EnvState;
 import funarray.Expression;
 
-public record ExpressionLessThanExpression<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
+public record ExpressionLessThanExpression<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
         Expression left,
         Expression right) implements Condition<ElementT, VariableT> {
 

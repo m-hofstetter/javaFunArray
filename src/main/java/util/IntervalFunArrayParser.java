@@ -1,21 +1,27 @@
 package util;
 
-import static base.sign.Sign.SignElement.*;
+import static base.sign.Sign.SignElement.NEGATIVE;
+import static base.sign.Sign.SignElement.POSITIVE;
+import static base.sign.Sign.SignElement.ZERO;
 
 import base.DomainValue;
-import base.infint.*;
+import base.infint.FiniteInteger;
+import base.infint.InfInt;
+import base.infint.Infinity;
+import base.infint.NegativeInfinity;
+import base.infint.PositiveInfinity;
 import base.interval.Interval;
 import base.sign.Sign;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
 import funarray.VariableReference;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   @Override
@@ -55,7 +61,9 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
 
   @Override
   public Expression visitExpression(FunArrayParser.ExpressionContext ctx) {
-    var variable = ctx.variableName() != null ? new VariableReference(ctx.variableName().getText()) : new VariableReference("0");
+    var variable = ctx.variableName() != null
+            ? new VariableReference(ctx.variableName().getText())
+            : new VariableReference("0");
     if (ctx.finiteInteger() != null) {
       InfInt integer = visitFiniteInteger(ctx.finiteInteger());
       if (ctx.MINUS() != null) {

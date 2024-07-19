@@ -7,8 +7,11 @@ import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 
-public record While<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>>(
-        Condition<ElementT, VariableT> condition, Analysis<ElementT, VariableT> bodyAnalysis,
+public record While<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>>(
+        Condition<ElementT, VariableT> condition,
+        Analysis<ElementT, VariableT> bodyAnalysis,
         ElementT unreachable) implements Analysis<ElementT, VariableT> {
 
   public static final int WIDENING_LOOP_HARD_LIMIT = 1000;
@@ -34,10 +37,20 @@ public record While<ElementT extends DomainValue<ElementT>, VariableT extends Do
       if (state.equals(nextState)) {
         // fixpoint has been reached
         var resultState = condition.satisfyComplement(state);
-        return new AnalysisResult<>(resultState, PROTOCOL_TEMPLATE.formatted(condition, satisfiedState.toString().indent(INDENTATION), result.protocol().indent(INDENTATION), resultState));
+        return new AnalysisResult<>(
+                resultState,
+                PROTOCOL_TEMPLATE.formatted(
+                        condition,
+                        satisfiedState.toString().indent(INDENTATION),
+                        result.protocol().indent(INDENTATION),
+                        resultState
+                )
+        );
       }
       state = nextState;
     }
-    throw new RuntimeException("Could not find fixpoint after %d widenings.".formatted(WIDENING_LOOP_HARD_LIMIT));
+    throw new RuntimeException(
+            "Could not find fixpoint after %d widenings.".formatted(WIDENING_LOOP_HARD_LIMIT)
+    );
   }
 }

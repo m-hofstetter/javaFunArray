@@ -1,6 +1,8 @@
 package base;
 
-import static base.sign.Sign.SignElement.*;
+import static base.sign.Sign.SignElement.NEGATIVE;
+import static base.sign.Sign.SignElement.POSITIVE;
+import static base.sign.Sign.SignElement.ZERO;
 
 import base.infint.InfInt;
 import base.interval.Interval;
@@ -35,7 +37,7 @@ public class DomainValueConversion {
 
   public static Interval convertSignToInterval(Sign sign) {
     var combined = Interval.unreachable();
-    for (var element : sign.getElements().stream()
+    for (var element : sign.elements().stream()
             .map(signElement -> switch (signElement) {
               case NEGATIVE -> Interval.of(InfInt.negInf(), -1);
               case ZERO -> Interval.of(0, 0);

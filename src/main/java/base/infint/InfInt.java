@@ -18,9 +18,6 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return new NegativeInfinity();
   }
 
-  @Override
-  public abstract int compareTo(InfInt other);
-
   /**
    * A utility function returning the minimum of two integer with infinity handling.
    *
@@ -59,9 +56,6 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return this.compareTo(other) >= 0;
   }
 
-  @Override
-  public abstract String toString();
-
   public boolean isPosInf() {
     return this instanceof PositiveInfinity;
   }
@@ -85,7 +79,4 @@ public abstract sealed class InfInt implements Comparable<InfInt>
   }
 
   public abstract InfInt negate();
-
-  @Override
-  public abstract boolean equals(Object other);
 }

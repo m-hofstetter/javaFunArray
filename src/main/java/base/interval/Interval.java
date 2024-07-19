@@ -6,7 +6,8 @@ import base.infint.InfInt;
 /**
  * An abstract domain representing integers as intervals.
  */
-public abstract sealed class Interval implements DomainValue<Interval> permits ReachableInterval, Unreachable {
+public abstract sealed class Interval
+        implements DomainValue<Interval> permits ReachableInterval, Unreachable {
 
   public static Interval unreachable() {
     return new Unreachable();

@@ -1,6 +1,8 @@
 package util;
 
-import static base.sign.Sign.SignElement.*;
+import static base.sign.Sign.SignElement.NEGATIVE;
+import static base.sign.Sign.SignElement.POSITIVE;
+import static base.sign.Sign.SignElement.ZERO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import base.interval.Interval;
@@ -9,9 +11,9 @@ import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
 import funarray.VariableReference;
-import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class IntervalFunArrayParserTest {
 
@@ -68,7 +70,7 @@ public class IntervalFunArrayParserTest {
 
   @Test
   void parseSignTest() {
-    var f = IntervalFunArrayParser.parseIntervalFunArray("{a} <0 {b} ⊤ {c}");
+    var f = IntervalFunArrayParser.parseSignFunArray("{a} <0 {b} ⊤ {c}");
     var comparand = new FunArray<>(
             List.of(
                     new Bound(new Expression(new VariableReference("a"))),
