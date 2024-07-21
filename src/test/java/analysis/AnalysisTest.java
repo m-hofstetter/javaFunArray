@@ -34,7 +34,7 @@ public class AnalysisTest {
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
-    var environment = new EnvState<>(funArray, Map.of(
+    var environment = new EnvState<>(Map.of("A", funArray), Map.of(
             "a", Interval.unknown(),
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
@@ -42,22 +42,22 @@ public class AnalysisTest {
             "temp", Interval.unknown()));
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("0"), value -> value);
+    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("A", new Expression("a"), new Expression("0"), value -> value);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>(expA, "temp", DomainValueConversion::keepInterval),
-                            new AssignArrayElementValueToArrayElement<>(expB, expA),
-                            new AssignVariableValueToArrayElement<>(expB, "temp", DomainValueConversion::keepInterval)
+                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::keepInterval),
+                            new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
+                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::keepInterval)
                     ),
                     Interval.unreachable()),
             Interval.unreachable());
 
     var result = program.run(environment);
-    var expected = parseIntervalFunArray("{0} [-100, -1] {a b}? [0, 100] {A.length}?");
+    var expected = Map.of("A", parseIntervalFunArray("{0} [-100, -1] {a b}? [0, 100] {A.length}?"));
     assertThat(result.resultState().funArray()).isEqualTo(expected);
   }
 
@@ -68,7 +68,7 @@ public class AnalysisTest {
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
-    var environment = new EnvState<>(funArray, Map.of(
+    var environment = new EnvState<>(Map.of("A", funArray), Map.of(
             "a", Interval.unknown(),
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
@@ -77,7 +77,7 @@ public class AnalysisTest {
 
 
     var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>(new Expression("a"), new Expression("0"), DomainValueConversion::convertIntervalToSign);
+    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new Expression("a"), new Expression("0"), DomainValueConversion::convertIntervalToSign);
 
 
     var program = new While<>(loopCondition,
@@ -85,15 +85,15 @@ public class AnalysisTest {
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>(expA, "temp", DomainValueConversion::convertSignToInterval),
-                            new AssignArrayElementValueToArrayElement<>(expB, expA),
-                            new AssignVariableValueToArrayElement<>(expB, "temp", DomainValueConversion::convertIntervalToSign)
+                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::convertSignToInterval),
+                            new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
+                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::convertIntervalToSign)
                     ),
                     new Sign(Set.of())),
             new Sign(Set.of()));
 
     var result = program.run(environment);
-    var expected = parseSignFunArray("{0} <0 {a b}? ≥0 {A.length}?");
+    var expected = Map.of("A", parseSignFunArray("{0} <0 {a b}? ≥0 {A.length}?"));
     assertThat(result.resultState().funArray()).isEqualTo(expected);
   }
 }

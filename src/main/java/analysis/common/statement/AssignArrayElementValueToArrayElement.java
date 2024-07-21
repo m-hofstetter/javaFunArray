@@ -17,7 +17,9 @@ import funarray.Expression;
 public record AssignArrayElementValueToArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
+        String arrRefSource,
         Expression arrayIndexSource,
+        String arrRefTarget,
         Expression arrayIndexTarget) implements Analysis<ElementT, VariableT> {
   public static final String PROTOCOL_TEMPLATE = """
           A[%s] ← A[%s]
@@ -26,8 +28,9 @@ public record AssignArrayElementValueToArrayElement<
   @Override
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var resultState = startingState.assignArrayElement(
+            arrRefTarget,
             arrayIndexTarget,
-            startingState.getArrayElement(arrayIndexSource)
+            startingState.getArrayElement(arrRefSource, arrayIndexSource)
     );
     var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndexTarget, arrayIndexSource, resultState);
     return new AnalysisResult<>(resultState, protocol);

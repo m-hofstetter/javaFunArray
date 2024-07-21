@@ -20,6 +20,7 @@ import java.util.function.Function;
 public record AssignVariableValueToArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
+        String arrRef,
         Expression arrayIndex,
         String varRef,
         Function<VariableT, ElementT> variableToElementValueConversion)
@@ -33,6 +34,7 @@ public record AssignVariableValueToArrayElement<
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var value = startingState.getVariableValue(varRef);
     var resultState = startingState.assignArrayElement(
+            arrRef,
             arrayIndex,
             variableToElementValueConversion.apply(value)
     );

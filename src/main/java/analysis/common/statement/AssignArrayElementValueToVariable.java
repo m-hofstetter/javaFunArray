@@ -20,6 +20,7 @@ import java.util.function.Function;
 public record AssignArrayElementValueToVariable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
+        String arrRef,
         Expression arrayIndex,
         String varRef,
         Function<ElementT, VariableT> elementValueToVariableConversion)
@@ -31,9 +32,10 @@ public record AssignArrayElementValueToVariable<
 
   @Override
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
-    var arrayElementValue = startingState.getArrayElement(arrayIndex);
+    var arrayElementValue = startingState.getArrayElement(arrRef, arrayIndex);
     var resultState = startingState.assignVariable(
             varRef,
+            arrRef,
             elementValueToVariableConversion.apply(arrayElementValue)
     );
     var protocol = PROTOCOL_TEMPLATE.formatted(varRef, arrayIndex, resultState);

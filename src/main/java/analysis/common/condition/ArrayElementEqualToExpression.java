@@ -17,22 +17,23 @@ import java.util.function.Function;
 public record ArrayElementEqualToExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
+        String arrRef,
         Expression index,
         Expression comparand,
         Function<VariableT, ElementT> valueConversion) implements Condition<ElementT, VariableT> {
 
   @Override
   public EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state) {
-    var value = state.getArrayElement(index);
+    var value = state.getArrayElement(arrRef, index);
     value = value.satisfyEqual(valueConversion.apply(state.calculateExpression(comparand)));
-    return state.assignArrayElement(index, value);
+    return state.assignArrayElement(arrRef, index, value);
   }
 
   @Override
   public EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state) {
-    var value = state.getArrayElement(index);
+    var value = state.getArrayElement(arrRef, index);
     value = value.satisfyNotEqual(valueConversion.apply(state.calculateExpression(comparand)));
-    return state.assignArrayElement(index, value);
+    return state.assignArrayElement(arrRef, index, value);
   }
 
   @Override

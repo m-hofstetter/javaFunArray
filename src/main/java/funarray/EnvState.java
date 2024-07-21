@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public record EnvState<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
-        FunArray<ElementT> funArray,
+        Map<String, FunArray<ElementT>> funArray,
         Map<String, VariableT> variables) {
 
   public EnvState {
@@ -33,29 +33,40 @@ public record EnvState<
     var newVariables = new HashMap<>(variables);
     var newVariableValue = variables.get(varRef).addConstant(value);
     newVariables.put(varRef, newVariableValue);
-    var newSegmentation = funArray.addToVariable(varRef, value);
-    return new EnvState<>(newSegmentation, newVariables);
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().addToVariable(varRef, value)
+            ));
+    return new EnvState<>(modifiedFunArrays, newVariables);
   }
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef,
+                                                      String arrRef,
                                                       Expression expression) {
-    var modifiedFunArray = funArray.removeVariableOccurrences(varRef);
-    modifiedFunArray = modifiedFunArray.insertExpression(varRef, expression);
+    var modifiedFunArrays = new HashMap<>(funArray);
+    modifiedFunArrays.put(arrRef,
+            modifiedFunArrays.get(arrRef)
+                    .removeVariableOccurrences(varRef)
+                    .insertExpression(varRef, expression)
+    );
 
     var modifiedVariables = new HashMap<>(variables);
     modifiedVariables.put(varRef, calculateExpression(expression));
 
-    return new EnvState<>(modifiedFunArray, modifiedVariables);
+    return new EnvState<>(modifiedFunArrays, modifiedVariables);
   }
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef,
+                                                      String arrRef,
                                                       VariableT interval) {
-    var modifiedFunArray = funArray.removeVariableOccurrences(varRef);
+    var modifiedFunArrays = new HashMap<>(funArray);
+    modifiedFunArrays.put(arrRef, modifiedFunArrays.get(arrRef).removeVariableOccurrences(varRef));
 
     var modified = new HashMap<>(variables);
     modified.put(varRef, interval);
 
-    return new EnvState<>(modifiedFunArray, modified);
+    return new EnvState<>(modifiedFunArrays, modified);
   }
 
   /**
@@ -65,9 +76,15 @@ public record EnvState<
    * @param value the value.
    * @return the altered FunArray
    */
-  public EnvState<ElementT, VariableT> assignArrayElement(Expression index, ElementT value) {
-    var modified = funArray.insert(index, value);
-    return new EnvState<>(modified, variables());
+  public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
+                                                          Expression index,
+                                                          ElementT value) {
+    var modifiedFunArrays = new HashMap<>(funArray);
+    modifiedFunArrays.put(arrRef,
+            modifiedFunArrays.get(arrRef)
+                    .insert(index, value)
+    );
+    return new EnvState<>(modifiedFunArrays, variables());
   }
 
   /**
@@ -76,8 +93,8 @@ public record EnvState<
    * @param index the index.
    * @return the value.
    */
-  public ElementT getArrayElement(Expression index) {
-    return funArray.get(index);
+  public ElementT getArrayElement(String arrRef, Expression index) {
+    return funArray.get(arrRef).get(index);
   }
 
   @Override
@@ -85,21 +102,32 @@ public record EnvState<
     var variablesString = variables.entrySet().stream()
             .map(v -> "%s: %s".formatted(v.getKey(), v.getValue()))
             .collect(Collectors.joining(" "));
+    var funArraysString = funArray.entrySet().stream()
+            .map(v -> "%s: %s".formatted(v.getKey(), v.getValue()))
+            .collect(Collectors.joining("\n"));
 
-    return "A: %s\n%s".formatted(funArray, variablesString);
+    return funArraysString + "\n" + variablesString;
   }
 
   public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other,
                                             ElementT unreachable) {
-    var joinedFunArray = funArray.join(other.funArray, unreachable);
-    return new EnvState<>(joinedFunArray, variables);
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().join(other.funArray().get(e.getKey()), unreachable)
+            ));
+    return new EnvState<>(modifiedFunArrays, variables);
     //TODO: join variables
   }
 
   public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other,
                                              ElementT unreachable) {
-    var widenedFunArray = funArray.widen(other.funArray, unreachable);
-    return new EnvState<>(widenedFunArray, variables);
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().widen(other.funArray().get(e.getKey()), unreachable)
+            ));
+    return new EnvState<>(modifiedFunArrays, variables);
     //TODO: proper widening
   }
 
@@ -109,18 +137,29 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(Expression left,
                                                                       Expression right) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
+            ));
     //TODO: Variables need to be modified to satisfy condition
-    return new EnvState<>(funArray.satisfyBoundExpressionLessEqualThan(left, right), variables());
+    return new EnvState<>(modifiedFunArrays, variables());
   }
 
   public EnvState<ElementT, VariableT> satisfyExpressionLessThan(Expression left,
                                                                  Expression right) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
+            ));
     //TODO: Variables need to be modified to satisfy condition
-    return new EnvState<>(funArray.satisfyBoundExpressionLessThan(left, right), variables());
+    return new EnvState<>(modifiedFunArrays, variables());
   }
 
   public VariableT calculateExpression(Expression expression) {
     var variableValue = variables.get(expression.varRef());
     return variableValue.addConstant(expression.constant());
   }
+
 }
