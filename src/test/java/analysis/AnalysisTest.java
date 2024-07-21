@@ -17,11 +17,10 @@ import base.interval.Interval;
 import base.sign.Sign;
 import funarray.EnvState;
 import funarray.Expression;
-import funarray.VariableReference;
-import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class AnalysisTest {
 
@@ -30,35 +29,29 @@ public class AnalysisTest {
    */
   @Test
   void cousotExampleTest() {
-    var a = new VariableReference("a");
-    var b = new VariableReference("b");
-    var length = new VariableReference("A.length");
-    var zero = new VariableReference("0");
-    var temp = new VariableReference("temp");
-
-    var expA = new Expression(a);
-    var expB = new Expression(b);
+    var expA = new Expression("a");
+    var expB = new Expression("b");
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
     var environment = new EnvState<>(funArray, Map.of(
-            a, Interval.unknown(),
-            b, Interval.unknown(),
-            length, Interval.unknown(),
-            zero, Interval.of(0),
-            temp, Interval.unknown()));
+            "a", Interval.unknown(),
+            "b", Interval.unknown(),
+            "A.length", Interval.unknown(),
+            "0", Interval.of(0),
+            "temp", Interval.unknown()));
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression(a), new Expression(b));
-    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>(new Expression(a), new Expression(zero, 0), value -> value);
+    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("b"));
+    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("0"), value -> value);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new IncrementVariable<>(a, 1),
+                    new IncrementVariable<>("a", 1),
                     List.of(
-                            new IncrementVariable<>(b, -1),
-                            new AssignArrayElementValueToVariable<>(expA, temp, DomainValueConversion::keepInterval),
+                            new IncrementVariable<>("b", -1),
+                            new AssignArrayElementValueToVariable<>(expA, "temp", DomainValueConversion::keepInterval),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
-                            new AssignVariableValueToArrayElement<>(expB, temp, DomainValueConversion::keepInterval)
+                            new AssignVariableValueToArrayElement<>(expB, "temp", DomainValueConversion::keepInterval)
                     ),
                     Interval.unreachable()),
             Interval.unreachable());
@@ -70,37 +63,31 @@ public class AnalysisTest {
 
   @Test
   void cousotExampleWithSignDomainTest() {
-    var a = new VariableReference("a");
-    var b = new VariableReference("b");
-    var length = new VariableReference("A.length");
-    var zero = new VariableReference("0");
-    var temp = new VariableReference("temp");
-
-    var expA = new Expression(a);
-    var expB = new Expression(b);
+    var expA = new Expression("a");
+    var expB = new Expression("b");
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
     var environment = new EnvState<>(funArray, Map.of(
-            a, Interval.unknown(),
-            b, Interval.unknown(),
-            length, Interval.unknown(),
-            zero, Interval.of(0),
-            temp, Interval.unknown()));
+            "a", Interval.unknown(),
+            "b", Interval.unknown(),
+            "A.length", Interval.unknown(),
+            "0", Interval.of(0),
+            "temp", Interval.unknown()));
 
 
-    var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new Expression(a), new Expression(b));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>(new Expression(a), new Expression(zero, 0), DomainValueConversion::convertIntervalToSign);
+    var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new Expression("a"), new Expression("b"));
+    var positiveIntCondition = new ArrayElementLessThanExpression<>(new Expression("a"), new Expression("0"), DomainValueConversion::convertIntervalToSign);
 
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new IncrementVariable<>(a, 1),
+                    new IncrementVariable<>("a", 1),
                     List.of(
-                            new IncrementVariable<>(b, -1),
-                            new AssignArrayElementValueToVariable<>(expA, temp, DomainValueConversion::convertSignToInterval),
+                            new IncrementVariable<>("b", -1),
+                            new AssignArrayElementValueToVariable<>(expA, "temp", DomainValueConversion::convertSignToInterval),
                             new AssignArrayElementValueToArrayElement<>(expB, expA),
-                            new AssignVariableValueToArrayElement<>(expB, temp, DomainValueConversion::convertIntervalToSign)
+                            new AssignVariableValueToArrayElement<>(expB, "temp", DomainValueConversion::convertIntervalToSign)
                     ),
                     new Sign(Set.of())),
             new Sign(Set.of()));

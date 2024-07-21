@@ -5,7 +5,6 @@ import analysis.common.AnalysisResult;
 import base.DomainValue;
 import funarray.EnvState;
 import funarray.Expression;
-import funarray.VariableReference;
 import java.util.function.Function;
 
 /**
@@ -22,7 +21,7 @@ public record AssignArrayElementValueToVariable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         Expression arrayIndex,
-        VariableReference variable,
+        String varRef,
         Function<ElementT, VariableT> elementValueToVariableConversion)
         implements Analysis<ElementT, VariableT> {
 
@@ -34,10 +33,10 @@ public record AssignArrayElementValueToVariable<
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var arrayElementValue = startingState.getArrayElement(arrayIndex);
     var resultState = startingState.assignVariable(
-            variable,
+            varRef,
             elementValueToVariableConversion.apply(arrayElementValue)
     );
-    var protocol = PROTOCOL_TEMPLATE.formatted(variable, arrayIndex, resultState);
+    var protocol = PROTOCOL_TEMPLATE.formatted(varRef, arrayIndex, resultState);
     return new AnalysisResult<>(resultState, protocol);
   }
 }

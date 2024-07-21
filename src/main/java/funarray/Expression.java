@@ -6,28 +6,24 @@ package funarray;
  * SIGPLAN Not. 46, 1 (January 2011), 105–118. <a
  * href="https://doi.org/10.1145/1925844.1926399">https://doi.org/10.1145/1925844.1926399</a>
  *
- * @param variable the variable v
+ * @param varRef the reference for a variable v
  * @param constant the constant k
  */
-public record Expression(VariableReference variable, int constant) {
+public record Expression(String varRef, int constant) {
 
-  public Expression(VariableReference variable) {
+  public Expression(String variable) {
     this(variable, 0);
-  }
-
-  public Expression(int constant) {
-    this(VariableReference.zero(), constant);
   }
 
   @Override
   public String toString() {
     if (constant == 0) {
-      return variable.toString();
+      return varRef;
     }
-    if (variable.equals(VariableReference.zero())) {
+    if (varRef.equals("0")) {
       return String.valueOf(constant);
     }
-    return "%s%s%s".formatted(variable, constant < 0 ? "" : "+", constant);
+    return "%s%s%s".formatted(varRef, constant < 0 ? "" : "+", constant);
   }
 
   /**
@@ -35,19 +31,19 @@ public record Expression(VariableReference variable, int constant) {
    * replaced by f^-1(v), so that it still represents the Array correctly. See Cousot et al. 2011.
    * For adding to a variable v by an amount i, this means replacing alle occurrences of v by v-1.
    *
-   * @param variable the variable v.
-   * @param value    the value by which it is being increased.
+   * @param otherVarRef the variable v.
+   * @param value       the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression addToVariableInFunArray(VariableReference variable, int value) {
-    if (this.variable().equals(variable)) {
-      return new Expression(variable, constant - value);
+  public Expression addToVariableInFunArray(String otherVarRef, int value) {
+    if (this.varRef().equals(otherVarRef)) {
+      return new Expression(otherVarRef, constant - value);
     }
     return this;
   }
 
   public Expression increase(int value) {
-    return new Expression(variable, constant + value);
+    return new Expression(varRef, constant + value);
   }
 
   /**
@@ -58,14 +54,14 @@ public record Expression(VariableReference variable, int constant) {
    *         than the other and UNKNOWN if it can't be determined
    */
   public boolean isLessThan(Expression other) {
-    if (!this.variable().equals(other.variable())) {
+    if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() < other.constant();
   }
 
   public boolean isLessEqualThan(Expression other) {
-    if (!this.variable().equals(other.variable())) {
+    if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() <= other.constant();
@@ -79,34 +75,25 @@ public record Expression(VariableReference variable, int constant) {
    *         greater than the other and UNKNOWN if it can't be determined
    */
   public boolean isGreaterThan(Expression other) {
-    if (!this.variable().equals(other.variable())) {
+    if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() > other.constant();
   }
 
   public boolean isGreaterEqualThan(Expression other) {
-    if (!this.variable().equals(other.variable())) {
+    if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() >= other.constant();
   }
 
-  public boolean containsVariable(VariableReference variable) {
-    return this.variable.equals(variable);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o instanceof Expression otherExpression) {
-      return this.variable().equals(otherExpression.variable())
-              && this.constant() == otherExpression.constant();
-    }
-    return false;
+  public boolean containsVariable(String varRef) {
+    return this.varRef.equals(varRef);
   }
 
   @Override
   public int hashCode() {
-    return (variable.name() + constant).hashCode();
+    return (varRef + constant).hashCode();
   }
 }

@@ -15,7 +15,6 @@ import base.sign.Sign;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
-import funarray.VariableReference;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,8 +61,8 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   @Override
   public Expression visitExpression(FunArrayParser.ExpressionContext ctx) {
     var variable = ctx.variableName() != null
-            ? new VariableReference(ctx.variableName().getText())
-            : new VariableReference("0");
+            ? ctx.variableName().getText()
+            : "0";
     if (ctx.finiteInteger() != null) {
       InfInt integer = visitFiniteInteger(ctx.finiteInteger());
       if (ctx.MINUS() != null) {

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 public class BoundTest {
 
-  static final Expression A = new Expression(new VariableReference("A"));
-  static final Expression B = new Expression(new VariableReference("B"));
+  static final Expression A = new Expression("A");
+  static final Expression B = new Expression("B");
 
   static final Set<Expression> SET_A = Set.of(A);
   static final Set<Expression> SET_AB = Set.of(A, B);

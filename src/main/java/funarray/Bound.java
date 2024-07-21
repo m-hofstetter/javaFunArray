@@ -26,14 +26,14 @@ public record Bound(Set<Expression> expressions) {
    * replaced by f^-1(v), so that it still represents the Array correctly. See Cousot et al. 2011.
    * For adding to a variable v by an amount i, this means replacing alle occurrences of v by v-1.
    *
-   * @param variable the variable v.
+   * @param varRef the variable v.
    * @param value    the value by which it is being increased.
    * @return the altered bound.
    */
-  public Bound addToVariableInFunArray(VariableReference variable, int value) {
+  public Bound addToVariableInFunArray(String varRef, int value) {
     return new Bound(
             expressions.stream()
-                    .map(e -> e.addToVariableInFunArray(variable, value))
+                    .map(e -> e.addToVariableInFunArray(varRef, value))
                     .collect(Collectors.toSet())
     );
   }
@@ -42,21 +42,21 @@ public record Bound(Set<Expression> expressions) {
    * Inserts a new expression if a specified variable is present in its expressions. Is needed for
    * assigning a value to a variable that might be contained in a {@link FunArray}.
    *
-   * @param variable   the variable.
+   * @param varRef   the variable.
    * @param expression the expression
    * @return the modified bound.
    */
   public Bound insertExpressionIfVariablePresent(
-          VariableReference variable,
+          String varRef,
           Expression expression
   ) {
-    var modifiedExpressions = new HashSet<>(removeVariableOccurrences(variable).expressions);
+    var modifiedExpressions = new HashSet<>(removeVariableOccurrences(varRef).expressions);
 
     modifiedExpressions.stream()
-            .filter(e -> e.containsVariable(expression.variable()))
+            .filter(e -> e.containsVariable(expression.varRef()))
             .findAny()
             .ifPresent(e -> modifiedExpressions.add(
-                    new Expression(variable, e.constant() - expression.constant())
+                    new Expression(varRef, e.constant() - expression.constant())
             ));
 
     return new Bound(modifiedExpressions);
@@ -68,9 +68,9 @@ public record Bound(Set<Expression> expressions) {
    * @param variable the variable.
    * @return the modified bound.
    */
-  public Bound removeVariableOccurrences(VariableReference variable) {
+  public Bound removeVariableOccurrences(String varRef) {
     var modifiedExpressions = expressions.stream()
-            .filter(e -> !e.containsVariable(variable))
+            .filter(e -> !e.containsVariable(varRef))
             .collect(Collectors.toSet());
     return new Bound(modifiedExpressions);
   }

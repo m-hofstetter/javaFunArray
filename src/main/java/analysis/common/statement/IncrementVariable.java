@@ -4,7 +4,6 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import base.DomainValue;
 import funarray.EnvState;
-import funarray.VariableReference;
 
 /**
  * Atomic statement for incrementing a variable.
@@ -17,7 +16,7 @@ import funarray.VariableReference;
 public record IncrementVariable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
-        VariableReference variable,
+        String variable,
         int amount) implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
