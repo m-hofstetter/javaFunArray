@@ -96,4 +96,50 @@ public class AnalysisTest {
     var expected = Map.of("A", parseSignFunArray("{0} <0 {a b}? ≥0 {A.length}?"));
     assertThat(result.resultState().funArray()).isEqualTo(expected);
   }
+
+  @Test
+  public void sortIntoArraysTest() {
+    var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
+    var arrayPositive = parseIntervalFunArray("{0 p} ⊥ {P.length}");
+    var arrayNegative = parseIntervalFunArray("{0 n} ⊥ {N.length}");
+    var expS = new Expression("s");
+    var expP = new Expression("p");
+    var expN = new Expression("n");
+
+    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("s"), new Expression("S.length"));
+    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new Expression("s"), new Expression("0"), DomainValueConversion::keepInterval);
+
+    var environment = new EnvState<>(Map.of(
+            "S", arraySource,
+            "P", arrayPositive,
+            "N", arrayNegative
+    ), Map.of(
+            "s", Interval.of(0),
+            "p", Interval.of(0),
+            "n", Interval.of(0),
+            "S.length", Interval.unknown(),
+            "0", Interval.of(0)
+    ));
+
+
+    var program = new While<>(loopCondition, List.of(
+            new IfThenElse<>(negativeIntCondition, List.of(
+                    new AssignArrayElementValueToArrayElement<>("S", expS, "N", expN),
+                    new IncrementVariable<>("n", 1)
+            ), List.of(
+                    new AssignArrayElementValueToArrayElement<>("S", expS, "P", expP),
+                    new IncrementVariable<>("p", 1)
+            ), Interval.unreachable()),
+            new IncrementVariable<>("s", 1)
+    ), Interval.unreachable());
+
+    var result = program.run(environment);
+
+    var expected = Map.of("S", parseIntervalFunArray("{0} [-100, 100] {S.length s}?"),
+            "P", parseIntervalFunArray("{0} [0, 100] {p}? ⊥ {P.length}?"),
+            "N", parseIntervalFunArray("{0} [-100, -1] {n}? ⊥ {N.length}?")
+    );
+    assertThat(result.resultState().funArray()).isEqualTo(expected);
+
+  }
 }
