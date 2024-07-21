@@ -2,8 +2,8 @@ package funarray;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class BoundTest {
 
@@ -31,9 +31,18 @@ public class BoundTest {
   }
 
   @Test
-  void complementTest() {
+  void differenceTest() {
     assertThat(
-            new Bound(SET_AB).getComplementBound(new Bound(SET_A))
+            new Bound(SET_AB).difference(new Bound(SET_A))
+    ).isEqualTo(
+            new Bound(SET_B)
+    );
+  }
+
+  @Test
+  void relativeComplementTest() {
+    assertThat(
+            new Bound(SET_A).relativeComplement(new Bound(SET_AB))
     ).isEqualTo(
             new Bound(SET_B)
     );

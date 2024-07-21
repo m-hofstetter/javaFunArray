@@ -1,9 +1,11 @@
 package funarray;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A segment bound in a {@link FunArray}.
@@ -73,84 +75,80 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  /**
-   * Returns a bound containing only expressions from this that are present in a specified list.
-   *
-   * @param expressions the list of allowed expressions.
-   * @return the intersection of both bound.
-   */
-  public Bound intersectExpressions(Set<Expression> expressions) {
-    var modifiedExpressions = this.expressions.stream()
-            .filter(expressions::contains)
-            .collect(Collectors.toSet());
-    return new Bound(modifiedExpressions);
-  }
-
-  /**
-   * Returns a new bound containing only expressions that are present in both bounds.
-   *
-   * @param other the other bound.
-   * @return the intersection of both bound.
-   */
-  public Bound intersect(Bound other) {
-    return intersectExpressions(other.expressions);
-  }
-
   public boolean contains(Expression expression) {
     return expressions().stream().anyMatch(e -> e.equals(expression));
   }
 
-  public boolean expressionIsLessEqualThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isLessEqualThan(expression));
-  }
-
-  public boolean expressionIsGreaterEqualThan(Expression expression) {
-    return expressions().stream().anyMatch(e -> e.isGreaterEqualThan(expression));
-  }
-
-  /**
-   * Returns a new bound of all expressions from a bound that are not contained in another specified
-   * bound.
-   *
-   * @param other the other bound.
-   * @return the complement.
-   */
-  public Bound getComplementBound(Bound other) {
-    return new Bound(
-            expressions.stream()
-                    .filter(e -> !other.expressions.contains(e))
-                    .collect(Collectors.toSet())
-    );
-  }
-
-  /**
-   * Returns a new bound containing all expressions the list of specified bounds.
-   *
-   * @param bounds the list of bounds.
-   * @return the joined bound.
-   */
-  public static Bound join(List<Bound> bounds) {
-    return new Bound(
-            bounds.stream().flatMap(b -> b.expressions().stream()).collect(Collectors.toSet())
-    );
+  public boolean contains(Predicate<Expression> predicate) {
+    return expressions().stream().anyMatch(predicate);
   }
 
   public boolean isEmpty() {
     return expressions.isEmpty();
   }
 
+  public static Bound union(Collection<Bound> bounds) {
+    return new Bound(
+            bounds.stream()
+                    .flatMap(e -> e.expressions().stream())
+                    .collect(Collectors.toSet())
+    );
+  }
+
+  public Bound increase(int amount) {
+    return new Bound(expressions.stream()
+            .map(e -> e.increase(amount))
+            .collect(Collectors.toSet()));
+  }
+
+  public Bound union(Bound other) {
+    return union(other.expressions);
+  }
+
+  public Bound union(Set<Expression> otherExpressions) {
+    var newExpressions = Stream.concat(
+            this.expressions.stream(),
+            otherExpressions.stream()
+    ).collect(Collectors.toSet());
+    return new Bound(newExpressions);
+  }
+
+  public Bound intersection(Bound other) {
+    return intersection(other.expressions);
+  }
+
+  public Bound intersection(Set<Expression> otherExpressions) {
+    var newExpressions = this.expressions.stream()
+            .filter(otherExpressions::contains)
+            .collect(Collectors.toSet());
+    return new Bound(newExpressions);
+  }
+
+  public Bound difference(Bound other) {
+    return difference(other.expressions);
+  }
+
+  public Bound difference(Set<Expression> otherExpressions) {
+    var newExpressions = this.expressions.stream()
+            .filter(o -> !otherExpressions.contains(o))
+            .collect(Collectors.toSet());
+    return new Bound(newExpressions);
+  }
+
+  public Bound relativeComplement(Bound other) {
+    return relativeComplement(other.expressions);
+  }
+
+  public Bound relativeComplement(Set<Expression> otherExpressions) {
+    var newExpressions = otherExpressions.stream()
+            .filter(o -> !this.expressions.contains(o))
+            .collect(Collectors.toSet());
+    return new Bound(newExpressions);
+  }
+
   @Override
   public String toString() {
     return "{%s}".formatted(
             String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof Bound otherBound) {
-      return this.expressions.size() == otherBound.expressions.size()
-              && otherBound.expressions.containsAll(this.expressions);
-    }
-    return false;
   }
 }

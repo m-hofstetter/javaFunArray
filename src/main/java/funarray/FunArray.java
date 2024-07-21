@@ -116,7 +116,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   public FunArray<ElementT> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
     var newBounds = bounds.stream()
-            .map(b -> b.intersectExpressions(allowedExpressions))
+            .map(b -> b.intersection(allowedExpressions))
             .toList();
     return new FunArray<>(newBounds, values, emptiness)
             .removeEmptyBounds();
@@ -176,9 +176,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
         }
       }
       rightBound = newBounds.get(leastUpperBoundIndex);
-      leftBound = new Bound(rightBound.expressions().stream()
-              .map(e -> e.increase(-1))
-              .collect(Collectors.toSet()));
+      leftBound = rightBound.increase(-1);
     }
 
     if (leftAdjacent) {
@@ -189,9 +187,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
         }
       }
       leftBound = newBounds.get(greatestLowerBoundIndex);
-      rightBound = new Bound(leftBound.expressions().stream()
-              .map(e -> e.increase(1))
-              .collect(Collectors.toSet()));
+      rightBound = leftBound.increase(1);
     }
 
     var jointValue = getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
@@ -238,7 +234,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   private int getRightmostLowerBoundIndex(Expression expression) {
     int greatestLowerBoundIndex = 0;
     for (int i = 0; i <= bounds.size() - 1; i++) {
-      if (bounds.get(i).expressionIsLessEqualThan(expression)) {
+      if (bounds.get(i).contains(e -> e.isLessEqualThan(expression))) {
         greatestLowerBoundIndex = i;
       }
     }
@@ -255,7 +251,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   private int getLeastUpperBoundIndex(Expression expression) {
     int leastUpperBoundIndex = bounds.size() - 1;
     for (int i = bounds.size() - 1; i >= 0; i--) {
-      if (bounds.get(i).expressionIsGreaterEqualThan(expression)) {
+      if (bounds.get(i).contains(e -> e.isGreaterEqualThan(expression))) {
         leastUpperBoundIndex = i;
       }
     }
@@ -293,18 +289,13 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   public UnifyResult<ElementT> unify(FunArray<ElementT> other,
                                      ElementT thisNeutralElement, ElementT otherNeutralElement) {
 
-    var thisExpressions = this.bounds.stream()
-            .flatMap(b -> b.expressions().stream())
-            .collect(Collectors.toSet());
-
-    var otherExpressions = other.bounds.stream()
-            .flatMap(b -> b.expressions().stream())
-            .collect(Collectors.toSet());
+    var thisExpressions = this.getExpressions();
+    var otherExpressions = other.getExpressions();
 
     var commonExpressions = new HashSet<>(thisExpressions);
     commonExpressions.retainAll(otherExpressions);
 
-    var thisReduced = restrictExpressionOccurrences(commonExpressions);
+    var thisReduced = this.restrictExpressionOccurrences(commonExpressions);
     var otherReduced = other.restrictExpressionOccurrences(commonExpressions);
 
     List<Bound> boundsThis = new ArrayList<>(thisReduced.bounds);
@@ -321,19 +312,19 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       var currentBoundThis = boundsThis.get(i);
       var currentBoundOther = boundsOther.get(i);
 
-      var intersection = currentBoundThis.intersect(currentBoundOther);
-      var complementThis = currentBoundThis.getComplementBound(currentBoundOther);
-      var complementOther = currentBoundOther.getComplementBound(currentBoundThis);
+      var intersection = currentBoundThis.intersection(currentBoundOther);
+      var difference = currentBoundThis.difference(currentBoundOther);
+      var relativeComplement = currentBoundThis.relativeComplement(currentBoundOther);
 
-      if (!complementThis.isEmpty()) {
-        boundsThis.set(i, complementThis);
+      if (!difference.isEmpty()) {
+        boundsThis.set(i, difference);
         boundsThis.add(i, intersection);
         valuesThis.add(i, thisNeutralElement);
         emptinessThis.add(i, true);
       }
 
-      if (!complementOther.isEmpty()) {
-        boundsOther.set(i, complementOther);
+      if (!relativeComplement.isEmpty()) {
+        boundsOther.set(i, relativeComplement);
         boundsOther.add(i, intersection);
         valuesOther.add(i, otherNeutralElement);
         emptinessOther.add(i, true);
@@ -419,11 +410,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       // Condition states that left expression is less equal than right expression
       // --> left expression has to be equal to right expression --> Squash segments
       var boundsToBeSquashed = modifiedBounds.subList(rightIndex, leftIndex + 1);
-      var squashedBoundExpressions = boundsToBeSquashed.stream()
-              .flatMap(b -> b.expressions().stream())
-              .collect(Collectors.toSet());
+      var squashedBound = Bound.union(boundsToBeSquashed);
       boundsToBeSquashed.clear();
-      boundsToBeSquashed.add(new Bound(squashedBoundExpressions));
+      boundsToBeSquashed.add(squashedBound);
 
       modifiedValues.subList(rightIndex, leftIndex).clear();
       modifiedEmptiness.subList(rightIndex, leftIndex).clear();
@@ -484,5 +473,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   public FunArray<ElementT> narrow(FunArray<ElementT> other, ElementT unknown) {
     return unifyOperation(ElementT::narrow, other, unknown, unknown);
+  }
+
+  public Set<Expression> getExpressions() {
+    return bounds.stream().flatMap(e -> e.expressions().stream()).collect(Collectors.toSet());
   }
 }
