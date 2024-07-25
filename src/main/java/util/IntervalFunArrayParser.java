@@ -13,8 +13,8 @@ import base.infint.PositiveInfinity;
 import base.interval.Interval;
 import base.sign.Sign;
 import funarray.Bound;
-import funarray.Expression;
 import funarray.FunArray;
+import funarray.NormalExpression;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,7 +62,7 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   }
 
   @Override
-  public Expression visitExpression(FunArrayParser.ExpressionContext ctx) {
+  public NormalExpression visitExpression(FunArrayParser.ExpressionContext ctx) {
     var variable = ctx.variableName() != null
             ? ctx.variableName().getText()
             : "0";
@@ -71,9 +71,9 @@ public class IntervalFunArrayParser extends FunArrayBaseVisitor {
       if (ctx.MINUS() != null) {
         integer = integer.negate();
       }
-      return new Expression(variable, ((FiniteInteger) integer).getValue());
+      return new NormalExpression(variable, ((FiniteInteger) integer).getValue());
     }
-    return new Expression(variable);
+    return new NormalExpression(variable);
   }
 
   @Override

@@ -2,7 +2,7 @@ package analysis.common.condition;
 
 import base.DomainValue;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 import java.util.function.Function;
 
 /**
@@ -18,8 +18,8 @@ public record ArrayElementLessThanExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         String arrRef,
-        Expression index,
-        Expression comparand,
+        NormalExpression index,
+        NormalExpression comparand,
         Function<VariableT, ElementT> valueConversion) implements Condition<ElementT, VariableT> {
 
   @Override

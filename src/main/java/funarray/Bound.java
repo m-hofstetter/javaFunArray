@@ -12,12 +12,12 @@ import java.util.stream.Stream;
  *
  * @param expressions the expressions contained within.
  */
-public record Bound(Set<Expression> expressions) {
+public record Bound(Set<NormalExpression> expressions) {
   public Bound {
     expressions = Set.copyOf(expressions);
   }
 
-  public Bound(Expression expression) {
+  public Bound(NormalExpression expression) {
     this(Set.of(expression));
   }
 
@@ -48,7 +48,7 @@ public record Bound(Set<Expression> expressions) {
    */
   public Bound insertExpressionIfVariablePresent(
           String varRef,
-          Expression expression
+          NormalExpression expression
   ) {
     var modifiedExpressions = new HashSet<>(removeVariableOccurrences(varRef).expressions);
 
@@ -56,7 +56,7 @@ public record Bound(Set<Expression> expressions) {
             .filter(e -> e.containsVariable(expression.varRef()))
             .findAny()
             .ifPresent(e -> modifiedExpressions.add(
-                    new Expression(varRef, e.constant() - expression.constant())
+                    new NormalExpression(varRef, e.constant() - expression.constant())
             ));
 
     return new Bound(modifiedExpressions);
@@ -75,11 +75,11 @@ public record Bound(Set<Expression> expressions) {
     return new Bound(modifiedExpressions);
   }
 
-  public boolean contains(Expression expression) {
+  public boolean contains(NormalExpression expression) {
     return expressions().stream().anyMatch(e -> e.equals(expression));
   }
 
-  public boolean contains(Predicate<Expression> predicate) {
+  public boolean contains(Predicate<NormalExpression> predicate) {
     return expressions().stream().anyMatch(predicate);
   }
 
@@ -105,7 +105,7 @@ public record Bound(Set<Expression> expressions) {
     return union(other.expressions);
   }
 
-  public Bound union(Set<Expression> otherExpressions) {
+  public Bound union(Set<NormalExpression> otherExpressions) {
     var newExpressions = Stream.concat(
             this.expressions.stream(),
             otherExpressions.stream()
@@ -117,7 +117,7 @@ public record Bound(Set<Expression> expressions) {
     return intersection(other.expressions);
   }
 
-  public Bound intersection(Set<Expression> otherExpressions) {
+  public Bound intersection(Set<NormalExpression> otherExpressions) {
     var newExpressions = this.expressions.stream()
             .filter(otherExpressions::contains)
             .collect(Collectors.toSet());
@@ -128,7 +128,7 @@ public record Bound(Set<Expression> expressions) {
     return difference(other.expressions);
   }
 
-  public Bound difference(Set<Expression> otherExpressions) {
+  public Bound difference(Set<NormalExpression> otherExpressions) {
     var newExpressions = this.expressions.stream()
             .filter(o -> !otherExpressions.contains(o))
             .collect(Collectors.toSet());
@@ -139,7 +139,7 @@ public record Bound(Set<Expression> expressions) {
     return relativeComplement(other.expressions);
   }
 
-  public Bound relativeComplement(Set<Expression> otherExpressions) {
+  public Bound relativeComplement(Set<NormalExpression> otherExpressions) {
     var newExpressions = otherExpressions.stream()
             .filter(o -> !this.expressions.contains(o))
             .collect(Collectors.toSet());
@@ -149,6 +149,6 @@ public record Bound(Set<Expression> expressions) {
   @Override
   public String toString() {
     return "{%s}".formatted(
-            String.join(" ", expressions.stream().map(Expression::toString).sorted().toList()));
+            String.join(" ", expressions.stream().map(NormalExpression::toString).sorted().toList()));
   }
 }

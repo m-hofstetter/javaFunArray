@@ -4,7 +4,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import base.DomainValue;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 import java.util.function.Function;
 
 /**
@@ -21,7 +21,7 @@ public record AssignArrayElementValueToVariable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         String arrRef,
-        Expression arrayIndex,
+        NormalExpression arrayIndex,
         String varRef,
         Function<ElementT, VariableT> elementValueToVariableConversion)
         implements Analysis<ElementT, VariableT> {
