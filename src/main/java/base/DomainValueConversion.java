@@ -11,8 +11,17 @@ import base.sign.Sign;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A utility class for providing conversion functions between abstract domains.
+ */
 public class DomainValueConversion {
 
+  /**
+   * Converts a value from the interval abstract domain to the sign abstract domain.
+   *
+   * @param interval the interval value.
+   * @return the sign value.
+   */
   public static Sign convertIntervalToSign(Interval interval) {
     if (interval instanceof ReachableInterval reachableInterval) {
       var lowerLimit = reachableInterval.getLowerLimit();
@@ -35,6 +44,12 @@ public class DomainValueConversion {
     return new Sign(Set.of());
   }
 
+  /**
+   * Converts a value from the sign abstract domain to the interval abstract domain.
+   *
+   * @param sign the sign value.
+   * @return the interval value.
+   */
   public static Interval convertSignToInterval(Sign sign) {
     var combined = Interval.unreachable();
     for (var element : sign.elements().stream()
@@ -49,8 +64,16 @@ public class DomainValueConversion {
     return combined;
   }
 
-  public static Interval keepInterval(Interval interval) {
-    return interval;
+  /**
+   * The identity function for domain values. Takes a value from an abstract domain and returns the
+   * same value from the same domain.
+   *
+   * @param value the value
+   * @param <T>   the abstract domain of the value
+   * @return the same value
+   */
+  public static <T extends DomainValue<T>> T identity(T value) {
+    return value;
   }
 
 }

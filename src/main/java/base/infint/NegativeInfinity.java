@@ -1,5 +1,8 @@
 package base.infint;
 
+/**
+ * Negative infinity value in {@link InfInt}.
+ */
 public final class NegativeInfinity extends Infinity {
   @Override
   public String toString() {

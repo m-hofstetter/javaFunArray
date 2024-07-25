@@ -1,5 +1,10 @@
 package base;
 
+/**
+ * An interface representing a value from an abstract domain.
+ *
+ * @param <T> the domain.
+ */
 public interface DomainValue<T extends DomainValue<T>> {
 
   /**

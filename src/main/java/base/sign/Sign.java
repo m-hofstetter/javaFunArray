@@ -9,12 +9,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The sign abstract domain.
+ *
+ * @param elements its elements.
+ */
 public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
 
   public Sign(Set<SignElement> elements) {
     this.elements = Set.copyOf(elements);
   }
 
+  /**
+   * The atomic values of the sign domain.
+   */
   public enum SignElement {
     POSITIVE, NEGATIVE, ZERO
   }

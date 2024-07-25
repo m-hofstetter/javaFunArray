@@ -2,6 +2,9 @@ package base.infint;
 
 import lombok.Getter;
 
+/**
+ * A finite integer.
+ */
 @Getter
 public final class FiniteInteger extends InfInt {
 

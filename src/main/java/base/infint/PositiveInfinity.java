@@ -1,5 +1,8 @@
 package base.infint;
 
+/**
+ * Positive infinity value in {@link InfInt}.
+ */
 public final class PositiveInfinity extends Infinity {
   @Override
   public String toString() {

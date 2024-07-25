@@ -3,7 +3,9 @@ package base.interval;
 import base.infint.InfInt;
 import lombok.Getter;
 
-
+/**
+ * An {@link Interval}, that is not unreachable.
+ */
 @Getter
 public final class ReachableInterval extends Interval {
 

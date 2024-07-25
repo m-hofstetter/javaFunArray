@@ -49,9 +49,9 @@ public class AnalysisTest {
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::keepInterval),
+                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::identity),
                             new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
-                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::keepInterval)
+                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::identity)
                     ),
                     Interval.unreachable()),
             Interval.unreachable());
@@ -107,7 +107,7 @@ public class AnalysisTest {
     var expN = new Expression("n");
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("s"), new Expression("S.length"));
-    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new Expression("s"), new Expression("0"), DomainValueConversion::keepInterval);
+    var negativeIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("S", new Expression("s"), new Expression("0"), DomainValueConversion::identity);
 
     var environment = new EnvState<>(Map.of(
             "S", arraySource,

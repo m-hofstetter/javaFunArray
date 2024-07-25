@@ -22,6 +22,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+/**
+ * Utility class for parsing FunArrays.
+ */
 public class IntervalFunArrayParser extends FunArrayBaseVisitor {
   @Override
   public FiniteInteger visitFiniteInteger(FunArrayParser.FiniteIntegerContext ctx) {

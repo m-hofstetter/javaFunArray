@@ -87,18 +87,18 @@ public record Bound(Set<Expression> expressions) {
     return expressions.isEmpty();
   }
 
+  public Bound increase(int amount) {
+    return new Bound(expressions.stream()
+            .map(e -> e.increase(amount))
+            .collect(Collectors.toSet()));
+  }
+
   public static Bound union(Collection<Bound> bounds) {
     return new Bound(
             bounds.stream()
                     .flatMap(e -> e.expressions().stream())
                     .collect(Collectors.toSet())
     );
-  }
-
-  public Bound increase(int amount) {
-    return new Bound(expressions.stream()
-            .map(e -> e.increase(amount))
-            .collect(Collectors.toSet()));
   }
 
   public Bound union(Bound other) {
