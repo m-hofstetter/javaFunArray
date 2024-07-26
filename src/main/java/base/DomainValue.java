@@ -72,6 +72,61 @@ public interface DomainValue<T extends DomainValue<T>> {
   T subtractConstant(int constant);
 
   /**
+   * The abstract multiplication transformation.
+   *
+   * @param other another domain value.
+   * @return the product of both.
+   */
+  T multiply(T other);
+
+  /**
+   * The abstract multiplication transformation.
+   *
+   * @param constant an integer.
+   * @return the transformed domain value.
+   */
+  T multiplyByConstant(int constant);
+
+  /**
+   * The abstract division transformation.
+   *
+   * @param other another domain value.
+   * @return the division of both.
+   */
+  T divide(T other);
+
+  /**
+   * The abstract division transformation.
+   *
+   * @param constant an integer.
+   * @return the transformed domain value.
+   */
+  T divideByConstant(int constant);
+
+  /**
+   * The abstract modulo transformation.
+   *
+   * @param other another domain value.
+   * @return the modulo of both.
+   */
+  T modulo(T other);
+
+  /**
+   * The abstract modulo transformation.
+   *
+   * @param constant an integer.
+   * @return the modulo.
+   */
+  T modulo(int constant);
+
+  /**
+   * The absolute value transformation.
+   *
+   * @return the absolute value.
+   */
+  T absoluteValue();
+
+  /**
    * The abstract negation transformation. Inverses the sign in the concrete. Equal to
    * multiplication by -1.
    *

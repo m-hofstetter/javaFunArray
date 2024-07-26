@@ -150,6 +150,41 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
+  public Sign multiply(Sign other) {
+    return null; //TODO
+  }
+
+  @Override
+  public Sign multiplyByConstant(int constant) {
+    return null;//TODO
+  }
+
+  @Override
+  public Sign divide(Sign other) {
+    return null;//TODO
+  }
+
+  @Override
+  public Sign divideByConstant(int constant) {
+    return null;//TODO
+  }
+
+  @Override
+  public Sign modulo(Sign other) {
+    return null;//TODO
+  }
+
+  @Override
+  public Sign modulo(int constant) {
+    return null;//TODO
+  }
+
+  @Override
+  public Sign absoluteValue() {
+    return null; //TODO
+  }
+
+  @Override
   public Sign negate() {
     var modifiedSet = new HashSet<>(elements);
     if (elements.contains(NEGATIVE)) {

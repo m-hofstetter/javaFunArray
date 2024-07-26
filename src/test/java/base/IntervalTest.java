@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import base.infint.InfInt;
 import base.interval.Interval;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import java.util.stream.Stream;
 
 public class IntervalTest {
 
@@ -164,5 +164,37 @@ public class IntervalTest {
     assertThat(Interval.of(0, 100).satisfyNotEqual(Interval.of(0, 0))).isEqualTo(Interval.of(1, 100));
     assertThat(Interval.of(1, 2).satisfyNotEqual(Interval.of(0, 3))).isEqualTo(Interval.unreachable());
     assertThat(Interval.of(1, 2).satisfyNotEqual(Interval.of(1, 2))).isEqualTo(Interval.unreachable());
+  }
+
+  @Test
+  public void multiplyTest() {
+    assertThat(Interval.of(0, 3).multiply(Interval.of(1, 2))).isEqualTo(Interval.of(0, 6));
+    assertThat(Interval.of(0, InfInt.posInf()).multiply(Interval.of(1, 2))).isEqualTo(Interval.of(0, InfInt.posInf()));
+    assertThat(Interval.of(0, 3).multiply(Interval.of(1, InfInt.posInf()))).isEqualTo(Interval.of(0, InfInt.posInf()));
+  }
+
+  @Test
+  public void divideTest() {
+    assertThat(Interval.of(0, 3).divide(Interval.of(1, 2))).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(0, InfInt.posInf()).divide(Interval.of(1, 2))).isEqualTo(Interval.of(0, InfInt.posInf()));
+    assertThat(Interval.of(0, 3).divide(Interval.of(1, InfInt.posInf()))).isEqualTo(Interval.of(0, 3));
+  }
+
+  @Test
+  public void moduloTest() {
+    assertThat(Interval.of(0, 3).modulo(Interval.of(1, 2))).isEqualTo(Interval.of(0, 1));
+    assertThat(Interval.of(-3, 0).modulo(Interval.of(1, 2))).isEqualTo(Interval.of(-1, 0));
+    assertThat(Interval.of(0, InfInt.posInf()).modulo(Interval.of(1, 2))).isEqualTo(Interval.of(0, 1));
+    assertThat(Interval.of(0, 3).modulo(Interval.of(1, InfInt.posInf()))).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(0, InfInt.posInf()).modulo(Interval.of(1, InfInt.posInf()))).isEqualTo(Interval.of(0, InfInt.posInf()));
+    assertThat(Interval.of(-10, 10).modulo(Interval.of(3, 6))).isEqualTo(Interval.of(-5, 5));
+  }
+
+  @Test
+  public void absTest() {
+    assertThat(Interval.of(0, 3).absoluteValue()).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(-3, 3).absoluteValue()).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(-3, 1).absoluteValue()).isEqualTo(Interval.of(0, 3));
+    assertThat(Interval.of(-3, -1).absoluteValue()).isEqualTo(Interval.of(1, 3));
   }
 }

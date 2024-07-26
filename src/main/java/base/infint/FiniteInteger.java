@@ -37,6 +37,43 @@ public final class FiniteInteger extends InfInt {
   }
 
   @Override
+  public InfInt multiply(InfInt value) {
+    return switch (value) {
+      case FiniteInteger f -> new FiniteInteger(this.value * f.value);
+      case Infinity i -> i.multiply(this);
+    };
+  }
+
+  @Override
+  public InfInt divide(InfInt value) {
+    return switch (value) {
+      case FiniteInteger f -> new FiniteInteger(this.value / f.value);
+      case Infinity i -> InfInt.of(0);
+    };
+  }
+
+  /*
+   * Modulo with negative operands is defined as in the C language:
+   * The sign of the divisor is ignored. The operation is conducted as if the dividend was positive
+   * and its sign is then applied to the result. This differs from the java implementation where if
+   * either operand is negative, the result will also be negative.
+   */
+  @Override
+  public InfInt modulo(InfInt value) {
+    return switch (value) {
+      case FiniteInteger f -> {
+        boolean dividendIsPositive = this.value >= 0;
+        var dividend = dividendIsPositive ? this.value : -this.value;
+        var divisor = f.value >= 0 ? f.value : -f.value;
+        var mod = dividend % divisor;
+        mod = dividendIsPositive ? mod : -mod;
+        yield new FiniteInteger(mod);
+      }
+      case Infinity i -> i.modulo(this);
+    };
+  }
+
+  @Override
   public InfInt negate() {
     return new FiniteInteger(-value);
   }

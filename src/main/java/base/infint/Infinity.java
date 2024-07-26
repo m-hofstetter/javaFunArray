@@ -9,4 +9,8 @@ public abstract sealed class Infinity extends InfInt permits NegativeInfinity, P
     return this;
   }
 
+  @Override
+  public InfInt modulo(InfInt value) {
+    throw new ArithmeticException("Cannot mod infinity");
+  }
 }

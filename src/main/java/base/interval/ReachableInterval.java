@@ -121,7 +121,7 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval negate() {
+  public ReachableInterval negate() {
     return new ReachableInterval(upperLimit.negate(), lowerLimit.negate());
   }
 
@@ -138,6 +138,108 @@ public final class ReachableInterval extends Interval {
   @Override
   public Interval subtractConstant(int constant) {
     return addConstant(-constant);
+  }
+
+  @Override
+  public Interval multiply(Interval other) {
+    if (other instanceof ReachableInterval reachableOther) {
+      var lowerBound = InfInt.min(
+              this.lowerLimit.multiply(reachableOther.lowerLimit),
+              this.lowerLimit.multiply(reachableOther.upperLimit),
+              this.upperLimit.multiply(reachableOther.lowerLimit),
+              this.upperLimit.multiply(reachableOther.upperLimit)
+      );
+      var upperBound = InfInt.max(
+              this.lowerLimit.multiply(reachableOther.lowerLimit),
+              this.lowerLimit.multiply(reachableOther.upperLimit),
+              this.upperLimit.multiply(reachableOther.lowerLimit),
+              this.upperLimit.multiply(reachableOther.upperLimit)
+      );
+      return new ReachableInterval(lowerBound, upperBound);
+    }
+    return new Unreachable();
+  }
+
+  @Override
+  public Interval multiplyByConstant(int constant) {
+    return new ReachableInterval(this.lowerLimit.multiply(constant), this.upperLimit.multiply(constant));
+  }
+
+  @Override
+  public Interval divide(Interval other) {
+    if (other instanceof ReachableInterval reachableOther) {
+      var otherLower = reachableOther.lowerLimit;
+      var otherUpper = reachableOther.upperLimit;
+
+      if (otherLower.equals(InfInt.of(0)) && otherUpper.equals(InfInt.of(0))) {
+        throw new ArithmeticException("Cannot divide by zero interval.");
+      }
+      otherLower = otherLower.equals(InfInt.of(0)) ? InfInt.of(1) : otherLower;
+      otherUpper = otherUpper.equals(InfInt.of(0)) ? InfInt.of(-1) : otherUpper;
+
+      var lower = InfInt.min(
+              this.lowerLimit.divide(otherLower),
+              this.lowerLimit.divide(otherUpper),
+              this.upperLimit.divide(otherLower),
+              this.upperLimit.divide(otherUpper)
+      );
+
+      var upper = InfInt.max(
+              this.lowerLimit.divide(otherLower),
+              this.lowerLimit.divide(otherUpper),
+              this.upperLimit.divide(otherLower),
+              this.upperLimit.divide(otherUpper)
+      );
+      return new ReachableInterval(lower, upper);
+    }
+    return new Unreachable();
+  }
+
+  @Override
+  public Interval divideByConstant(int constant) {
+    if (constant == 0) {
+      throw new ArithmeticException("Cannot divide by zero.");
+    }
+    return new ReachableInterval(this.lowerLimit.divide(constant), this.upperLimit.divide(constant));
+  }
+
+
+  /**
+   * To simplify implementation, modulo of intervals is implemented
+   */
+  @Override
+  public Interval modulo(Interval other) {
+    if (other instanceof ReachableInterval reachableOther) {
+      var divisor = reachableOther.absoluteValue();
+      divisor = new ReachableInterval(divisor.lowerLimit, divisor.upperLimit.subtract(1));
+
+      if (this.lowerLimit.isGreaterEqualThan(InfInt.of(0))) {
+        return new ReachableInterval(InfInt.of(0), InfInt.min(this.upperLimit, divisor.upperLimit));
+      }
+
+      if (this.upperLimit.isLessThan(InfInt.of(0))) {
+        return new ReachableInterval(InfInt.max(this.lowerLimit, divisor.negate().lowerLimit), InfInt.of(0));
+      }
+
+      return new ReachableInterval(InfInt.max(this.lowerLimit, divisor.negate().lowerLimit), InfInt.min(this.upperLimit, divisor.upperLimit));
+    }
+    return Interval.unreachable();
+  }
+
+  @Override
+  public Interval modulo(int constant) {
+    return new ReachableInterval(this.lowerLimit.modulo(constant), this.upperLimit.modulo(constant));
+  }
+
+  @Override
+  public ReachableInterval absoluteValue() {
+    if (this.lowerLimit.isLessEqualThan(InfInt.of(0)) && this.upperLimit.isGreaterEqualThan(InfInt.of(0))) {
+      return new ReachableInterval(InfInt.of(0), InfInt.max(this.lowerLimit.negate(), this.upperLimit));
+    }
+    if (this.lowerLimit.isLessEqualThan(InfInt.of(0)) && this.upperLimit.isLessEqualThan(InfInt.of(0))) {
+      return new ReachableInterval(this.upperLimit.negate(), this.lowerLimit.negate());
+    }
+    return this;
   }
 
   @Override

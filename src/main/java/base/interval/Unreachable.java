@@ -58,6 +58,41 @@ final class Unreachable extends Interval {
   }
 
   @Override
+  public Interval multiply(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval multiplyByConstant(int constant) {
+    return this;
+  }
+
+  @Override
+  public Interval divide(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval divideByConstant(int constant) {
+    return this;
+  }
+
+  @Override
+  public Interval modulo(Interval other) {
+    return this;
+  }
+
+  @Override
+  public Interval modulo(int constant) {
+    return this;
+  }
+
+  @Override
+  public Interval absoluteValue() {
+    return this;
+  }
+
+  @Override
   public Interval satisfyLessEqualThan(Interval other) {
     return this;
   }

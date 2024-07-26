@@ -10,6 +10,25 @@ public final class PositiveInfinity extends Infinity {
   }
 
   @Override
+  public InfInt multiply(InfInt value) {
+    if (value.isNegInf()) {
+      return InfInt.negInf();
+    }
+    return this;
+  }
+
+  @Override
+  public InfInt divide(InfInt value) {
+    if (value.isGreaterThan(InfInt.of(0))) {
+      return InfInt.posInf();
+    } else if (value.equals(InfInt.of(0))) {
+      throw new ArithmeticException("Cannot divide by zero");
+    } else {
+      return InfInt.negInf();
+    }
+  }
+
+  @Override
   public InfInt negate() {
     return new NegativeInfinity();
   }
