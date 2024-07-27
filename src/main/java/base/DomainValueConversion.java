@@ -4,6 +4,7 @@ import static base.sign.Sign.SignElement.NEGATIVE;
 import static base.sign.Sign.SignElement.POSITIVE;
 import static base.sign.Sign.SignElement.ZERO;
 
+import base.infint.FiniteInteger;
 import base.infint.InfInt;
 import base.interval.Interval;
 import base.interval.ReachableInterval;
@@ -82,5 +83,22 @@ public class DomainValueConversion {
 
   public static Interval constantIntervalValue(int value) {
     return Interval.of(value);
+  }
+
+  public static int intervalToConstantConversion(Interval interval) throws DomainValueToConstantConversionException {
+    if (interval instanceof ReachableInterval reachableInterval) {
+      if (reachableInterval.getLowerLimit().equals(reachableInterval.getUpperLimit())
+              && reachableInterval.getLowerLimit() instanceof FiniteInteger concreteValue) {
+        return concreteValue.getValue();
+      }
+    }
+    throw new DomainValueToConstantConversionException(interval);
+  }
+
+  public static int signToConstantConversion(Sign sign) throws DomainValueToConstantConversionException {
+    if (sign.equals(Sign.of(0))) {
+      return 0;
+    }
+    throw new DomainValueToConstantConversionException(sign);
   }
 }

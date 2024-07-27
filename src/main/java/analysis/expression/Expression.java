@@ -1,16 +1,29 @@
 package analysis.expression;
 
 import base.DomainValue;
-import java.util.Map;
+import funarray.EnvState;
+import funarray.NormalExpression;
 import java.util.function.Function;
 
-public abstract class Expression {
+public abstract class Expression<
+        ElementT extends DomainValue<ElementT>,
+        VariableT extends DomainValue<VariableT>> {
 
-  public Expression transformToNormalForm() {
-    return null;
+  protected final Function<Integer, VariableT> constantToVariableValueConversion;
+  protected final Function<ElementT, VariableT> arrayElementValueToVariableValueConversion;
+  protected final VariableT unknown;
+
+  public Expression(
+          Function<Integer, VariableT> constantToVariableValueConversion,
+          Function<ElementT, VariableT> arrayElementValueToVariableValueConversion,
+          VariableT unknown
+  ) {
+    this.constantToVariableValueConversion = constantToVariableValueConversion;
+    this.arrayElementValueToVariableValueConversion = arrayElementValueToVariableValueConversion;
+    this.unknown = unknown;
   }
 
-  public abstract <VariableT extends DomainValue<VariableT>>
-  VariableT evaluate(Map<String, VariableT> variableValues,
-                     Function<Integer, VariableT> constantToVariableValueConversion);
+  public abstract NormalExpression normalise() throws NormaliseExpressionException;
+
+  public abstract VariableT evaluate(EnvState<ElementT, VariableT> environment);
 }
