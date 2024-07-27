@@ -16,6 +16,16 @@ import java.util.stream.Collectors;
  */
 public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
 
+  public static Sign of(int value) {
+    if (value == 0) {
+      return new Sign(Set.of(ZERO));
+    } else if (value >= 1) {
+      return new Sign(Set.of(POSITIVE));
+    } else {
+      return new Sign(Set.of(NEGATIVE));
+    }
+  }
+
   public Sign(Set<SignElement> elements) {
     this.elements = Set.copyOf(elements);
   }
