@@ -76,4 +76,11 @@ public class DomainValueConversion {
     return value;
   }
 
+  public static Sign constantSignValue(int value) {
+    return Sign.of(value);
+  }
+
+  public static Interval constantIntervalValue(int value) {
+    return Interval.of(value);
+  }
 }
