@@ -1,9 +1,10 @@
-package base;
+package base.util;
 
 import static base.sign.Sign.SignElement.NEGATIVE;
 import static base.sign.Sign.SignElement.POSITIVE;
 import static base.sign.Sign.SignElement.ZERO;
 
+import base.DomainValue;
 import base.infint.InfInt;
 import base.interval.Interval;
 import base.interval.ReachableInterval;
