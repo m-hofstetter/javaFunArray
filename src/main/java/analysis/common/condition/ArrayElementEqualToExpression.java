@@ -1,9 +1,9 @@
 package analysis.common.condition;
 
 import abstractdomain.DomainValue;
+import analysis.common.AnalysisContext;
 import funarray.EnvState;
 import funarray.Expression;
-import java.util.function.Function;
 
 /**
  * A condition deciding whether an array element is equal to an expression.
@@ -20,19 +20,19 @@ public record ArrayElementEqualToExpression<
         String arrRef,
         Expression index,
         Expression comparand,
-        Function<VariableT, ElementT> valueConversion) implements Condition<ElementT, VariableT> {
+        AnalysisContext<ElementT, VariableT> context) implements Condition<ElementT, VariableT> {
 
   @Override
   public EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state) {
     var value = state.getArrayElement(arrRef, index);
-    value = value.satisfyEqual(valueConversion.apply(state.calculateExpression(comparand)));
+    value = value.satisfyEqual(context.convertVariableValueToArrayElementValue(state.calculateExpression(comparand)));
     return state.assignArrayElement(arrRef, index, value);
   }
 
   @Override
   public EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state) {
     var value = state.getArrayElement(arrRef, index);
-    value = value.satisfyNotEqual(valueConversion.apply(state.calculateExpression(comparand)));
+    value = value.satisfyNotEqual(context.convertVariableValueToArrayElementValue(state.calculateExpression(comparand)));
     return state.assignArrayElement(arrRef, index, value);
   }
 

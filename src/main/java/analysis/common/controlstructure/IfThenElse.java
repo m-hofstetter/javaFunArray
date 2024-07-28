@@ -2,6 +2,7 @@ package analysis.common.controlstructure;
 
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
+import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
 import funarray.EnvState;
@@ -24,7 +25,7 @@ public record IfThenElse<
         Condition<ElementT, VariableT> condition,
         Analysis<ElementT, VariableT> ifAnalysis,
         Analysis<ElementT, VariableT> elseAnalysis,
-        ElementT unreachable) implements Analysis<ElementT, VariableT> {
+        AnalysisContext<ElementT, VariableT> context) implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
           \033[1mIF\033[22m %s \033[1mTHEN DO:\033[22m
@@ -37,24 +38,24 @@ public record IfThenElse<
           Condition<ElementT, VariableT> condition,
           Analysis<ElementT, VariableT> ifAnalysis,
           List<Analysis<ElementT, VariableT>> elseAnalyses,
-          ElementT unreachable) {
-    this(condition, ifAnalysis, new Block<>(elseAnalyses), unreachable);
+          AnalysisContext<ElementT, VariableT> context) {
+    this(condition, ifAnalysis, new Block<>(elseAnalyses), context);
   }
 
   public IfThenElse(
           Condition<ElementT, VariableT> condition,
           List<Analysis<ElementT, VariableT>> ifAnalyses,
           Analysis<ElementT, VariableT> elseAnalysis,
-          ElementT unreachable) {
-    this(condition, new Block<>(ifAnalyses), elseAnalysis, unreachable);
+          AnalysisContext<ElementT, VariableT> context) {
+    this(condition, new Block<>(ifAnalyses), elseAnalysis, context);
   }
 
   public IfThenElse(
           Condition<ElementT, VariableT> condition,
           List<Analysis<ElementT, VariableT>> ifAnalyses,
           List<Analysis<ElementT, VariableT>> elseAnalyses,
-          ElementT unreachable) {
-    this(condition, new Block<>(ifAnalyses), new Block<>(elseAnalyses), unreachable);
+          AnalysisContext<ElementT, VariableT> context) {
+    this(condition, new Block<>(ifAnalyses), new Block<>(elseAnalyses), context);
   }
 
   @Override
@@ -63,7 +64,7 @@ public record IfThenElse<
     var resultIf = ifAnalysis.run(satisfiedState);
     var complementSatisfiedState = condition.satisfyComplement(startingState);
     var resultElse = elseAnalysis.run(complementSatisfiedState);
-    var joinedState = resultIf.resultState().join(resultElse.resultState(), unreachable);
+    var joinedState = resultIf.resultState().join(resultElse.resultState(), context.getElementDomain().getUnreachable());
 
     var protocol = PROTOCOL_TEMPLATE.formatted(condition,
             satisfiedState.toString().indent(INDENTATION),

@@ -2,10 +2,10 @@ package analysis.common.statement;
 
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
+import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import funarray.EnvState;
 import funarray.Expression;
-import java.util.function.Function;
 
 /**
  * Atomic statement for assigning the value of a variable to an array element.
@@ -23,7 +23,7 @@ public record AssignVariableValueToArrayElement<
         String arrRef,
         Expression arrayIndex,
         String varRef,
-        Function<VariableT, ElementT> variableToElementValueConversion)
+        AnalysisContext<ElementT, VariableT> context)
         implements Analysis<ElementT, VariableT> {
 
   public static final String PROTOCOL_TEMPLATE = """
@@ -36,7 +36,7 @@ public record AssignVariableValueToArrayElement<
     var resultState = startingState.assignArrayElement(
             arrRef,
             arrayIndex,
-            variableToElementValueConversion.apply(value)
+            context.convertVariableValueToArrayElementValue(value)
     );
     var protocol = PROTOCOL_TEMPLATE.formatted(arrayIndex, varRef, resultState);
     return new AnalysisResult<>(resultState, protocol);

@@ -14,12 +14,12 @@ import analysis.common.statement.AssignArrayElementValueToArrayElement;
 import analysis.common.statement.AssignArrayElementValueToVariable;
 import analysis.common.statement.AssignVariableValueToArrayElement;
 import analysis.common.statement.IncrementVariable;
-import base.DomainValueConversion;
+import analysis.interval.IntervalAnalysisContext;
+import analysis.signinterval.SignIntervalAnalysisContext;
 import funarray.EnvState;
 import funarray.Expression;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class AnalysisTest {
@@ -29,6 +29,8 @@ public class AnalysisTest {
    */
   @Test
   void cousotExampleTest() {
+    final var context = IntervalAnalysisContext.INSTANCE;
+
     var expA = new Expression("a");
     var expB = new Expression("b");
 
@@ -42,19 +44,19 @@ public class AnalysisTest {
             "temp", Interval.unknown()));
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("A", new Expression("a"), new Expression("0"), value -> value);
+    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("A", new Expression("a"), new Expression("0"), context);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::identity),
+                            new AssignArrayElementValueToVariable<>("A", expA, "temp", context),
                             new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
-                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::identity)
+                            new AssignVariableValueToArrayElement<>("A", expB, "temp", context)
                     ),
-                    Interval.unreachable()),
-            Interval.unreachable());
+                    context),
+            context);
 
     var result = program.run(environment);
     var expected = Map.of("A", parseIntervalFunArray("{0} [-100, -1] {a b}? [0, 100] {A.length}?"));
@@ -63,6 +65,9 @@ public class AnalysisTest {
 
   @Test
   void cousotExampleWithSignDomainTest() {
+
+    final var context = SignIntervalAnalysisContext.INSTANCE;
+
     var expA = new Expression("a");
     var expB = new Expression("b");
 
@@ -77,7 +82,7 @@ public class AnalysisTest {
 
 
     var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new Expression("a"), new Expression("0"), DomainValueConversion::convertIntervalToSign);
+    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new Expression("a"), new Expression("0"), context);
 
 
     var program = new While<>(loopCondition,
@@ -85,12 +90,12 @@ public class AnalysisTest {
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>("A", expA, "temp", DomainValueConversion::convertSignToInterval),
+                            new AssignArrayElementValueToVariable<>("A", expA, "temp", context),
                             new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
-                            new AssignVariableValueToArrayElement<>("A", expB, "temp", DomainValueConversion::convertIntervalToSign)
+                            new AssignVariableValueToArrayElement<>("A", expB, "temp", context)
                     ),
-                    new Sign(Set.of())),
-            new Sign(Set.of()));
+                    context),
+            context);
 
     var result = program.run(environment);
     var expected = Map.of("A", parseSignFunArray("{0} <0 {a b}? ≥0 {A.length}?"));
@@ -99,6 +104,9 @@ public class AnalysisTest {
 
   @Test
   public void sortIntoArraysTest() {
+
+    final var context = IntervalAnalysisContext.INSTANCE;
+
     var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
     var arrayPositive = parseIntervalFunArray("{0 p} ⊥ {P.length}");
     var arrayNegative = parseIntervalFunArray("{0 n} ⊥ {N.length}");
@@ -107,7 +115,7 @@ public class AnalysisTest {
     var expN = new Expression("n");
 
     var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("s"), new Expression("S.length"));
-    var negativeIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("S", new Expression("s"), new Expression("0"), DomainValueConversion::identity);
+    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new Expression("s"), new Expression("0"), context);
 
     var environment = new EnvState<>(Map.of(
             "S", arraySource,
@@ -129,9 +137,9 @@ public class AnalysisTest {
             ), List.of(
                     new AssignArrayElementValueToArrayElement<>("S", expS, "P", expP),
                     new IncrementVariable<>("p", 1)
-            ), Interval.unreachable()),
+            ), context),
             new IncrementVariable<>("s", 1)
-    ), Interval.unreachable());
+    ), context);
 
     var result = program.run(environment);
 
