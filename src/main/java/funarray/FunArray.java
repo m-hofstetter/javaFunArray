@@ -1,7 +1,7 @@
 package funarray;
 
 import abstractdomain.DomainValue;
-import exception.FunArrayLogicException;
+import funarray.exception.FunArrayLogicException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -96,7 +96,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(newBounds, values, emptiness);
   }
 
-  public FunArray<ElementT> insertExpression(String varRef, Expression expression) {
+  public FunArray<ElementT> insertExpression(String varRef, NormalExpression expression) {
     var newBounds = new ArrayList<>(bounds.stream()
             .map(b -> b.insertExpressionIfVariablePresent(varRef, expression))
             .toList());
@@ -114,7 +114,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
 
-  public FunArray<ElementT> restrictExpressionOccurrences(Set<Expression> allowedExpressions) {
+  public FunArray<ElementT> restrictExpressionOccurrences(Set<NormalExpression> allowedExpressions) {
     var newBounds = bounds.stream()
             .map(b -> b.intersection(allowedExpressions))
             .toList();
@@ -148,7 +148,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param value the value to be inserted.
    * @return the modified Segmentation.
    */
-  public FunArray<ElementT> insert(Expression index, ElementT value) {
+  public FunArray<ElementT> insert(NormalExpression index, ElementT value) {
     var trailingIndex = index.increase(1);
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
@@ -218,7 +218,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public ElementT get(Expression abstractIndex) {
+  public ElementT get(NormalExpression abstractIndex) {
     int greatestLowerBoundIndex = getRightmostLowerBoundIndex(abstractIndex);
     int leastUpperBoundIndex = getLeastUpperBoundIndex(abstractIndex.increase(1));
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
@@ -231,7 +231,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param expression the expression
    * @return the calculated index
    */
-  private int getRightmostLowerBoundIndex(Expression expression) {
+  private int getRightmostLowerBoundIndex(NormalExpression expression) {
     int greatestLowerBoundIndex = 0;
     for (int i = 0; i <= bounds.size() - 1; i++) {
       if (bounds.get(i).contains(e -> e.isLessEqualThan(expression))) {
@@ -248,7 +248,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @param expression the expression
    * @return the calculated index
    */
-  private int getLeastUpperBoundIndex(Expression expression) {
+  private int getLeastUpperBoundIndex(NormalExpression expression) {
     int leastUpperBoundIndex = bounds.size() - 1;
     for (int i = bounds.size() - 1; i >= 0; i--) {
       if (bounds.get(i).contains(e -> e.isGreaterEqualThan(expression))) {
@@ -383,7 +383,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
 
-  public FunArray<ElementT> satisfyBoundExpressionLessEqualThan(Expression left, Expression right) {
+  public FunArray<ElementT> satisfyBoundExpressionLessEqualThan(NormalExpression left, NormalExpression right) {
     int leftIndex;
     int rightIndex;
     try {
@@ -421,7 +421,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
-  public FunArray<ElementT> satisfyBoundExpressionLessThan(Expression left, Expression right) {
+  public FunArray<ElementT> satisfyBoundExpressionLessThan(NormalExpression left, NormalExpression right) {
     int leftIndex;
     int rightIndex;
     try {
@@ -449,7 +449,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
-  private int findIndex(Expression expression) {
+  private int findIndex(NormalExpression expression) {
     for (int i = 0; i < bounds.size(); i++) {
       if (bounds.get(i).contains(expression)) {
         return i;
@@ -475,7 +475,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return unifyOperation(ElementT::narrow, other, unknown, unknown);
   }
 
-  public Set<Expression> getExpressions() {
+  public Set<NormalExpression> getExpressions() {
     return bounds.stream().flatMap(e -> e.expressions().stream()).collect(Collectors.toSet());
   }
 }

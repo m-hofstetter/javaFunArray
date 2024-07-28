@@ -17,7 +17,7 @@ import analysis.common.statement.IncrementVariable;
 import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,8 @@ public class AnalysisTest {
   void cousotExampleTest() {
     final var context = IntervalAnalysisContext.INSTANCE;
 
-    var expA = new Expression("a");
-    var expB = new Expression("b");
+    var expA = new NormalExpression("a");
+    var expB = new NormalExpression("b");
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
@@ -43,8 +43,8 @@ public class AnalysisTest {
             "0", Interval.of(0),
             "temp", Interval.unknown()));
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("A", new Expression("a"), new Expression("0"), context);
+    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new NormalExpression("a"), new NormalExpression("b"));
+    var positiveIntCondition = new ArrayElementLessThanExpression<Interval, Interval>("A", new NormalExpression("a"), new NormalExpression("0"), context);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
@@ -68,8 +68,8 @@ public class AnalysisTest {
 
     final var context = SignIntervalAnalysisContext.INSTANCE;
 
-    var expA = new Expression("a");
-    var expB = new Expression("b");
+    var expA = new NormalExpression("a");
+    var expB = new NormalExpression("b");
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
@@ -81,8 +81,8 @@ public class AnalysisTest {
             "temp", Interval.unknown()));
 
 
-    var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new Expression("a"), new Expression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new Expression("a"), new Expression("0"), context);
+    var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new NormalExpression("a"), new NormalExpression("b"));
+    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new NormalExpression("a"), new NormalExpression("0"), context);
 
 
     var program = new While<>(loopCondition,
@@ -110,12 +110,12 @@ public class AnalysisTest {
     var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
     var arrayPositive = parseIntervalFunArray("{0 p} ⊥ {P.length}");
     var arrayNegative = parseIntervalFunArray("{0 n} ⊥ {N.length}");
-    var expS = new Expression("s");
-    var expP = new Expression("p");
-    var expN = new Expression("n");
+    var expS = new NormalExpression("s");
+    var expP = new NormalExpression("p");
+    var expN = new NormalExpression("n");
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new Expression("s"), new Expression("S.length"));
-    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new Expression("s"), new Expression("0"), context);
+    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new NormalExpression("s"), new NormalExpression("S.length"));
+    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new NormalExpression("s"), new NormalExpression("0"), context);
 
     var environment = new EnvState<>(Map.of(
             "S", arraySource,

@@ -9,9 +9,9 @@ package funarray;
  * @param varRef the reference for a variable v
  * @param constant the constant k
  */
-public record Expression(String varRef, int constant) {
+public record NormalExpression(String varRef, int constant) {
 
-  public Expression(String variable) {
+  public NormalExpression(String variable) {
     this(variable, 0);
   }
 
@@ -35,15 +35,15 @@ public record Expression(String varRef, int constant) {
    * @param value       the value by which it is being increased.
    * @return the altered variable.
    */
-  public Expression addToVariableInFunArray(String otherVarRef, int value) {
+  public NormalExpression addToVariableInFunArray(String otherVarRef, int value) {
     if (this.varRef().equals(otherVarRef)) {
-      return new Expression(otherVarRef, constant - value);
+      return new NormalExpression(otherVarRef, constant - value);
     }
     return this;
   }
 
-  public Expression increase(int value) {
-    return new Expression(varRef, constant + value);
+  public NormalExpression increase(int value) {
+    return new NormalExpression(varRef, constant + value);
   }
 
   /**
@@ -53,14 +53,14 @@ public record Expression(String varRef, int constant) {
    * @return TRUE if this is definitely less than the other, FALSE if this is definitely not less
    *         than the other and UNKNOWN if it can't be determined
    */
-  public boolean isLessThan(Expression other) {
+  public boolean isLessThan(NormalExpression other) {
     if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() < other.constant();
   }
 
-  public boolean isLessEqualThan(Expression other) {
+  public boolean isLessEqualThan(NormalExpression other) {
     if (!this.varRef.equals(other.varRef)) {
       return false;
     }
@@ -74,14 +74,14 @@ public record Expression(String varRef, int constant) {
    * @return TRUE if this is definitely greater than the other, FALSE if this is definitely not
    *         greater than the other and UNKNOWN if it can't be determined
    */
-  public boolean isGreaterThan(Expression other) {
+  public boolean isGreaterThan(NormalExpression other) {
     if (!this.varRef.equals(other.varRef)) {
       return false;
     }
     return this.constant() > other.constant();
   }
 
-  public boolean isGreaterEqualThan(Expression other) {
+  public boolean isGreaterEqualThan(NormalExpression other) {
     if (!this.varRef.equals(other.varRef)) {
       return false;
     }

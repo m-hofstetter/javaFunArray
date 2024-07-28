@@ -5,7 +5,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 
 /**
  * Atomic statement for assigning the value of a variable to an array element.
@@ -21,7 +21,7 @@ public record AssignVariableValueToArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         String arrRef,
-        Expression arrayIndex,
+        NormalExpression arrayIndex,
         String varRef,
         AnalysisContext<ElementT, VariableT> context)
         implements Analysis<ElementT, VariableT> {

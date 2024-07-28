@@ -2,7 +2,7 @@ package analysis.common.condition;
 
 import abstractdomain.DomainValue;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 
 /**
  * A condition deciding whether an expression is less than another expression.
@@ -15,8 +15,8 @@ import funarray.Expression;
 public record ExpressionLessThanExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
-        Expression left,
-        Expression right) implements Condition<ElementT, VariableT> {
+        NormalExpression left,
+        NormalExpression right) implements Condition<ElementT, VariableT> {
 
   @Override
   public EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state) {

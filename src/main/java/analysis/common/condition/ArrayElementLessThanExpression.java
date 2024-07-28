@@ -3,7 +3,7 @@ package analysis.common.condition;
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 
 /**
  * A condition deciding whether an array element is less equal than an expression.
@@ -18,8 +18,8 @@ public record ArrayElementLessThanExpression<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         String arrRef,
-        Expression index,
-        Expression comparand,
+        NormalExpression index,
+        NormalExpression comparand,
         AnalysisContext<ElementT, VariableT> context) implements Condition<ElementT, VariableT> {
 
   @Override

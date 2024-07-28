@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
 import abstractdomain.interval.value.Interval;
-import exception.FunArrayLogicException;
+import funarray.exception.FunArrayLogicException;
 import org.junit.jupiter.api.Test;
 
 public class FunArrayTest {
@@ -21,22 +21,22 @@ public class FunArrayTest {
   void insertTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {x A.length}");
 
-    funArray = funArray.insert(new Expression("0"), Interval.of(0));
+    funArray = funArray.insert(new NormalExpression("0"), Interval.of(0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x A.length}?")
     );
 
-    funArray = funArray.insert(new Expression("0", 1), Interval.of(0, 0));
+    funArray = funArray.insert(new NormalExpression("0", 1), Interval.of(0, 0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {x A.length}?")
     );
 
-    funArray = funArray.insert(new Expression("A.length", -1), Interval.of(0));
+    funArray = funArray.insert(new NormalExpression("A.length", -1), Interval.of(0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
 
-    funArray = funArray.insert(new Expression("0"), Interval.of(0));
+    funArray = funArray.insert(new NormalExpression("0"), Interval.of(0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
@@ -86,10 +86,10 @@ public class FunArrayTest {
   void getTest() {
     var funArray = parseIntervalFunArray("{0} [0, 0] {1} [1, 1] {2}");
 
-    assertThat(funArray.get(new Expression("0")))
+    assertThat(funArray.get(new NormalExpression("0")))
             .isEqualTo(Interval.of(0));
 
-    assertThat(funArray.get(new Expression("0", 1)))
+    assertThat(funArray.get(new NormalExpression("0", 1)))
             .isEqualTo(Interval.of(1));
   }
 
@@ -98,8 +98,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b} [-∞, ∞] {A.length}");
 
     funArray = funArray.satisfyBoundExpressionLessEqualThan(
-            new Expression("a"),
-            new Expression("b")
+            new NormalExpression("a"),
+            new NormalExpression("b")
     );
 
     assertThat(funArray).isEqualTo(
@@ -112,8 +112,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b}? [-∞, ∞] {A.length}");
 
     funArray = funArray.satisfyBoundExpressionLessEqualThan(
-            new Expression("b"),
-            new Expression("a")
+            new NormalExpression("b"),
+            new NormalExpression("a")
     );
 
     assertThat(funArray).isEqualTo(
@@ -126,8 +126,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b} [-∞, ∞] {A.length}");
 
     assertThrows(FunArrayLogicException.class, () -> funArray.satisfyBoundExpressionLessEqualThan(
-            new Expression("b"),
-            new Expression("a")
+            new NormalExpression("b"),
+            new NormalExpression("a")
     ));
   }
 
@@ -136,8 +136,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b}? [-∞, ∞] {A.length}");
 
     funArray = funArray.satisfyBoundExpressionLessThan(
-            new Expression("a"),
-            new Expression("b")
+            new NormalExpression("a"),
+            new NormalExpression("b")
     );
 
     assertThat(funArray).isEqualTo(
@@ -150,8 +150,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b}? [-∞, ∞] {c}? [-∞, ∞] {A.length}");
 
     funArray = funArray.satisfyBoundExpressionLessThan(
-            new Expression("a"),
-            new Expression("c")
+            new NormalExpression("a"),
+            new NormalExpression("c")
     );
 
     assertThat(funArray).isEqualTo(
@@ -164,8 +164,8 @@ public class FunArrayTest {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b} [-∞, ∞] {A.length}");
 
     assertThrows(FunArrayLogicException.class, () -> funArray.satisfyBoundExpressionLessThan(
-            new Expression("b"),
-            new Expression("a")
+            new NormalExpression("b"),
+            new NormalExpression("a")
     ));
   }
 
@@ -179,7 +179,7 @@ public class FunArrayTest {
   void insertVariableTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}");
 
-    funArray = funArray.insertExpression("b", new Expression("a"));
+    funArray = funArray.insertExpression("b", new NormalExpression("a"));
 
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [-∞, ∞] {a b} [-∞, ∞] {A.length}")

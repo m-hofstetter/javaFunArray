@@ -1,4 +1,4 @@
-package exception;
+package funarray.exception;
 
 /**
  * The runtime exception for when an operation on a FunArray is semantically not possible. For

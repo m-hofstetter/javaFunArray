@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 
 public class BoundTest {
 
-  static final Expression A = new Expression("A");
-  static final Expression B = new Expression("B");
+  static final NormalExpression A = new NormalExpression("A");
+  static final NormalExpression B = new NormalExpression("B");
 
-  static final Set<Expression> SET_A = Set.of(A);
-  static final Set<Expression> SET_AB = Set.of(A, B);
-  static final Set<Expression> SET_B = Set.of(B);
+  static final Set<NormalExpression> SET_A = Set.of(A);
+  static final Set<NormalExpression> SET_AB = Set.of(A, B);
+  static final Set<NormalExpression> SET_B = Set.of(B);
 
   @SuppressWarnings("EqualsWithItself")
   @Test

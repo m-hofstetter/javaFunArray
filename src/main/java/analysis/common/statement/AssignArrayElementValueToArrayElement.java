@@ -4,7 +4,7 @@ import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import funarray.EnvState;
-import funarray.Expression;
+import funarray.NormalExpression;
 
 /**
  * Atomic statement for assigning the value of an array element to another element.
@@ -18,9 +18,9 @@ public record AssignArrayElementValueToArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         String arrRefSource,
-        Expression arrayIndexSource,
+        NormalExpression arrayIndexSource,
         String arrRefTarget,
-        Expression arrayIndexTarget) implements Analysis<ElementT, VariableT> {
+        NormalExpression arrayIndexTarget) implements Analysis<ElementT, VariableT> {
   public static final String PROTOCOL_TEMPLATE = """
           A[%s] ← A[%s]
           \033[0;36m%s\033[0m""";

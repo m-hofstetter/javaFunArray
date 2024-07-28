@@ -43,7 +43,7 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef,
                                                       String arrRef,
-                                                      Expression expression) {
+                                                      NormalExpression expression) {
     var modifiedFunArrays = new HashMap<>(funArray);
     modifiedFunArrays.put(arrRef,
             modifiedFunArrays.get(arrRef)
@@ -77,7 +77,7 @@ public record EnvState<
    * @return the altered FunArray
    */
   public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
-                                                          Expression index,
+                                                          NormalExpression index,
                                                           ElementT value) {
     var modifiedFunArrays = new HashMap<>(funArray);
     modifiedFunArrays.put(arrRef,
@@ -93,7 +93,7 @@ public record EnvState<
    * @param index the index.
    * @return the value.
    */
-  public ElementT getArrayElement(String arrRef, Expression index) {
+  public ElementT getArrayElement(String arrRef, NormalExpression index) {
     return funArray.get(arrRef).get(index);
   }
 
@@ -135,8 +135,8 @@ public record EnvState<
     return variables.get(varRef);
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(Expression left,
-                                                                      Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(NormalExpression left,
+                                                                      NormalExpression right) {
     var modifiedFunArrays = funArray.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
@@ -146,8 +146,8 @@ public record EnvState<
     return new EnvState<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(Expression left,
-                                                                 Expression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(NormalExpression left,
+                                                                 NormalExpression right) {
     var modifiedFunArrays = funArray.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
@@ -157,7 +157,7 @@ public record EnvState<
     return new EnvState<>(modifiedFunArrays, variables());
   }
 
-  public VariableT calculateExpression(Expression expression) {
+  public VariableT calculateExpression(NormalExpression expression) {
     var variableValue = variables.get(expression.varRef());
     return variableValue.addConstant(expression.constant());
   }
