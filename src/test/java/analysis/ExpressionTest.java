@@ -1,13 +1,10 @@
 package analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
 import abstractdomain.interval.value.Interval;
 import analysis.common.AnalysisContext;
-import analysis.common.expression.Expression;
-import analysis.common.expression.NormaliseExpressionException;
 import analysis.common.expression.associative.Addition;
 import analysis.common.expression.associative.Multiplication;
 import analysis.common.expression.atom.ArrayElement;
@@ -32,63 +29,77 @@ public class ExpressionTest {
           Map.of(
                   "a", Interval.unknown(),
                   "b", Interval.of(5, 10),
-                  "c", Interval.unknown(),
+                  "c", Interval.of(20, 20),
                   "A.length", Interval.unknown(),
                   "0", Interval.of(0),
                   "temp", Interval.unknown()
           )
   );
 
-  Expression<Interval, Interval> constant = new Constant<>(0, context);
-
-  Expression<Interval, Interval> variable = new Variable<>("b", context);
-
-  Expression<Interval, Interval> addition = new Addition<>(Set.of(constant, variable), context);
-
-  Expression<Interval, Interval> arrayElement = new ArrayElement<>(
-          "A",
-          addition,
-          context
-  );
-
-  Expression<Interval, Interval> multiplication = new Multiplication<>(
-          Set.of(constant, variable),
-          context
-  );
-
-
   @Test
-  public void testConstant() throws Exception {
+  public void testConstant() {
+    var constant = new Constant<>(0, context);
+
     assertThat(constant.toString()).isEqualTo("0");
     assertThat(constant.evaluate(environment)).isEqualTo(Interval.of(0));
-    assertThat(constant.normalise(environment)).isEqualTo(new NormalExpression("0", 0));
+    assertThat(constant.normalise(environment)).containsExactly(new NormalExpression("0", 0));
   }
 
   @Test
-  public void testVariable() throws Exception {
+  public void testVariable() {
+    var variable = new Variable<>("b", context);
+
     assertThat(variable.toString()).isEqualTo("b");
     assertThat(variable.evaluate(environment)).isEqualTo(Interval.of(5, 10));
-    assertThat(variable.normalise(environment)).isEqualTo(new NormalExpression("b", 0));
+    assertThat(variable.normalise(environment)).containsExactly(new NormalExpression("b", 0));
   }
 
   @Test
-  public void testArrayElement() throws Exception {
+  public void testArrayElement() {
+    var arrayElement = new ArrayElement<>(
+            "A",
+            new Addition<>(Set.of(
+                    new Variable<>("b", context),
+                    new Constant<>(0, context)
+            ), context),
+            context
+    );
+
     assertThat(arrayElement.toString()).isEqualTo("A[b + 0]");
     assertThat(arrayElement.evaluate(environment)).isEqualTo(Interval.of(-100, 100));
-    assertThatExceptionOfType(NormaliseExpressionException.class).isThrownBy(() -> arrayElement.normalise(environment));
+    assertThat(arrayElement.normalise(environment)).isEmpty();
   }
 
   @Test
-  public void testAddition() throws Exception {
+  public void testAddition() {
+    var addition = new Addition<>(Set.of(
+            new Variable<>("b", context),
+            new Constant<>(0, context)
+    ), context);
+
     assertThat(addition.toString()).isEqualTo("b + 0");
     assertThat(addition.evaluate(environment)).isEqualTo(Interval.of(5, 10));
-    assertThat(addition.normalise(environment)).isEqualTo(new NormalExpression("b", 0));
+    assertThat(addition.normalise(environment)).containsExactly(new NormalExpression("b", 0));
   }
 
   @Test
-  public void testMultiplication() throws Exception {
-    assertThat(multiplication.toString()).isEqualTo("b * 0");
-    assertThat(multiplication.evaluate(environment)).isEqualTo(Interval.of(0, 0));
-    assertThat(multiplication.normalise(environment)).isEqualTo(new NormalExpression("0", 0));
+  public void testMultiplication() {
+    var multiplication = new Multiplication<>(Set.of(
+            new Variable<>("b", context),
+            new Constant<>(3, context)
+    ), context);
+
+    assertThat(multiplication.toString()).isEqualTo("b * 3");
+    assertThat(multiplication.evaluate(environment)).isEqualTo(Interval.of(15, 30));
+    assertThat(multiplication.normalise(environment)).isEmpty();
+
+    var normalisableMultiplication = new Multiplication<>(Set.of(
+            new Variable<>("c", context),
+            new Constant<>(5, context)
+    ), context);
+
+    assertThat(normalisableMultiplication.toString()).isEqualTo("c * 5");
+    assertThat(normalisableMultiplication.evaluate(environment)).isEqualTo(Interval.of(100));
+    assertThat(normalisableMultiplication.normalise(environment)).containsExactly(new NormalExpression("0", 100));
   }
 }
