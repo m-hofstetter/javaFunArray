@@ -1,6 +1,6 @@
-package base.interval;
+package abstractdomain.interval.value;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
 import base.infint.InfInt;
 
 /**

@@ -1,10 +1,10 @@
-package base.sign;
+package abstractdomain.sign.value;
 
-import static base.sign.Sign.SignElement.NEGATIVE;
-import static base.sign.Sign.SignElement.POSITIVE;
-import static base.sign.Sign.SignElement.ZERO;
+import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
+import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
+import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;

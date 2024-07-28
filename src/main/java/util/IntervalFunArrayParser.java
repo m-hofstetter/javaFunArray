@@ -1,17 +1,17 @@
 package util;
 
-import static base.sign.Sign.SignElement.NEGATIVE;
-import static base.sign.Sign.SignElement.POSITIVE;
-import static base.sign.Sign.SignElement.ZERO;
+import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
+import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
+import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
+import abstractdomain.interval.value.Interval;
+import abstractdomain.sign.value.Sign;
 import base.infint.FiniteInteger;
 import base.infint.InfInt;
 import base.infint.Infinity;
 import base.infint.NegativeInfinity;
 import base.infint.PositiveInfinity;
-import base.interval.Interval;
-import base.sign.Sign;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;

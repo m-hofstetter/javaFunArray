@@ -1,12 +1,14 @@
 package base;
 
-import static base.sign.Sign.SignElement.*;
+import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
+import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
+import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import base.sign.Sign;
-import org.junit.jupiter.api.Test;
+import abstractdomain.sign.value.Sign;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class SignTest {
   final Sign POS = new Sign(Set.of(POSITIVE));

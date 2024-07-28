@@ -1,8 +1,8 @@
 package analysis.common.statement;
 
+import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import base.DomainValue;
 import funarray.EnvState;
 import funarray.Expression;
 import java.util.function.Function;

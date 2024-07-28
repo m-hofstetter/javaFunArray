@@ -1,6 +1,6 @@
 package analysis.common.condition;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
 import funarray.EnvState;
 
 /**

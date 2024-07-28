@@ -1,8 +1,8 @@
 package analysis.common.controlstructure;
 
+import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import base.DomainValue;
 import funarray.EnvState;
 import java.util.ArrayList;
 import java.util.List;

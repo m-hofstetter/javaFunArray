@@ -1,4 +1,4 @@
-package base.interval;
+package abstractdomain.interval.value;
 
 final class Unreachable extends Interval {
 

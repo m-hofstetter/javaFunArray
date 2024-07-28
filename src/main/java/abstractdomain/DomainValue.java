@@ -1,4 +1,4 @@
-package base;
+package abstractdomain;
 
 /**
  * An interface representing a value from an abstract domain.

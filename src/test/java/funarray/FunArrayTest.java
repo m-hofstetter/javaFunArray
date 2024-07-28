@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
-import base.interval.Interval;
+import abstractdomain.interval.value.Interval;
 import exception.FunArrayLogicException;
 import org.junit.jupiter.api.Test;
 

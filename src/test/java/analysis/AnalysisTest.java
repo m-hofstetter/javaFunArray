@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 import static util.IntervalFunArrayParser.parseSignFunArray;
 
+import abstractdomain.interval.value.Interval;
+import abstractdomain.sign.value.Sign;
 import analysis.common.condition.ArrayElementLessThanExpression;
 import analysis.common.condition.ExpressionLessThanExpression;
 import analysis.common.controlstructure.IfThenElse;
@@ -13,8 +15,6 @@ import analysis.common.statement.AssignArrayElementValueToVariable;
 import analysis.common.statement.AssignVariableValueToArrayElement;
 import analysis.common.statement.IncrementVariable;
 import base.DomainValueConversion;
-import base.interval.Interval;
-import base.sign.Sign;
 import funarray.EnvState;
 import funarray.Expression;
 import java.util.List;

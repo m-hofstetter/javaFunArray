@@ -3,8 +3,8 @@ package base;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import abstractdomain.interval.value.Interval;
 import base.infint.InfInt;
-import base.interval.Interval;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

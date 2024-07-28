@@ -1,6 +1,6 @@
 package funarray;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
 import exception.FunArrayLogicException;
 import java.util.ArrayList;
 import java.util.HashSet;

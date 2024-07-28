@@ -1,6 +1,6 @@
 package funarray;
 
-import base.DomainValue;
+import abstractdomain.DomainValue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;

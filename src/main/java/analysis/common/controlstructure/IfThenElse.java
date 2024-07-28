@@ -1,9 +1,9 @@
 package analysis.common.controlstructure;
 
+import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import base.DomainValue;
 import funarray.EnvState;
 import java.util.List;
 

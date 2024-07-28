@@ -1,13 +1,14 @@
 package base;
 
-import static base.sign.Sign.SignElement.NEGATIVE;
-import static base.sign.Sign.SignElement.POSITIVE;
-import static base.sign.Sign.SignElement.ZERO;
+import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
+import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
+import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 
+import abstractdomain.DomainValue;
+import abstractdomain.interval.value.Interval;
+import abstractdomain.interval.value.ReachableInterval;
+import abstractdomain.sign.value.Sign;
 import base.infint.InfInt;
-import base.interval.Interval;
-import base.interval.ReachableInterval;
-import base.sign.Sign;
 import java.util.HashSet;
 import java.util.Set;
 

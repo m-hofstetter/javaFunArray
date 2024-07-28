@@ -1,12 +1,12 @@
 package util;
 
-import static base.sign.Sign.SignElement.NEGATIVE;
-import static base.sign.Sign.SignElement.POSITIVE;
-import static base.sign.Sign.SignElement.ZERO;
+import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
+import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
+import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import base.interval.Interval;
-import base.sign.Sign;
+import abstractdomain.interval.value.Interval;
+import abstractdomain.sign.value.Sign;
 import funarray.Bound;
 import funarray.Expression;
 import funarray.FunArray;
