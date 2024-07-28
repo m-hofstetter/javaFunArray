@@ -35,7 +35,6 @@ public record AssignArrayElementValueToVariable<
     var arrayElementValue = startingState.getArrayElement(arrRef, arrayIndex);
     var resultState = startingState.assignVariable(
             varRef,
-            arrRef,
             context.convertArrayElementValueToVariableValue(arrayElementValue)
     );
     var protocol = PROTOCOL_TEMPLATE.formatted(varRef, arrayIndex, resultState);

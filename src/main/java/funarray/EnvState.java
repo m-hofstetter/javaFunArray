@@ -3,6 +3,7 @@ package funarray;
 import abstractdomain.DomainValue;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -26,7 +27,7 @@ public record EnvState<
    * Adds to a variable. See Cousot et al. 2011, Chapter 11.6.
    *
    * @param varRef the variable
-   * @param value    the amount by which to increase it
+   * @param value  the amount by which to increase it
    * @return the altered FunArray
    */
   public EnvState<ElementT, VariableT> addToVariable(String varRef, int value) {
@@ -41,32 +42,40 @@ public record EnvState<
     return new EnvState<>(modifiedFunArrays, newVariables);
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(String varRef,
-                                                      String arrRef,
-                                                      NormalExpression expression) {
-    var modifiedFunArrays = new HashMap<>(funArray);
-    modifiedFunArrays.put(arrRef,
-            modifiedFunArrays.get(arrRef)
-                    .removeVariableOccurrences(varRef)
-                    .insertExpression(varRef, expression)
-    );
+  public EnvState<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            funArrayEntry -> {
+                              var funArray = funArrayEntry.getValue();
+                              for (NormalExpression expression : expressions) {
+                                funArray = funArray
+                                        .removeVariableOccurrences("TODO")
+                                        .insertExpression(varRef, expression);
+                              }
+                              return funArray;
+                            }
+                    )
+            );
 
     var modifiedVariables = new HashMap<>(variables);
-    modifiedVariables.put(varRef, calculateExpression(expression));
+    modifiedVariables.put(varRef, calculateExpression(expressions.stream().findAny().orElseThrow(IllegalArgumentException::new)));
 
     return new EnvState<>(modifiedFunArrays, modifiedVariables);
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(String varRef,
-                                                      String arrRef,
-                                                      VariableT interval) {
-    var modifiedFunArrays = new HashMap<>(funArray);
-    modifiedFunArrays.put(arrRef, modifiedFunArrays.get(arrRef).removeVariableOccurrences(varRef));
+  public EnvState<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            funArrayEntry -> funArrayEntry.getValue().removeVariableOccurrences(varRef)
+                    )
+            );
 
-    var modified = new HashMap<>(variables);
-    modified.put(varRef, interval);
+    var modifiedVariables = new HashMap<>(variables);
+    modifiedVariables.put(varRef, value);
 
-    return new EnvState<>(modifiedFunArrays, modified);
+    return new EnvState<>(modifiedFunArrays, modifiedVariables);
   }
 
   /**
@@ -77,14 +86,20 @@ public record EnvState<
    * @return the altered FunArray
    */
   public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
-                                                          NormalExpression index,
+                                                          Set<NormalExpression> indeces,
                                                           ElementT value) {
     var modifiedFunArrays = new HashMap<>(funArray);
     modifiedFunArrays.put(arrRef,
             modifiedFunArrays.get(arrRef)
-                    .insert(index, value)
+                    .insert(indeces, value)
     );
     return new EnvState<>(modifiedFunArrays, variables());
+  }
+
+  public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
+                                                          NormalExpression index,
+                                                          ElementT value) {
+    return assignArrayElement(arrRef, Set.of(index), value);
   }
 
   /**

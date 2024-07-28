@@ -141,32 +141,44 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
+  public FunArray<ElementT> insert(NormalExpression index, ElementT value) {
+    return insert(Set.of(index), value);
+  }
+
   /**
    * Inserts a value into the FunArray.
    *
-   * @param index the leading bound expression for the new value.
+   * @param indeces the leading bound expressions for the new value.
    * @param value the value to be inserted.
    * @return the modified Segmentation.
    */
-  public FunArray<ElementT> insert(NormalExpression index, ElementT value) {
-    var trailingIndex = index.increase(1);
-    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(index);
-    int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndex);
+  public FunArray<ElementT> insert(Set<NormalExpression> indeces, ElementT value) {
+    var trailingIndeces = indeces.stream()
+            .map(e -> e.increase(1))
+            .collect(Collectors.toSet());
+    int greatestLowerBoundIndex = getRightmostLowerBoundIndex(indeces);
+    int leastUpperBoundIndex = getLeastUpperBoundIndex(trailingIndeces);
+
+    final Bound greatestLowerBound = bounds.get(greatestLowerBoundIndex);
+    final Bound leastUpperBound = bounds.get(leastUpperBoundIndex);
+
+    var leftAdjacent = indeces.stream().anyMatch(greatestLowerBound::contains);
+    var rightAdjacent = trailingIndeces.stream().anyMatch(leastUpperBound::contains);
+
 
     var newBounds = new ArrayList<>(bounds);
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(this.emptiness);
 
-    var leftAdjacent = bounds.get(greatestLowerBoundIndex).contains(index);
-    var rightAdjacent = bounds.get(leastUpperBoundIndex).contains(trailingIndex);
+
 
     if (leftAdjacent && rightAdjacent) {
       newValues.set(greatestLowerBoundIndex, value);
       return new FunArray<>(newBounds, newValues, newEmptiness);
     }
 
-    Bound leftBound = new Bound(index);
-    Bound rightBound = new Bound(trailingIndex);
+    Bound leftBound = new Bound(indeces);
+    Bound rightBound = new Bound(trailingIndeces);
 
     if (rightAdjacent) {
       for (int i = leastUpperBoundIndex - 1; i > greatestLowerBoundIndex; i--) {
@@ -224,6 +236,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return getJointValue(greatestLowerBoundIndex, leastUpperBoundIndex);
   }
 
+  private int getRightmostLowerBoundIndex(Set<NormalExpression> expressions) {
+    return expressions.stream().mapToInt(this::getRightmostLowerBoundIndex).max().orElse(0);
+  }
+
   /**
    * Gets the index of the rightmost segment s such that the trailing bound of the segment s
    * contains an expression that is equal to or less than the given expression.
@@ -239,6 +255,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       }
     }
     return greatestLowerBoundIndex;
+  }
+
+  private int getLeastUpperBoundIndex(Set<NormalExpression> expressions) {
+    return expressions.stream().mapToInt(this::getLeastUpperBoundIndex).max().orElse(bounds.size() - 1);
   }
 
   /**

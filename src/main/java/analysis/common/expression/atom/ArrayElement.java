@@ -3,6 +3,7 @@ package analysis.common.expression.atom;
 import abstractdomain.DomainValue;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
+import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.EnvState;
 import funarray.NormalExpression;
@@ -12,7 +13,9 @@ import java.util.stream.Collectors;
 
 public class ArrayElement<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>> extends Expression<ElementT, VariableT> {
+        VariableT extends DomainValue<VariableT>>
+        extends Expression<ElementT, VariableT>
+        implements Assignable<ElementT, VariableT> {
 
   public static final String STRING_TEMPLATE = "%s[%s]";
 
@@ -68,5 +71,14 @@ public class ArrayElement<
     return index.normalise(environment).stream()
             .map(e -> environment.getArrayElement(arrayRef, e))
             .collect(Collectors.toSet());
+  }
+
+  @Override
+  public EnvState<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, EnvState<ElementT, VariableT> environmentState) {
+    return environmentState.assignArrayElement(
+            arrayRef,
+            index.normalise(environmentState),
+            context.convertVariableValueToArrayElementValue(value.evaluate(environmentState))
+    );
   }
 }
