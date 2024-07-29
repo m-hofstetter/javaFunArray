@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 public class ArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>
-        extends Expression<ElementT, VariableT>
         implements Assignable<ElementT, VariableT> {
 
   public static final String STRING_TEMPLATE = "%s[%s]";
 
+  private final AnalysisContext<ElementT, VariableT> context;
   private final String arrayRef;
   private final Expression<ElementT, VariableT> index;
 
@@ -27,7 +27,7 @@ public class ArrayElement<
           Expression<ElementT, VariableT> index,
           AnalysisContext<ElementT, VariableT> context
   ) {
-    super(context);
+    this.context = context;
     this.arrayRef = arrayRef;
     this.index = index;
   }

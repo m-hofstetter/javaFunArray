@@ -11,12 +11,13 @@ import lombok.Getter;
 @Getter
 public class Constant<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>> extends Expression<ElementT, VariableT> {
+        VariableT extends DomainValue<VariableT>> implements Expression<ElementT, VariableT> {
 
+  private final AnalysisContext<ElementT, VariableT> context;
   private final int constant;
 
   public Constant(int constant, AnalysisContext<ElementT, VariableT> context) {
-    super(context);
+    this.context = context;
     this.constant = constant;
   }
 

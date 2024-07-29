@@ -42,12 +42,12 @@ public class ExpressionTest {
 
     assertThat(constant.toString()).isEqualTo("0");
     assertThat(constant.evaluate(environment)).isEqualTo(Interval.of(0));
-    assertThat(constant.normalise(environment)).containsExactly(new NormalExpression("0", 0));
+    assertThat(constant.normalise(environment)).isEmpty();
   }
 
   @Test
   public void testVariable() {
-    var variable = new Variable<>("b", context);
+    var variable = new Variable<Interval, Interval>("b");
 
     assertThat(variable.toString()).isEqualTo("b");
     assertThat(variable.evaluate(environment)).isEqualTo(Interval.of(5, 10));
@@ -59,7 +59,7 @@ public class ExpressionTest {
     var arrayElement = new ArrayElement<>(
             "A",
             new Addition<>(Set.of(
-                    new Variable<>("b", context),
+                    new Variable<>("b"),
                     new Constant<>(0, context)
             ), context),
             context
@@ -73,7 +73,7 @@ public class ExpressionTest {
   @Test
   public void testAddition() {
     var addition = new Addition<>(Set.of(
-            new Variable<>("b", context),
+            new Variable<>("b"),
             new Constant<>(0, context)
     ), context);
 
@@ -85,7 +85,7 @@ public class ExpressionTest {
   @Test
   public void testMultiplication() {
     var multiplication = new Multiplication<>(Set.of(
-            new Variable<>("b", context),
+            new Variable<>("b"),
             new Constant<>(3, context)
     ), context);
 
@@ -94,7 +94,7 @@ public class ExpressionTest {
     assertThat(multiplication.normalise(environment)).isEmpty();
 
     var normalisableMultiplication = new Multiplication<>(Set.of(
-            new Variable<>("c", context),
+            new Variable<>("c"),
             new Constant<>(5, context)
     ), context);
 

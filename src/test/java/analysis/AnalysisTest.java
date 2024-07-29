@@ -48,29 +48,29 @@ public class AnalysisTest {
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("a", context), new Constant<>(1, context)), context),
-                            new Variable<>("a", context),
+                            new Addition<>(Set.of(new Variable<>("a"), new Constant<>(1, context)), context),
+                            new Variable<>("a"),
                             context
                     ),
                     List.of(
                             new Assign<>(
-                                    new Addition<>(Set.of(new Variable<>("b", context), new Constant<>(-1, context)), context),
-                                    new Variable<>("b", context),
+                                    new Addition<>(Set.of(new Variable<>("b"), new Constant<>(-1, context)), context),
+                                    new Variable<>("b"),
                                     context
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("a", context), context),
-                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("a"), context),
+                                    new Variable<>("temp"),
                                     context
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("b", context), context),
-                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new ArrayElement<>("A", new Variable<>("b"), context),
+                                    new ArrayElement<>("A", new Variable<>("a"), context),
                                     context
                             ),
                             new Assign<>(
-                                    new Variable<>("temp", context),
-                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new Variable<>("temp"),
+                                    new ArrayElement<>("A", new Variable<>("b"), context),
                                     context
                             )
                     ),
@@ -108,29 +108,29 @@ public class AnalysisTest {
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
                     new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("a", context), new Constant<>(1, context)), context),
-                            new Variable<>("a", context),
+                            new Addition<>(Set.of(new Variable<>("a"), new Constant<>(1, context)), context),
+                            new Variable<>("a"),
                             context
                     ),
                     List.of(
                             new Assign<>(
-                                    new Addition<>(Set.of(new Variable<>("b", context), new Constant<>(-1, context)), context),
-                                    new Variable<>("b", context),
+                                    new Addition<>(Set.of(new Variable<>("b"), new Constant<>(-1, context)), context),
+                                    new Variable<>("b"),
                                     context
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("a", context), context),
-                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("a"), context),
+                                    new Variable<>("temp"),
                                     context
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("b", context), context),
-                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new ArrayElement<>("A", new Variable<>("b"), context),
+                                    new ArrayElement<>("A", new Variable<>("a"), context),
                                     context
                             ),
                             new Assign<>(
-                                    new Variable<>("temp", context),
-                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new Variable<>("temp"),
+                                    new ArrayElement<>("A", new Variable<>("b"), context),
                                     context
                             )
                     ),
@@ -173,30 +173,30 @@ public class AnalysisTest {
     var program = new While<>(loopCondition, List.of(
             new IfThenElse<>(negativeIntCondition, List.of(
                     new Assign<>(
-                            new ArrayElement<>("S", new Variable<>("s", context), context),
-                            new ArrayElement<>("N", new Variable<>("n", context), context),
+                            new ArrayElement<>("S", new Variable<>("s"), context),
+                            new ArrayElement<>("N", new Variable<>("n"), context),
                             context
                     ),
                     new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("n", context), new Constant<>(1, context)), context),
-                            new Variable<>("n", context),
+                            new Addition<>(Set.of(new Variable<>("n"), new Constant<>(1, context)), context),
+                            new Variable<>("n"),
                             context
                     )
             ), List.of(
                     new Assign<>(
-                            new ArrayElement<>("S", new Variable<>("s", context), context),
-                            new ArrayElement<>("P", new Variable<>("p", context), context),
+                            new ArrayElement<>("S", new Variable<>("s"), context),
+                            new ArrayElement<>("P", new Variable<>("p"), context),
                             context
                     ),
                     new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("p", context), new Constant<>(1, context)), context),
-                            new Variable<>("p", context),
+                            new Addition<>(Set.of(new Variable<>("p"), new Constant<>(1, context)), context),
+                            new Variable<>("p"),
                             context
                     )
             ), context),
             new Assign<>(
-                    new Addition<>(Set.of(new Variable<>("s", context), new Constant<>(1, context)), context),
-                    new Variable<>("s", context),
+                    new Addition<>(Set.of(new Variable<>("s"), new Constant<>(1, context)), context),
+                    new Variable<>("s"),
                     context
             )
     ), context);
@@ -209,35 +209,6 @@ public class AnalysisTest {
     );
     System.out.println(result.protocol());
     assertThat(result.resultState().funArray()).isEqualTo(expected);
-
-  }
-
-
-  @Test
-  public void t() {
-    final var context = IntervalAnalysisContext.INSTANCE;
-
-    var funArray = parseIntervalFunArray("{0} [-100, -1] {n}? [-100, -1] {N.length}?");
-    var env = new EnvState<>(Map.of("A", funArray),
-            Map.of(
-                    "n", Interval.of(1),
-                    "0", Interval.of(0)
-            )
-    );
-
-    System.out.println(env);
-    System.out.println();
-
-
-    var program = new Assign<>(
-            new Addition<>(Set.of(new Variable<>("n", context), new Constant<>(1, context)), context),
-            new Variable<>("n", context),
-            context
-    );
-
-    var result = program.run(env);
-
-    System.out.println(result.protocol());
 
   }
 }

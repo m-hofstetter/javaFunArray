@@ -13,13 +13,14 @@ import java.util.stream.Collectors;
 
 public abstract class AssociativeOperation<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>> extends Expression<ElementT, VariableT> {
+        VariableT extends DomainValue<VariableT>> implements Expression<ElementT, VariableT> {
 
+  protected final AnalysisContext<ElementT, VariableT> context;
   protected final Set<Expression<ElementT, VariableT>> operands;
 
   public AssociativeOperation(Set<Expression<ElementT, VariableT>> operands,
                               AnalysisContext<ElementT, VariableT> context) {
-    super(context);
+    this.context = context;
     if (operands.size() < 2) {
       throw new IllegalArgumentException("Associative operation needs to have at least two operands.");
     }
