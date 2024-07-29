@@ -10,18 +10,17 @@ import analysis.common.condition.ArrayElementLessThanExpression;
 import analysis.common.condition.ExpressionLessThanExpression;
 import analysis.common.controlstructure.IfThenElse;
 import analysis.common.controlstructure.While;
-import analysis.common.expression.associative.Addition;
 import analysis.common.expression.atom.ArrayElement;
-import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
 import analysis.common.statement.Assign;
+import analysis.common.statement.Decrement;
+import analysis.common.statement.Increment;
 import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
 import funarray.EnvState;
 import funarray.NormalExpression;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class AnalysisTest {
@@ -47,31 +46,20 @@ public class AnalysisTest {
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("a"), new Constant<>(1, context)), context),
-                            new Variable<>("a"),
-                            context
-                    ),
+                    new Increment<>(new Variable<>("a"), context),
                     List.of(
-                            new Assign<>(
-                                    new Addition<>(Set.of(new Variable<>("b"), new Constant<>(-1, context)), context),
-                                    new Variable<>("b"),
-                                    context
-                            ),
+                            new Decrement<>(new Variable<>("b"), context),
                             new Assign<>(
                                     new ArrayElement<>("A", new Variable<>("a"), context),
-                                    new Variable<>("temp"),
-                                    context
+                                    new Variable<>("temp")
                             ),
                             new Assign<>(
                                     new ArrayElement<>("A", new Variable<>("b"), context),
-                                    new ArrayElement<>("A", new Variable<>("a"), context),
-                                    context
+                                    new ArrayElement<>("A", new Variable<>("a"), context)
                             ),
                             new Assign<>(
                                     new Variable<>("temp"),
-                                    new ArrayElement<>("A", new Variable<>("b"), context),
-                                    context
+                                    new ArrayElement<>("A", new Variable<>("b"), context)
                             )
                     ),
                     context),
@@ -107,31 +95,20 @@ public class AnalysisTest {
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("a"), new Constant<>(1, context)), context),
-                            new Variable<>("a"),
-                            context
-                    ),
+                    new Increment<>(new Variable<>("a"), context),
                     List.of(
-                            new Assign<>(
-                                    new Addition<>(Set.of(new Variable<>("b"), new Constant<>(-1, context)), context),
-                                    new Variable<>("b"),
-                                    context
-                            ),
+                            new Decrement<>(new Variable<>("b"), context),
                             new Assign<>(
                                     new ArrayElement<>("A", new Variable<>("a"), context),
-                                    new Variable<>("temp"),
-                                    context
+                                    new Variable<>("temp")
                             ),
                             new Assign<>(
                                     new ArrayElement<>("A", new Variable<>("b"), context),
-                                    new ArrayElement<>("A", new Variable<>("a"), context),
-                                    context
+                                    new ArrayElement<>("A", new Variable<>("a"), context)
                             ),
                             new Assign<>(
                                     new Variable<>("temp"),
-                                    new ArrayElement<>("A", new Variable<>("b"), context),
-                                    context
+                                    new ArrayElement<>("A", new Variable<>("b"), context)
                             )
                     ),
                     context),
@@ -174,31 +151,17 @@ public class AnalysisTest {
             new IfThenElse<>(negativeIntCondition, List.of(
                     new Assign<>(
                             new ArrayElement<>("S", new Variable<>("s"), context),
-                            new ArrayElement<>("N", new Variable<>("n"), context),
-                            context
+                            new ArrayElement<>("N", new Variable<>("n"), context)
                     ),
-                    new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("n"), new Constant<>(1, context)), context),
-                            new Variable<>("n"),
-                            context
-                    )
+                    new Increment<>(new Variable<>("n"), context)
             ), List.of(
                     new Assign<>(
                             new ArrayElement<>("S", new Variable<>("s"), context),
-                            new ArrayElement<>("P", new Variable<>("p"), context),
-                            context
+                            new ArrayElement<>("P", new Variable<>("p"), context)
                     ),
-                    new Assign<>(
-                            new Addition<>(Set.of(new Variable<>("p"), new Constant<>(1, context)), context),
-                            new Variable<>("p"),
-                            context
-                    )
+                    new Increment<>(new Variable<>("p"), context)
             ), context),
-            new Assign<>(
-                    new Addition<>(Set.of(new Variable<>("s"), new Constant<>(1, context)), context),
-                    new Variable<>("s"),
-                    context
-            )
+            new Increment<>(new Variable<>("s"), context)
     ), context);
 
     var result = program.run(environment);
