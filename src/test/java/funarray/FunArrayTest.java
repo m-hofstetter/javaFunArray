@@ -13,7 +13,7 @@ public class FunArrayTest {
   @Test
   void addToVariableTest() {
     var funArray = parseIntervalFunArray("{a} [-∞, ∞] {b}");
-    var modified = funArray.addToVariable("b", 3);
+    var modified = funArray.insertExpression("b", new NormalExpression("b", 3));
     assertThat(modified).isEqualTo(parseIntervalFunArray("{a} [-∞, ∞] {b-3}"));
   }
 

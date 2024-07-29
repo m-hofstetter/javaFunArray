@@ -1,7 +1,6 @@
 package funarray;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,7 +26,7 @@ public record Bound(Set<NormalExpression> expressions) {
    * For adding to a variable v by an amount i, this means replacing alle occurrences of v by v-1.
    *
    * @param varRef the variable v.
-   * @param value    the value by which it is being increased.
+   * @param value  the value by which it is being increased.
    * @return the altered bound.
    */
   public Bound addToVariableInFunArray(String varRef, int value) {
@@ -38,26 +37,30 @@ public record Bound(Set<NormalExpression> expressions) {
     );
   }
 
-  /**
-   * Inserts a new expression if a specified variable is present in its expressions. Is needed for
-   * assigning a value to a variable that might be contained in a {@link FunArray}.
-   *
-   * @param varRef   the variable.
-   * @param expression the expression
-   * @return the modified bound.
-   */
-  public Bound insertExpressionIfVariablePresent(
-          String varRef,
-          NormalExpression expression
+  public Bound adaptForChangedVariableValue(
+          String changedVariableRef,
+          NormalExpression newValue
   ) {
-    var modifiedExpressions = new HashSet<>(removeVariableOccurrences(varRef).expressions);
-
-    modifiedExpressions.stream()
-            .filter(e -> e.containsVariable(expression.varRef()))
-            .findAny()
-            .ifPresent(e -> modifiedExpressions.add(
-                    new NormalExpression(varRef, e.constant() - expression.constant())
-            ));
+    var modifiedExpressions = expressions.stream().flatMap(
+            expression -> {
+              if (expression.containsVariable(newValue.varRef())) {
+                if (expression.containsVariable(changedVariableRef)) {
+                  return Stream.of(expression.increase(-newValue.constant()));
+                } else {
+                  return Stream.of(
+                          expression,
+                          new NormalExpression(changedVariableRef, expression.constant() - newValue.constant())
+                  );
+                }
+              } else {
+                if (expression.containsVariable(changedVariableRef)) {
+                  return Stream.of();
+                } else {
+                  return Stream.of(expression);
+                }
+              }
+            }
+    ).collect(Collectors.toSet());
 
     return new Bound(modifiedExpressions);
   }
@@ -65,7 +68,7 @@ public record Bound(Set<NormalExpression> expressions) {
   /**
    * Removes all expressions containing the specified variable.
    *
-   * @param variable the variable.
+   * @param varRef the variable.
    * @return the modified bound.
    */
   public Bound removeVariableOccurrences(String varRef) {

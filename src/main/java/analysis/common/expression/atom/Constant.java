@@ -22,7 +22,7 @@ public class Constant<
 
   @Override
   public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
-    return Set.of(new NormalExpression("0", constant));
+    return Set.of();
   }
 
   @Override

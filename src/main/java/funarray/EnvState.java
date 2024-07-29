@@ -23,25 +23,6 @@ public record EnvState<
     variables = Map.copyOf(variables);
   }
 
-  /**
-   * Adds to a variable. See Cousot et al. 2011, Chapter 11.6.
-   *
-   * @param varRef the variable
-   * @param value  the amount by which to increase it
-   * @return the altered FunArray
-   */
-  public EnvState<ElementT, VariableT> addToVariable(String varRef, int value) {
-    var newVariables = new HashMap<>(variables);
-    var newVariableValue = variables.get(varRef).addConstant(value);
-    newVariables.put(varRef, newVariableValue);
-    var modifiedFunArrays = funArray.entrySet().stream()
-            .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().addToVariable(varRef, value)
-            ));
-    return new EnvState<>(modifiedFunArrays, newVariables);
-  }
-
   public EnvState<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
     var modifiedFunArrays = funArray.entrySet().stream()
             .collect(Collectors.toMap(
@@ -49,9 +30,7 @@ public record EnvState<
                             funArrayEntry -> {
                               var funArray = funArrayEntry.getValue();
                               for (NormalExpression expression : expressions) {
-                                funArray = funArray
-                                        .removeVariableOccurrences(varRef)
-                                        .insertExpression(varRef, expression);
+                                funArray = funArray.insertExpression(varRef, expression);
                               }
                               return funArray;
                             }

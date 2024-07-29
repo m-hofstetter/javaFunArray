@@ -82,23 +82,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
             .collect(Collectors.joining(" "));
   }
 
-  /**
-   * Adapt FunArray to a changed variable value.
-   *
-   * @param varRef   the variable reference.
-   * @param value    the value.
-   * @return the altered FunArray.
-   */
-  public FunArray<ElementT> addToVariable(String varRef, int value) {
-    var newBounds = bounds.stream()
-            .map(s -> s.addToVariableInFunArray(varRef, value))
-            .toList();
-    return new FunArray<>(newBounds, values, emptiness);
-  }
-
   public FunArray<ElementT> insertExpression(String varRef, NormalExpression expression) {
     var newBounds = new ArrayList<>(bounds.stream()
-            .map(b -> b.insertExpressionIfVariablePresent(varRef, expression))
+            .map(b -> b.adaptForChangedVariableValue(varRef, expression))
             .toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);
