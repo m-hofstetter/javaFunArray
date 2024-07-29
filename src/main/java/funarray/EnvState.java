@@ -50,7 +50,7 @@ public record EnvState<
                               var funArray = funArrayEntry.getValue();
                               for (NormalExpression expression : expressions) {
                                 funArray = funArray
-                                        .removeVariableOccurrences("TODO")
+                                        .removeVariableOccurrences(varRef)
                                         .insertExpression(varRef, expression);
                               }
                               return funArray;

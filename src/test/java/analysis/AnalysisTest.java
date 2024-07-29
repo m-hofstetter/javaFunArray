@@ -10,9 +10,9 @@ import analysis.common.condition.ArrayElementLessThanExpression;
 import analysis.common.condition.ExpressionLessThanExpression;
 import analysis.common.controlstructure.IfThenElse;
 import analysis.common.controlstructure.While;
-import analysis.common.statement.AssignArrayElementValueToArrayElement;
-import analysis.common.statement.AssignArrayElementValueToVariable;
-import analysis.common.statement.AssignVariableValueToArrayElement;
+import analysis.common.expression.atom.ArrayElement;
+import analysis.common.expression.atom.Variable;
+import analysis.common.statement.Assign;
 import analysis.common.statement.IncrementVariable;
 import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
@@ -31,9 +31,6 @@ public class AnalysisTest {
   void cousotExampleTest() {
     final var context = IntervalAnalysisContext.INSTANCE;
 
-    var expA = new NormalExpression("a");
-    var expB = new NormalExpression("b");
-
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
     var environment = new EnvState<>(Map.of("A", funArray), Map.of(
@@ -51,9 +48,21 @@ public class AnalysisTest {
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>("A", expA, "temp", context),
-                            new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
-                            new AssignVariableValueToArrayElement<>("A", expB, "temp", context)
+                            new Assign<>(
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new Variable<>("temp", context),
+                                    context
+                            ),
+                            new Assign<>(
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    context
+                            ),
+                            new Assign<>(
+                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    context
+                            )
                     ),
                     context),
             context);
@@ -90,9 +99,21 @@ public class AnalysisTest {
                     new IncrementVariable<>("a", 1),
                     List.of(
                             new IncrementVariable<>("b", -1),
-                            new AssignArrayElementValueToVariable<>("A", expA, "temp", context),
-                            new AssignArrayElementValueToArrayElement<>("A", expB, "A", expA),
-                            new AssignVariableValueToArrayElement<>("A", expB, "temp", context)
+                            new Assign<>(
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new Variable<>("temp", context),
+                                    context
+                            ),
+                            new Assign<>(
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    context
+                            ),
+                            new Assign<>(
+                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    context
+                            )
                     ),
                     context),
             context);
@@ -132,10 +153,18 @@ public class AnalysisTest {
 
     var program = new While<>(loopCondition, List.of(
             new IfThenElse<>(negativeIntCondition, List.of(
-                    new AssignArrayElementValueToArrayElement<>("S", expS, "N", expN),
+                    new Assign<>(
+                            new ArrayElement<>("S", new Variable<>("s", context), context),
+                            new ArrayElement<>("N", new Variable<>("n", context), context),
+                            context
+                    ),
                     new IncrementVariable<>("n", 1)
             ), List.of(
-                    new AssignArrayElementValueToArrayElement<>("S", expS, "P", expP),
+                    new Assign<>(
+                            new ArrayElement<>("S", new Variable<>("s", context), context),
+                            new ArrayElement<>("P", new Variable<>("p", context), context),
+                            context
+                    ),
                     new IncrementVariable<>("p", 1)
             ), context),
             new IncrementVariable<>("s", 1)
