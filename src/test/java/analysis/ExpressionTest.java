@@ -10,6 +10,9 @@ import analysis.common.expression.associative.Multiplication;
 import analysis.common.expression.atom.ArrayElement;
 import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
+import analysis.common.expression.nonassociative.Division;
+import analysis.common.expression.nonassociative.Modulo;
+import analysis.common.expression.nonassociative.Subtraction;
 import analysis.interval.IntervalAnalysisContext;
 import funarray.EnvState;
 import funarray.NormalExpression;
@@ -101,5 +104,44 @@ public class ExpressionTest {
     assertThat(normalisableMultiplication.toString()).isEqualTo("c * 5");
     assertThat(normalisableMultiplication.evaluate(environment)).isEqualTo(Interval.of(100));
     assertThat(normalisableMultiplication.normalise(environment)).containsExactly(new NormalExpression("0", 100));
+  }
+
+  @Test
+  public void testSubtraction() {
+    var subtraction = new Subtraction<>(
+            new Variable<>("b"),
+            new Constant<>(3, context),
+            context
+    );
+
+    assertThat(subtraction.toString()).isEqualTo("b - 3");
+    assertThat(subtraction.evaluate(environment)).isEqualTo(Interval.of(2, 7));
+    assertThat(subtraction.normalise(environment)).containsExactly(new NormalExpression("b", -3));
+  }
+
+  @Test
+  public void testModulo() {
+    var modulo = new Modulo<>(
+            new Variable<>("b"),
+            new Constant<>(3, context),
+            context
+    );
+
+    assertThat(modulo.toString()).isEqualTo("b % 3");
+    assertThat(modulo.evaluate(environment)).isEqualTo(Interval.of(0, 2));
+    assertThat(modulo.normalise(environment)).isEmpty();
+  }
+
+  @Test
+  public void testDivision() {
+    var division = new Division<>(
+            new Variable<>("b"),
+            new Constant<>(3, context),
+            context
+    );
+
+    assertThat(division.toString()).isEqualTo("b / 3");
+    assertThat(division.evaluate(environment)).isEqualTo(Interval.of(1, 3));
+    assertThat(division.normalise(environment)).isEmpty();
   }
 }
