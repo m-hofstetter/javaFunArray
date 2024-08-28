@@ -4,6 +4,7 @@ import abstractdomain.DomainValue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -129,26 +130,68 @@ public record EnvState<
     return variables.get(varRef);
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(NormalExpression left,
-                                                                      NormalExpression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
+                                                                                  NormalExpression right) {
     var modifiedFunArrays = funArray.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
             ));
-    //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(NormalExpression left,
-                                                                 NormalExpression right) {
+  public EnvState<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
+                                                                             NormalExpression right) {
     var modifiedFunArrays = funArray.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
             ));
-    //TODO: Variables need to be modified to satisfy condition
     return new EnvState<>(modifiedFunArrays, variables());
+  }
+
+  public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
+                                                        NormalExpression comparand,
+                                                        BinaryOperator<VariableT> operator) {
+    return satisfyForValues(comparandum, calculateExpression(comparand), operator);
+  }
+
+  public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
+                                                        VariableT comparand,
+                                                        BinaryOperator<VariableT> operator) {
+    var modifiedVariables = new HashMap<>(variables);
+    var comparandAsValue = comparand.subtractConstant(comparandum.constant());
+    var satisfiedComparandumValue = operator.apply(getVariableValue(comparandum.varRef()), comparandAsValue);
+    modifiedVariables.put(comparandum.varRef(), satisfiedComparandumValue);
+    return new EnvState<>(funArray, modifiedVariables);
+  }
+
+  public EnvState<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
+                                                        NormalExpression indexComparandum,
+                                                        ElementT comparand,
+                                                        BinaryOperator<ElementT> operator) {
+    var valueAtIndex = getArrayElement(arrRefComparandum, indexComparandum);
+    var modifiedValue = operator.apply(valueAtIndex, comparand);
+    return assignArrayElement(arrRefComparandum, indexComparandum, modifiedValue);
+  }
+
+
+  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(NormalExpression left,
+                                                                      NormalExpression right) {
+    var modified = satisfyExpressionLessEqualThanInBoundOrder(left, right);
+    modified = modified.satisfyForValues(left, right, DomainValue::satisfyLessEqualThan);
+    modified = modified.satisfyForValues(right, left, DomainValue::satisfyGreaterThan);
+
+    return modified;
+  }
+
+  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(NormalExpression left,
+                                                                 NormalExpression right) {
+    var modified = satisfyExpressionLessThanInBoundOrder(left, right);
+    modified = modified.satisfyForValues(left, right, DomainValue::satisfyLessThan);
+    modified = modified.satisfyForValues(right, left, DomainValue::satisfyGreaterEqualThan);
+
+    return modified;
   }
 
   public VariableT calculateExpression(NormalExpression expression) {

@@ -5,12 +5,11 @@ import static util.IntervalFunArrayParser.parseIntervalFunArray;
 import static util.IntervalFunArrayParser.parseSignFunArray;
 
 import abstractdomain.interval.value.Interval;
-import abstractdomain.sign.value.Sign;
-import analysis.common.condition.ArrayElementLessThanExpression;
-import analysis.common.condition.ExpressionLessThanExpression;
+import analysis.common.condition.LessThan;
 import analysis.common.controlstructure.IfThenElse;
 import analysis.common.controlstructure.While;
 import analysis.common.expression.atom.ArrayElement;
+import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
 import analysis.common.statement.Assign;
 import analysis.common.statement.Decrement;
@@ -41,8 +40,8 @@ public class AnalysisTest {
             "0", Interval.of(0),
             "temp", Interval.unknown()));
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new NormalExpression("a"), new NormalExpression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new NormalExpression("a"), new NormalExpression("0"), context);
+    var loopCondition = new LessThan<>(new Variable<>("a"), new Variable<>("b"), context);
+    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a"), context), new Constant<>(0, context), context);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
@@ -89,8 +88,8 @@ public class AnalysisTest {
             "temp", Interval.unknown()));
 
 
-    var loopCondition = new ExpressionLessThanExpression<Sign, Interval>(new NormalExpression("a"), new NormalExpression("b"));
-    var positiveIntCondition = new ArrayElementLessThanExpression<>("A", new NormalExpression("a"), new NormalExpression("0"), context);
+    var loopCondition = new LessThan<>(new Variable<>("a"), new Variable<>("b"), context);
+    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a"), context), new Constant<>(0, context), context);
 
 
     var program = new While<>(loopCondition,
@@ -131,8 +130,8 @@ public class AnalysisTest {
     var expP = new NormalExpression("p");
     var expN = new NormalExpression("n");
 
-    var loopCondition = new ExpressionLessThanExpression<Interval, Interval>(new NormalExpression("s"), new NormalExpression("S.length"));
-    var negativeIntCondition = new ArrayElementLessThanExpression<>("S", new NormalExpression("s"), new NormalExpression("0"), context);
+    var loopCondition = new LessThan<>(new Variable<>("s"), new Variable<>("S.length"), context);
+    var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s"), context), new Constant<>(0, context), context);
 
     var environment = new EnvState<>(Map.of(
             "S", arraySource,
