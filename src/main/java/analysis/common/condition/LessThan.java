@@ -27,4 +27,8 @@ public record LessThan<
     return state;
   }
 
+  @Override
+  public String toString() {
+    return "%s < %s".formatted(left, right);
+  }
 }
