@@ -1,4 +1,4 @@
-package analysis.common.builder;
+package benchmarks;
 
 import java.util.List;
 

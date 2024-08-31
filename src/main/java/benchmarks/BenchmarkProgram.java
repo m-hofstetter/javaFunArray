@@ -1,4 +1,4 @@
-package analysis.common.builder;
+package benchmarks;
 
 import java.util.List;
 import java.util.Set;
@@ -14,12 +14,15 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
 
   StatementT assign(AssignableT assignee, ExpressionT value);
 
+  // Analysis utility
+  StatementT havoc(AssignableT assignee);
+
+  StatementT assume(ConditionT condition);
+
+  StatementT assert_(ConditionT condition);
+
   // Expressions
-  ExpressionT arrayElement(String arrayRef, ExpressionT index);
-
   ExpressionT constant(int value);
-
-  ExpressionT variable(String varName);
 
   ExpressionT addition(Set<ExpressionT> summands);
 
@@ -30,6 +33,11 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
   ExpressionT division(ExpressionT dividend, ExpressionT divisor);
 
   ExpressionT modulo(ExpressionT dividend, ExpressionT divisor);
+
+  // Assignables
+  AssignableT variable(String varName);
+
+  AssignableT arrayElement(String arrayRef, ExpressionT index);
 
   // Conditions
   ConditionT lessThan(ExpressionT left, ExpressionT right);
@@ -43,4 +51,8 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
   ConditionT equalTo(ExpressionT left, ExpressionT right);
 
   ConditionT unequalTo(ExpressionT left, ExpressionT right);
+
+  ConditionT true_();
+
+  ConditionT false_();
 }
