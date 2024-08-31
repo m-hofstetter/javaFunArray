@@ -455,6 +455,59 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
+  public FunArray<ElementT> satisfyBoundExpressionEqualTo(NormalExpression left, NormalExpression right) {
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left);
+      rightIndex = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return this;
+    }
+
+    if (leftIndex == rightIndex) {
+      return this;
+    }
+    var modifiedBounds = new ArrayList<>(bounds);
+    var modifiedValues = new ArrayList<>(values);
+    var modifiedEmptiness = new ArrayList<>(emptiness);
+
+    var boundsToBeSquashed = modifiedBounds.subList(rightIndex, leftIndex + 1);
+    var squashedBound = Bound.union(boundsToBeSquashed);
+    boundsToBeSquashed.clear();
+    boundsToBeSquashed.add(squashedBound);
+
+    modifiedValues.subList(rightIndex, leftIndex).clear();
+    modifiedEmptiness.subList(rightIndex, leftIndex).clear();
+
+    return new FunArray<>(modifiedBounds, modifiedValues, modifiedEmptiness);
+
+  }
+
+  public FunArray<ElementT> satisfyBoundExpressionUnequalTo(NormalExpression left, NormalExpression right) {
+    int leftIndex;
+    int rightIndex;
+    try {
+      leftIndex = findIndex(left);
+      rightIndex = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return this;
+    }
+
+    if (leftIndex != rightIndex) {
+      return this;
+    }
+
+    var modifiedBounds = new ArrayList<>(bounds);
+    var newLeftBound = modifiedBounds.get(leftIndex).difference(Set.of(left));
+    var newRightBound = modifiedBounds.get(rightIndex).difference(Set.of(right));
+
+    modifiedBounds.set(leftIndex, newLeftBound);
+    modifiedBounds.set(rightIndex, newRightBound);
+
+    return new FunArray<>(modifiedBounds, values, emptiness).removeEmptyBounds();
+  }
+
   private int findIndex(NormalExpression expression) {
     for (int i = 0; i < bounds.size(); i++) {
       if (bounds.get(i).contains(expression)) {

@@ -150,6 +150,26 @@ public record EnvState<
     return new EnvState<>(modifiedFunArrays, variables());
   }
 
+  public EnvState<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
+                                                                            NormalExpression right) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().satisfyBoundExpressionEqualTo(left, right)
+            ));
+    return new EnvState<>(modifiedFunArrays, variables());
+  }
+
+  public EnvState<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
+                                                                              NormalExpression right) {
+    var modifiedFunArrays = funArray.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().satisfyBoundExpressionUnequalTo(left, right)
+            ));
+    return new EnvState<>(modifiedFunArrays, variables());
+  }
+
   public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
                                                         NormalExpression comparand,
                                                         BinaryOperator<VariableT> operator) {
