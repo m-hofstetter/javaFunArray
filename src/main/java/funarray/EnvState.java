@@ -199,12 +199,6 @@ public record EnvState<
   }
 
   public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
-                                                        NormalExpression comparand,
-                                                        BinaryOperator<VariableT> operator) {
-    return satisfyForValues(comparandum, calculateExpression(comparand), operator);
-  }
-
-  public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
                                                         VariableT comparand,
                                                         BinaryOperator<VariableT> operator) {
     var modifiedVariables = new HashMap<>(variables);
@@ -221,25 +215,6 @@ public record EnvState<
     var valueAtIndex = getArrayElement(arrRefComparandum, indexComparandum);
     var modifiedValue = operator.apply(valueAtIndex, comparand);
     return assignArrayElement(arrRefComparandum, indexComparandum, modifiedValue);
-  }
-
-
-  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThan(NormalExpression left,
-                                                                      NormalExpression right) {
-    var modified = satisfyExpressionLessEqualThanInBoundOrder(left, right);
-    modified = modified.satisfyForValues(left, right, DomainValue::satisfyLessEqualThan);
-    modified = modified.satisfyForValues(right, left, DomainValue::satisfyGreaterThan);
-
-    return modified;
-  }
-
-  public EnvState<ElementT, VariableT> satisfyExpressionLessThan(NormalExpression left,
-                                                                 NormalExpression right) {
-    var modified = satisfyExpressionLessThanInBoundOrder(left, right);
-    modified = modified.satisfyForValues(left, right, DomainValue::satisfyLessThan);
-    modified = modified.satisfyForValues(right, left, DomainValue::satisfyGreaterEqualThan);
-
-    return modified;
   }
 
   public VariableT calculateExpression(NormalExpression expression) {
