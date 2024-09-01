@@ -21,6 +21,8 @@ import analysis.common.expression.nonassociative.Division;
 import analysis.common.expression.nonassociative.Modulo;
 import analysis.common.expression.nonassociative.Subtraction;
 import analysis.common.statement.Assign;
+import analysis.common.statement.Assume;
+import analysis.common.statement.Havoc;
 import analysis.interval.IntervalAnalysisContext;
 import java.util.List;
 import java.util.Set;
@@ -60,14 +62,12 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Analysis<Interval, Interval> havoc(Assignable<Interval, Interval> assignee) {
-    //TODO
-    return null;
+    return new Havoc<>(assignee, CONTEXT);
   }
 
   @Override
   public Analysis<Interval, Interval> assume(Condition<Interval, Interval> condition) {
-    //TODO
-    return null;
+    return new Assume<>(condition);
   }
 
   @Override
