@@ -82,7 +82,7 @@ public class indp5 implements Benchmark {
                                                                             "a",
                                                                             program.variable("i")),
                                                                     program.multiplication(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.variable("i"),
                                                                                     program.variable("i"))))),
                                                     program.assign(

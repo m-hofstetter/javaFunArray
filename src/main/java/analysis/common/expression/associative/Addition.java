@@ -6,6 +6,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.EnvState;
 import funarray.NormalExpression;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,7 +15,7 @@ public class Addition<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>> extends AssociativeOperation<ElementT, VariableT> {
 
-  public Addition(Set<Expression<ElementT, VariableT>> summands,
+  public Addition(Collection<Expression<ElementT, VariableT>> summands,
                   AnalysisContext<ElementT, VariableT> context) {
     super(summands, context);
   }

@@ -6,6 +6,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.EnvState;
 import funarray.NormalExpression;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,7 @@ public class Multiplication<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>> extends AssociativeOperation<ElementT, VariableT> {
 
-  public Multiplication(Set<Expression<ElementT, VariableT>> factors,
+  public Multiplication(Collection<Expression<ElementT, VariableT>> factors,
                         AnalysisContext<ElementT, VariableT> context) {
     super(factors, context);
   }

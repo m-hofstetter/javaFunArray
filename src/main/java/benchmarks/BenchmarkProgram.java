@@ -1,7 +1,7 @@
 package benchmarks;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> {
 
@@ -24,9 +24,9 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
   // Expressions
   ExpressionT constant(int value);
 
-  ExpressionT addition(Set<ExpressionT> summands);
+  ExpressionT addition(Collection<ExpressionT> summands);
 
-  ExpressionT multiplication(Set<ExpressionT> factors);
+  ExpressionT multiplication(Collection<ExpressionT> factors);
 
   ExpressionT subtraction(ExpressionT minuend, ExpressionT subtrahend);
 

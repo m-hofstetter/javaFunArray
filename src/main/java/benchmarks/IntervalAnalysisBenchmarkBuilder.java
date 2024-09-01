@@ -24,8 +24,8 @@ import analysis.common.statement.Assign;
 import analysis.common.statement.Assume;
 import analysis.common.statement.Havoc;
 import analysis.interval.IntervalAnalysisContext;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class IntervalAnalysisBenchmarkBuilder
         implements BenchmarkProgram<
@@ -82,12 +82,12 @@ public class IntervalAnalysisBenchmarkBuilder
   }
 
   @Override
-  public Expression<Interval, Interval> addition(Set<Expression<Interval, Interval>> summands) {
+  public Expression<Interval, Interval> addition(Collection<Expression<Interval, Interval>> summands) {
     return new Addition<>(summands, CONTEXT);
   }
 
   @Override
-  public Expression<Interval, Interval> multiplication(Set<Expression<Interval, Interval>> factors) {
+  public Expression<Interval, Interval> multiplication(Collection<Expression<Interval, Interval>> factors) {
     return new Multiplication<>(factors, CONTEXT);
   }
 

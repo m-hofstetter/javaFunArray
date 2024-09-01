@@ -7,7 +7,7 @@ import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
 import funarray.EnvState;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -16,9 +16,9 @@ public abstract class AssociativeOperation<
         VariableT extends DomainValue<VariableT>> implements Expression<ElementT, VariableT> {
 
   protected final AnalysisContext<ElementT, VariableT> context;
-  protected final Set<Expression<ElementT, VariableT>> operands;
+  protected final Collection<Expression<ElementT, VariableT>> operands;
 
-  public AssociativeOperation(Set<Expression<ElementT, VariableT>> operands,
+  public AssociativeOperation(Collection<Expression<ElementT, VariableT>> operands,
                               AnalysisContext<ElementT, VariableT> context) {
     this.context = context;
     if (operands.size() < 2) {
