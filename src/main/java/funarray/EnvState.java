@@ -111,8 +111,14 @@ public record EnvState<
                     Map.Entry::getKey,
                     e -> e.getValue().join(other.funArray().get(e.getKey()), unreachable)
             ));
-    return new EnvState<>(modifiedFunArrays, variables);
-    //TODO: join variables
+
+    var modifiedVariables = variables.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().join(other.variables.get(e.getKey()))
+            ));
+
+    return new EnvState<>(modifiedFunArrays, modifiedVariables);
   }
 
   public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other,
@@ -122,8 +128,14 @@ public record EnvState<
                     Map.Entry::getKey,
                     e -> e.getValue().widen(other.funArray().get(e.getKey()), unreachable)
             ));
-    return new EnvState<>(modifiedFunArrays, variables);
-    //TODO: proper widening
+
+    var modifiedVariables = variables.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> e.getValue().widen(other.variables.get(e.getKey()))
+            ));
+
+    return new EnvState<>(modifiedFunArrays, modifiedVariables);
   }
 
   public VariableT getVariableValue(String varRef) {
