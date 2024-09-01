@@ -9,16 +9,10 @@ import java.util.Set;
 import lombok.Getter;
 
 @Getter
-public class Variable<
+public record Variable<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>>
+        VariableT extends DomainValue<VariableT>>(String variableRef)
         implements Assignable<ElementT, VariableT> {
-
-  private final String variableRef;
-
-  public Variable(String variableRef) {
-    this.variableRef = variableRef;
-  }
 
   @Override
   public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {

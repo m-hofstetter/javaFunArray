@@ -25,9 +25,9 @@ public interface Condition<
                                                              BinaryOperator<ElementT> operatorElement,
                                                              BinaryOperator<VariableT> operatorVariable) {
     if (left instanceof ArrayElement<ElementT, VariableT> arrayElement) {
-      for (var indexNormalForm : arrayElement.getIndex().normalise(state)) {
+      for (var indexNormalForm : arrayElement.index().normalise(state)) {
         state = state.satisfyForValues(
-                arrayElement.getArrayRef(),
+                arrayElement.arrayRef(),
                 indexNormalForm,
                 context.convertVariableValueToArrayElementValue(right.evaluate(state)),
                 operatorElement);

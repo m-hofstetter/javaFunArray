@@ -23,12 +23,12 @@ public record Havoc<
   public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
     var modified = switch (assignee) {
       case ArrayElement<ElementT, VariableT> arrayElement -> startingState.assignArrayElement(
-              arrayElement.getArrayRef(),
-              arrayElement.getIndex().normalise(startingState),
+              arrayElement.arrayRef(),
+              arrayElement.index().normalise(startingState),
               context.getElementDomain().getUnknown()
       );
       case Variable<ElementT, VariableT> variable -> startingState.assignVariable(
-              variable.getVariableRef(),
+              variable.variableRef(),
               context.getVariableDomain().getUnknown()
       );
       case null, default -> throw new IllegalStateException();

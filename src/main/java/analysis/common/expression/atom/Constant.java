@@ -9,17 +9,12 @@ import java.util.Set;
 import lombok.Getter;
 
 @Getter
-public class Constant<
+public record Constant<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>> implements Expression<ElementT, VariableT> {
-
-  private final AnalysisContext<ElementT, VariableT> context;
-  private final int constant;
-
-  public Constant(int constant, AnalysisContext<ElementT, VariableT> context) {
-    this.context = context;
-    this.constant = constant;
-  }
+        VariableT extends DomainValue<VariableT>>(
+        int constant,
+        AnalysisContext<ElementT, VariableT> context
+) implements Expression<ElementT, VariableT> {
 
   @Override
   public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {

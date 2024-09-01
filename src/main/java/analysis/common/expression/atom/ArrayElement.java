@@ -13,26 +13,14 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
-public class ArrayElement<
+public record ArrayElement<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>>
+        VariableT extends DomainValue<VariableT>>(String arrayRef,
+                                                  Expression<ElementT, VariableT> index,
+                                                  AnalysisContext<ElementT, VariableT> context)
         implements Assignable<ElementT, VariableT> {
 
   public static final String STRING_TEMPLATE = "%s[%s]";
-
-  private final AnalysisContext<ElementT, VariableT> context;
-  private final String arrayRef;
-  private final Expression<ElementT, VariableT> index;
-
-  public ArrayElement(
-          String arrayRef,
-          Expression<ElementT, VariableT> index,
-          AnalysisContext<ElementT, VariableT> context
-  ) {
-    this.context = context;
-    this.arrayRef = arrayRef;
-    this.index = index;
-  }
 
   @Override
   public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
