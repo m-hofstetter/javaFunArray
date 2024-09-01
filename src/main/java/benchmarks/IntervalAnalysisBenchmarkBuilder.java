@@ -108,7 +108,7 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Assignable<Interval, Interval> variable(String varName) {
-    return new Variable<>(varName);
+    return new Variable<>(varName, CONTEXT);
   }
 
   @Override

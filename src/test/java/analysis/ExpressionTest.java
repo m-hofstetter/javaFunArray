@@ -50,7 +50,7 @@ public class ExpressionTest {
 
   @Test
   public void testVariable() {
-    var variable = new Variable<Interval, Interval>("b");
+    var variable = new Variable<Interval, Interval>("b", context);
 
     assertThat(variable.toString()).isEqualTo("b");
     assertThat(variable.evaluate(environment)).isEqualTo(Interval.of(5, 10));
@@ -62,7 +62,7 @@ public class ExpressionTest {
     var arrayElement = new ArrayElement<>(
             "A",
             new Addition<>(Set.of(
-                    new Variable<>("b"),
+                    new Variable<>("b", context),
                     new Constant<>(0, context)
             ), context),
             context
@@ -76,7 +76,7 @@ public class ExpressionTest {
   @Test
   public void testAddition() {
     var addition = new Addition<>(Set.of(
-            new Variable<>("b"),
+            new Variable<>("b", context),
             new Constant<>(0, context)
     ), context);
 
@@ -88,7 +88,7 @@ public class ExpressionTest {
   @Test
   public void testMultiplication() {
     var multiplication = new Multiplication<>(Set.of(
-            new Variable<>("b"),
+            new Variable<>("b", context),
             new Constant<>(3, context)
     ), context);
 
@@ -97,7 +97,7 @@ public class ExpressionTest {
     assertThat(multiplication.normalise(environment)).isEmpty();
 
     var normalisableMultiplication = new Multiplication<>(Set.of(
-            new Variable<>("c"),
+            new Variable<>("c", context),
             new Constant<>(5, context)
     ), context);
 
@@ -109,7 +109,7 @@ public class ExpressionTest {
   @Test
   public void testSubtraction() {
     var subtraction = new Subtraction<>(
-            new Variable<>("b"),
+            new Variable<>("b", context),
             new Constant<>(3, context),
             context
     );
@@ -122,7 +122,7 @@ public class ExpressionTest {
   @Test
   public void testModulo() {
     var modulo = new Modulo<>(
-            new Variable<>("b"),
+            new Variable<>("b", context),
             new Constant<>(3, context),
             context
     );
@@ -135,7 +135,7 @@ public class ExpressionTest {
   @Test
   public void testDivision() {
     var division = new Division<>(
-            new Variable<>("b"),
+            new Variable<>("b", context),
             new Constant<>(3, context),
             context
     );

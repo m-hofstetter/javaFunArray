@@ -1,17 +1,17 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
+import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.EnvState;
 import funarray.NormalExpression;
 import java.util.Set;
-import lombok.Getter;
 
-@Getter
 public record Variable<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>>(String variableRef)
+        VariableT extends DomainValue<VariableT>>(String variableRef,
+                                                  AnalysisContext<ElementT, VariableT> context)
         implements Assignable<ElementT, VariableT> {
 
   @Override

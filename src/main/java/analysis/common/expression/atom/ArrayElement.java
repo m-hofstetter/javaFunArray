@@ -10,9 +10,7 @@ import funarray.NormalExpression;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.Getter;
 
-@Getter
 public record ArrayElement<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(String arrayRef,

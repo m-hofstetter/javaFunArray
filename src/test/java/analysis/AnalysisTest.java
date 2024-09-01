@@ -40,25 +40,25 @@ public class AnalysisTest {
             "0", Interval.of(0),
             "temp", Interval.unknown()));
 
-    var loopCondition = new LessThan<>(new Variable<>("a"), new Variable<>("b"), context);
-    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a"), context), new Constant<>(0, context), context);
+    var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
+    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a", context), context), new Constant<>(0, context), context);
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new Increment<>(new Variable<>("a"), context),
+                    new Increment<>(new Variable<>("a", context), context),
                     List.of(
-                            new Decrement<>(new Variable<>("b"), context),
+                            new Decrement<>(new Variable<>("b", context), context),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("a"), context),
-                                    new Variable<>("temp")
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new Variable<>("temp", context)
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("b"), context),
-                                    new ArrayElement<>("A", new Variable<>("a"), context)
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new ArrayElement<>("A", new Variable<>("a", context), context)
                             ),
                             new Assign<>(
-                                    new Variable<>("temp"),
-                                    new ArrayElement<>("A", new Variable<>("b"), context)
+                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("b", context), context)
                             )
                     ),
                     context),
@@ -88,26 +88,26 @@ public class AnalysisTest {
             "temp", Interval.unknown()));
 
 
-    var loopCondition = new LessThan<>(new Variable<>("a"), new Variable<>("b"), context);
-    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a"), context), new Constant<>(0, context), context);
+    var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
+    var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a", context), context), new Constant<>(0, context), context);
 
 
     var program = new While<>(loopCondition,
             new IfThenElse<>(positiveIntCondition,
-                    new Increment<>(new Variable<>("a"), context),
+                    new Increment<>(new Variable<>("a", context), context),
                     List.of(
-                            new Decrement<>(new Variable<>("b"), context),
+                            new Decrement<>(new Variable<>("b", context), context),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("a"), context),
-                                    new Variable<>("temp")
+                                    new ArrayElement<>("A", new Variable<>("a", context), context),
+                                    new Variable<>("temp", context)
                             ),
                             new Assign<>(
-                                    new ArrayElement<>("A", new Variable<>("b"), context),
-                                    new ArrayElement<>("A", new Variable<>("a"), context)
+                                    new ArrayElement<>("A", new Variable<>("b", context), context),
+                                    new ArrayElement<>("A", new Variable<>("a", context), context)
                             ),
                             new Assign<>(
-                                    new Variable<>("temp"),
-                                    new ArrayElement<>("A", new Variable<>("b"), context)
+                                    new Variable<>("temp", context),
+                                    new ArrayElement<>("A", new Variable<>("b", context), context)
                             )
                     ),
                     context),
@@ -130,8 +130,8 @@ public class AnalysisTest {
     var expP = new NormalExpression("p");
     var expN = new NormalExpression("n");
 
-    var loopCondition = new LessThan<>(new Variable<>("s"), new Variable<>("S.length"), context);
-    var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s"), context), new Constant<>(0, context), context);
+    var loopCondition = new LessThan<>(new Variable<>("s", context), new Variable<>("S.length", context), context);
+    var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s", context), context), new Constant<>(0, context), context);
 
     var environment = new EnvState<>(Map.of(
             "S", arraySource,
@@ -149,18 +149,18 @@ public class AnalysisTest {
     var program = new While<>(loopCondition, List.of(
             new IfThenElse<>(negativeIntCondition, List.of(
                     new Assign<>(
-                            new ArrayElement<>("S", new Variable<>("s"), context),
-                            new ArrayElement<>("N", new Variable<>("n"), context)
+                            new ArrayElement<>("S", new Variable<>("s", context), context),
+                            new ArrayElement<>("N", new Variable<>("n", context), context)
                     ),
-                    new Increment<>(new Variable<>("n"), context)
+                    new Increment<>(new Variable<>("n", context), context)
             ), List.of(
                     new Assign<>(
-                            new ArrayElement<>("S", new Variable<>("s"), context),
-                            new ArrayElement<>("P", new Variable<>("p"), context)
+                            new ArrayElement<>("S", new Variable<>("s", context), context),
+                            new ArrayElement<>("P", new Variable<>("p", context), context)
                     ),
-                    new Increment<>(new Variable<>("p"), context)
+                    new Increment<>(new Variable<>("p", context), context)
             ), context),
-            new Increment<>(new Variable<>("s"), context)
+            new Increment<>(new Variable<>("s", context), context)
     ), context);
 
     var result = program.run(environment);
