@@ -57,6 +57,21 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     this.emptiness = List.copyOf(emptiness);
   }
 
+  public FunArray(Bound length, ElementT unknown) {
+    this(
+            List.of(
+                    new Bound(new NormalExpression("0")),
+                    length
+            ),
+            List.of(unknown),
+            List.of(true)
+    );
+  }
+
+  public FunArray(String length, ElementT unknown) {
+    this(new Bound(new NormalExpression(length)), unknown);
+  }
+
   @Override
   public String toString() {
     return IntStream.range(0, bounds.size())

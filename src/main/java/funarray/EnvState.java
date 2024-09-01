@@ -1,6 +1,7 @@
 package funarray;
 
 import abstractdomain.DomainValue;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +23,21 @@ public record EnvState<
 
   public EnvState {
     variables = Map.copyOf(variables);
+  }
+
+  public EnvState(Collection<String> variables, VariableT unknownVariableValue,
+                  Collection<String> arrays, ElementT unknwonElementValue) {
+    this(
+            arrays.stream().collect(Collectors.toMap(
+                    arrayRef -> arrayRef,
+                    arrayRef -> new FunArray<>(arrayRef + ".length", unknwonElementValue)
+            )),
+            variables.stream().collect(Collectors.toMap(
+                    varRef -> varRef,
+                    _ -> unknownVariableValue
+            ))
+    );
+
   }
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
