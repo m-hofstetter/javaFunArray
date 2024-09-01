@@ -6,7 +6,9 @@ import analysis.common.expression.Expression;
 import funarray.EnvState;
 import funarray.NormalExpression;
 import java.util.Set;
+import lombok.Getter;
 
+@Getter
 public class Variable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>
