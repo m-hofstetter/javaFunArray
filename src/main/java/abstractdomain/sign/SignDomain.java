@@ -38,4 +38,9 @@ public class SignDomain implements Domain<Sign> {
   public Sign getUnreachable() {
     return new Sign(Set.of());
   }
+
+  @Override
+  public Sign getZeroValue() {
+    return new Sign(Set.of(ZERO));
+  }
 }

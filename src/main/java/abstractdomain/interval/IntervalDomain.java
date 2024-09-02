@@ -38,4 +38,9 @@ public class IntervalDomain implements Domain<Interval> {
   public Interval getUnreachable() {
     return Interval.unreachable();
   }
+
+  @Override
+  public Interval getZeroValue() {
+    return Interval.of(0, 0);
+  }
 }

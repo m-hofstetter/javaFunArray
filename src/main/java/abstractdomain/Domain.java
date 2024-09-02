@@ -10,4 +10,6 @@ public interface Domain<T extends DomainValue<T>> {
   T getUnknown();
 
   T getUnreachable();
+
+  T getZeroValue();
 }
