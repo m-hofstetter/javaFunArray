@@ -159,6 +159,9 @@ public record State<
   }
 
   public VariableT getVariableValue(String varRef) {
+    if (varRef.equals("0")) {
+      return context.getVariableDomain().getZeroValue();
+    }
     return variables.get(varRef);
   }
 
