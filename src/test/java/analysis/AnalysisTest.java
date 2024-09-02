@@ -67,7 +67,7 @@ public class AnalysisTest {
     var result = program.run(environment);
     var expected = Map.of("A", parseIntervalFunArray("{0} [-100, -1] {a b}? [0, 100] {A.length}?"));
     System.out.println(result.protocol());
-    assertThat(result.resultState().funArray()).isEqualTo(expected);
+    assertThat(result.resultState().arrays()).isEqualTo(expected);
   }
 
   @Test
@@ -115,7 +115,7 @@ public class AnalysisTest {
 
     var result = program.run(environment);
     var expected = Map.of("A", parseSignFunArray("{0} <0 {a b}? ≥0 {A.length}?"));
-    assertThat(result.resultState().funArray()).isEqualTo(expected);
+    assertThat(result.resultState().arrays()).isEqualTo(expected);
   }
 
   @Test
@@ -170,7 +170,7 @@ public class AnalysisTest {
             "N", parseIntervalFunArray("{0} [-100, -1] {n}? ⊥ {N.length}?")
     );
     System.out.println(result.protocol());
-    assertThat(result.resultState().funArray()).isEqualTo(expected);
+    assertThat(result.resultState().arrays()).isEqualTo(expected);
 
   }
 }

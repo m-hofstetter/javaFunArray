@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
  * The environment in which an abstract analysis of an Array can be done, consisting of the abstract
  * representation of the array in the form of Cousot et al.'s FunArray and a variable environment.
  *
- * @param funArray  the FunArray
+ * @param arrays  the FunArray
  * @param variables the variable environment
  */
 public record EnvState<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
-        Map<String, FunArray<ElementT>> funArray,
+        Map<String, FunArray<ElementT>> arrays,
         Map<String, VariableT> variables) {
 
   public EnvState {
@@ -41,7 +41,7 @@ public record EnvState<
   }
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
                             funArrayEntry -> {
@@ -61,7 +61,7 @@ public record EnvState<
   }
 
   public EnvState<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
                             funArrayEntry -> funArrayEntry.getValue().removeVariableOccurrences(varRef)
@@ -84,7 +84,7 @@ public record EnvState<
   public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
                                                           Set<NormalExpression> indeces,
                                                           ElementT value) {
-    var modifiedFunArrays = new HashMap<>(funArray);
+    var modifiedFunArrays = new HashMap<>(arrays);
     modifiedFunArrays.put(arrRef,
             modifiedFunArrays.get(arrRef)
                     .insert(indeces, value)
@@ -105,7 +105,7 @@ public record EnvState<
    * @return the value.
    */
   public ElementT getArrayElement(String arrRef, NormalExpression index) {
-    return funArray.get(arrRef).get(index);
+    return arrays.get(arrRef).get(index);
   }
 
   @Override
@@ -113,7 +113,7 @@ public record EnvState<
     var variablesString = variables.entrySet().stream()
             .map(v -> "%s: %s".formatted(v.getKey(), v.getValue()))
             .collect(Collectors.joining(" "));
-    var funArraysString = funArray.entrySet().stream()
+    var funArraysString = arrays.entrySet().stream()
             .map(v -> "%s: %s".formatted(v.getKey(), v.getValue()))
             .collect(Collectors.joining("\n"));
 
@@ -122,10 +122,10 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other,
                                             ElementT unreachable) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> e.getValue().join(other.funArray().get(e.getKey()), unreachable)
+                    e -> e.getValue().join(other.arrays().get(e.getKey()), unreachable)
             ));
 
     var modifiedVariables = variables.entrySet().stream()
@@ -139,10 +139,10 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other,
                                              ElementT unreachable) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> e.getValue().widen(other.funArray().get(e.getKey()), unreachable)
+                    e -> e.getValue().widen(other.arrays().get(e.getKey()), unreachable)
             ));
 
     var modifiedVariables = variables.entrySet().stream()
@@ -160,7 +160,7 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
                                                                                   NormalExpression right) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
@@ -170,7 +170,7 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
                                                                              NormalExpression right) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
@@ -180,7 +180,7 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
                                                                             NormalExpression right) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionEqualTo(left, right)
@@ -190,7 +190,7 @@ public record EnvState<
 
   public EnvState<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
                                                                               NormalExpression right) {
-    var modifiedFunArrays = funArray.entrySet().stream()
+    var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionUnequalTo(left, right)
@@ -205,7 +205,7 @@ public record EnvState<
     var comparandAsValue = comparand.subtractConstant(comparandum.constant());
     var satisfiedComparandumValue = operator.apply(getVariableValue(comparandum.varRef()), comparandAsValue);
     modifiedVariables.put(comparandum.varRef(), satisfiedComparandumValue);
-    return new EnvState<>(funArray, modifiedVariables);
+    return new EnvState<>(arrays, modifiedVariables);
   }
 
   public EnvState<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
