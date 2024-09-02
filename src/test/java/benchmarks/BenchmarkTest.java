@@ -39,8 +39,9 @@ public class BenchmarkTest {
     var analysis = benchmark.statement(builder);
 
     var startingState = new State<>(
-            benchmark.integerVariables(), CONTEXT.getVariableDomain().getUnknown(),
-            benchmark.arrayVariables(), CONTEXT.getElementDomain().getUnknown()
+            benchmark.integerVariables(),
+            benchmark.arrayVariables(),
+            CONTEXT
     );
 
     var result = analysis.run(startingState);

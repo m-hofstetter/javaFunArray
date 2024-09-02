@@ -36,7 +36,7 @@ public class ExpressionTest {
                   "A.length", Interval.unknown(),
                   "0", Interval.of(0),
                   "temp", Interval.unknown()
-          )
+          ), context
   );
 
   @Test

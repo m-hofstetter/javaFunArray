@@ -38,7 +38,7 @@ public class AnalysisTest {
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
             "0", Interval.of(0),
-            "temp", Interval.unknown()));
+            "temp", Interval.unknown()), context);
 
     var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
     var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a", context), context), new Constant<>(0, context), context);
@@ -85,7 +85,7 @@ public class AnalysisTest {
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
             "0", Interval.of(0),
-            "temp", Interval.unknown()));
+            "temp", Interval.unknown()), context);
 
 
     var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
@@ -143,7 +143,7 @@ public class AnalysisTest {
             "n", Interval.of(0),
             "S.length", Interval.unknown(),
             "0", Interval.of(0)
-    ));
+    ), context);
 
 
     var program = new While<>(loopCondition, List.of(

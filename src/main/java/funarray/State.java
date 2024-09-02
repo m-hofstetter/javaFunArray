@@ -1,6 +1,7 @@
 package funarray;
 
 import abstractdomain.DomainValue;
+import analysis.common.AnalysisContext;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,23 +20,26 @@ public record State<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         Map<String, FunArray<ElementT>> arrays,
-        Map<String, VariableT> variables) {
+        Map<String, VariableT> variables,
+        AnalysisContext<ElementT, VariableT> context) {
 
   public State {
     variables = Map.copyOf(variables);
   }
 
-  public State(Collection<String> variables, VariableT unknownVariableValue,
-               Collection<String> arrays, ElementT unknwonElementValue) {
+  public State(Collection<String> variables,
+               Collection<String> arrays,
+               AnalysisContext<ElementT, VariableT> context) {
     this(
             arrays.stream().collect(Collectors.toMap(
                     arrayRef -> arrayRef,
-                    arrayRef -> new FunArray<>(arrayRef + ".length", unknwonElementValue)
+                    arrayRef -> new FunArray<>(arrayRef + ".length", context.getElementDomain().getUnknown())
             )),
             variables.stream().collect(Collectors.toMap(
                     varRef -> varRef,
-                    _ -> unknownVariableValue
-            ))
+                    _ -> context.getVariableDomain().getUnknown()
+            )),
+            context
     );
 
   }
@@ -57,7 +61,7 @@ public record State<
     var modifiedVariables = new HashMap<>(variables);
     modifiedVariables.put(varRef, calculateExpression(expressions.stream().findAny().orElseThrow(IllegalArgumentException::new)));
 
-    return new State<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
   public State<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
@@ -71,7 +75,7 @@ public record State<
     var modifiedVariables = new HashMap<>(variables);
     modifiedVariables.put(varRef, value);
 
-    return new State<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
   /**
@@ -89,7 +93,7 @@ public record State<
             modifiedFunArrays.get(arrRef)
                     .insert(indeces, value)
     );
-    return new State<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables(), context);
   }
 
   public State<ElementT, VariableT> assignArrayElement(String arrRef,
@@ -134,7 +138,7 @@ public record State<
                     e -> e.getValue().join(other.variables.get(e.getKey()))
             ));
 
-    return new State<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
   public State<ElementT, VariableT> widen(State<ElementT, VariableT> other,
@@ -151,7 +155,7 @@ public record State<
                     e -> e.getValue().widen(other.variables.get(e.getKey()))
             ));
 
-    return new State<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
   public VariableT getVariableValue(String varRef) {
@@ -165,7 +169,7 @@ public record State<
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
             ));
-    return new State<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables(), context);
   }
 
   public State<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
@@ -175,7 +179,7 @@ public record State<
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
             ));
-    return new State<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables(), context);
   }
 
   public State<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
@@ -185,7 +189,7 @@ public record State<
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionEqualTo(left, right)
             ));
-    return new State<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables(), context);
   }
 
   public State<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
@@ -195,7 +199,7 @@ public record State<
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionUnequalTo(left, right)
             ));
-    return new State<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables(), context);
   }
 
   public State<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
@@ -205,7 +209,7 @@ public record State<
     var comparandAsValue = comparand.subtractConstant(comparandum.constant());
     var satisfiedComparandumValue = operator.apply(getVariableValue(comparandum.varRef()), comparandAsValue);
     modifiedVariables.put(comparandum.varRef(), satisfiedComparandumValue);
-    return new State<>(arrays, modifiedVariables);
+    return new State<>(arrays, modifiedVariables, context);
   }
 
   public State<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
