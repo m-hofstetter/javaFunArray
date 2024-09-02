@@ -5,7 +5,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
+import funarray.State;
 
 public class Assign<
         ElementT extends DomainValue<ElementT>,
@@ -27,7 +27,7 @@ public class Assign<
   }
 
   @Override
-  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var modifiedState = target.assign(source, startingState);
     var protocol = PROTOCOL_TEMPLATE.formatted(target, source, modifiedState);
     return new AnalysisResult<>(modifiedState, protocol);

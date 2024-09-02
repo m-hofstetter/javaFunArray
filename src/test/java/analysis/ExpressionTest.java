@@ -14,8 +14,8 @@ import analysis.common.expression.nonassociative.Division;
 import analysis.common.expression.nonassociative.Modulo;
 import analysis.common.expression.nonassociative.Subtraction;
 import analysis.interval.IntervalAnalysisContext;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class ExpressionTest {
   AnalysisContext<Interval, Interval> context = IntervalAnalysisContext.INSTANCE;
 
 
-  EnvState<Interval, Interval> environment = new EnvState<>(
+  State<Interval, Interval> environment = new State<>(
           Map.of(
                   "A", parseIntervalFunArray("{0 a} [-100, 100] {b} [-100, 100] {c A.length}")
           ),

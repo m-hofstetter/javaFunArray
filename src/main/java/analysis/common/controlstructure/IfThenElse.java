@@ -5,7 +5,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import funarray.EnvState;
+import funarray.State;
 import java.util.List;
 
 /**
@@ -59,7 +59,7 @@ public record IfThenElse<
   }
 
   @Override
-  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var satisfiedState = condition.satisfy(startingState);
     var resultIf = ifAnalysis.run(satisfiedState);
     var complementSatisfiedState = condition.satisfyComplement(startingState);

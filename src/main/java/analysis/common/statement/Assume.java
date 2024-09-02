@@ -4,7 +4,7 @@ import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import funarray.EnvState;
+import funarray.State;
 
 public record Assume<
         ElementT extends DomainValue<ElementT>,
@@ -16,7 +16,7 @@ public record Assume<
           \033[0;36m%s\033[0m""";
 
   @Override
-  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var satisifed = condition.satisfy(startingState);
     var protocol = PROTOCOL_TEMPLATE.formatted(condition, satisifed);
     return new AnalysisResult<>(satisifed, protocol);

@@ -4,8 +4,8 @@ import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Set;
 
 public record Variable<
@@ -15,12 +15,12 @@ public record Variable<
         implements Assignable<ElementT, VariableT> {
 
   @Override
-  public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
+  public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     return Set.of(new NormalExpression(variableRef, 0));
   }
 
   @Override
-  public VariableT evaluate(EnvState<ElementT, VariableT> environment) {
+  public VariableT evaluate(State<ElementT, VariableT> environment) {
     return environment.getVariableValue(variableRef);
   }
 
@@ -30,7 +30,7 @@ public record Variable<
   }
 
   @Override
-  public EnvState<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, EnvState<ElementT, VariableT> environmentState) {
+  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> environmentState) {
     var normalExpressions = value.normalise(environmentState);
     if (normalExpressions.isEmpty()) {
       return environmentState.assignVariable(variableRef, value.evaluate(environmentState));

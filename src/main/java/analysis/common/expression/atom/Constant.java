@@ -3,8 +3,8 @@ package analysis.common.expression.atom;
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Set;
 
 public record Constant<
@@ -15,12 +15,12 @@ public record Constant<
 ) implements Expression<ElementT, VariableT> {
 
   @Override
-  public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
+  public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     return Set.of();
   }
 
   @Override
-  public VariableT evaluate(EnvState<ElementT, VariableT> environment) {
+  public VariableT evaluate(State<ElementT, VariableT> environment) {
     return context.getVariableDomain().abstract_(constant);
   }
 

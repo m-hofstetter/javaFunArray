@@ -1,7 +1,7 @@
 package analysis.common;
 
 import abstractdomain.DomainValue;
-import funarray.EnvState;
+import funarray.State;
 
 /**
  * An abstract interpretation analysis utilising FunArrays.
@@ -12,5 +12,5 @@ import funarray.EnvState;
 public interface Analysis<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>> {
-  AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState);
+  AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState);
 }

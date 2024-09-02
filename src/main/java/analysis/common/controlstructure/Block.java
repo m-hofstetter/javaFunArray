@@ -3,7 +3,7 @@ package analysis.common.controlstructure;
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import funarray.EnvState;
+import funarray.State;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public record Block<
   }
 
   @Override
-  public AnalysisResult<VariableT, ElementT> run(EnvState<VariableT, ElementT> startingState) {
+  public AnalysisResult<VariableT, ElementT> run(State<VariableT, ElementT> startingState) {
     var protocolSteps = new ArrayList<String>();
     for (Analysis<VariableT, ElementT> s : statements) {
       var stepResult = s.run(startingState);

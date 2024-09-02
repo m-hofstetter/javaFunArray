@@ -15,18 +15,18 @@ import java.util.stream.Collectors;
  * @param arrays  the FunArray
  * @param variables the variable environment
  */
-public record EnvState<
+public record State<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         Map<String, FunArray<ElementT>> arrays,
         Map<String, VariableT> variables) {
 
-  public EnvState {
+  public State {
     variables = Map.copyOf(variables);
   }
 
-  public EnvState(Collection<String> variables, VariableT unknownVariableValue,
-                  Collection<String> arrays, ElementT unknwonElementValue) {
+  public State(Collection<String> variables, VariableT unknownVariableValue,
+               Collection<String> arrays, ElementT unknwonElementValue) {
     this(
             arrays.stream().collect(Collectors.toMap(
                     arrayRef -> arrayRef,
@@ -40,7 +40,7 @@ public record EnvState<
 
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
+  public State<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -57,10 +57,10 @@ public record EnvState<
     var modifiedVariables = new HashMap<>(variables);
     modifiedVariables.put(varRef, calculateExpression(expressions.stream().findAny().orElseThrow(IllegalArgumentException::new)));
 
-    return new EnvState<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables);
   }
 
-  public EnvState<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
+  public State<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -71,7 +71,7 @@ public record EnvState<
     var modifiedVariables = new HashMap<>(variables);
     modifiedVariables.put(varRef, value);
 
-    return new EnvState<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables);
   }
 
   /**
@@ -81,20 +81,20 @@ public record EnvState<
    * @param value the value.
    * @return the altered FunArray
    */
-  public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
-                                                          Set<NormalExpression> indeces,
-                                                          ElementT value) {
+  public State<ElementT, VariableT> assignArrayElement(String arrRef,
+                                                       Set<NormalExpression> indeces,
+                                                       ElementT value) {
     var modifiedFunArrays = new HashMap<>(arrays);
     modifiedFunArrays.put(arrRef,
             modifiedFunArrays.get(arrRef)
                     .insert(indeces, value)
     );
-    return new EnvState<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> assignArrayElement(String arrRef,
-                                                          NormalExpression index,
-                                                          ElementT value) {
+  public State<ElementT, VariableT> assignArrayElement(String arrRef,
+                                                       NormalExpression index,
+                                                       ElementT value) {
     return assignArrayElement(arrRef, Set.of(index), value);
   }
 
@@ -120,8 +120,8 @@ public record EnvState<
     return funArraysString + "\n" + variablesString;
   }
 
-  public EnvState<ElementT, VariableT> join(EnvState<ElementT, VariableT> other,
-                                            ElementT unreachable) {
+  public State<ElementT, VariableT> join(State<ElementT, VariableT> other,
+                                         ElementT unreachable) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
@@ -134,11 +134,11 @@ public record EnvState<
                     e -> e.getValue().join(other.variables.get(e.getKey()))
             ));
 
-    return new EnvState<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables);
   }
 
-  public EnvState<ElementT, VariableT> widen(EnvState<ElementT, VariableT> other,
-                                             ElementT unreachable) {
+  public State<ElementT, VariableT> widen(State<ElementT, VariableT> other,
+                                          ElementT unreachable) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
@@ -151,67 +151,67 @@ public record EnvState<
                     e -> e.getValue().widen(other.variables.get(e.getKey()))
             ));
 
-    return new EnvState<>(modifiedFunArrays, modifiedVariables);
+    return new State<>(modifiedFunArrays, modifiedVariables);
   }
 
   public VariableT getVariableValue(String varRef) {
     return variables.get(varRef);
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
-                                                                                  NormalExpression right) {
+  public State<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
+                                                                               NormalExpression right) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
             ));
-    return new EnvState<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
-                                                                             NormalExpression right) {
+  public State<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
+                                                                          NormalExpression right) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
             ));
-    return new EnvState<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
-                                                                            NormalExpression right) {
+  public State<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
+                                                                         NormalExpression right) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionEqualTo(left, right)
             ));
-    return new EnvState<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
-                                                                              NormalExpression right) {
+  public State<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
+                                                                           NormalExpression right) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
                     e -> e.getValue().satisfyBoundExpressionUnequalTo(left, right)
             ));
-    return new EnvState<>(modifiedFunArrays, variables());
+    return new State<>(modifiedFunArrays, variables());
   }
 
-  public EnvState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
-                                                        VariableT comparand,
-                                                        BinaryOperator<VariableT> operator) {
+  public State<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
+                                                     VariableT comparand,
+                                                     BinaryOperator<VariableT> operator) {
     var modifiedVariables = new HashMap<>(variables);
     var comparandAsValue = comparand.subtractConstant(comparandum.constant());
     var satisfiedComparandumValue = operator.apply(getVariableValue(comparandum.varRef()), comparandAsValue);
     modifiedVariables.put(comparandum.varRef(), satisfiedComparandumValue);
-    return new EnvState<>(arrays, modifiedVariables);
+    return new State<>(arrays, modifiedVariables);
   }
 
-  public EnvState<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
-                                                        NormalExpression indexComparandum,
-                                                        ElementT comparand,
-                                                        BinaryOperator<ElementT> operator) {
+  public State<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
+                                                     NormalExpression indexComparandum,
+                                                     ElementT comparand,
+                                                     BinaryOperator<ElementT> operator) {
     var valueAtIndex = getArrayElement(arrRefComparandum, indexComparandum);
     var modifiedValue = operator.apply(valueAtIndex, comparand);
     return assignArrayElement(arrRefComparandum, indexComparandum, modifiedValue);

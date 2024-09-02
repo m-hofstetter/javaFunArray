@@ -3,7 +3,7 @@ package analysis.common.condition;
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
+import funarray.State;
 
 public record LessEqualThan<
         ElementT extends DomainValue<ElementT>,
@@ -12,18 +12,18 @@ public record LessEqualThan<
                                                   AnalysisContext<ElementT, VariableT> context) implements Condition<ElementT, VariableT> {
 
   @Override
-  public EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state) {
+  public State<ElementT, VariableT> satisfy(State<ElementT, VariableT> state) {
     state = satisfyForSingleSide(left, right, context, state, DomainValue::satisfyLessEqualThan, DomainValue::satisfyLessEqualThan);
     state = satisfyForSingleSide(right, left, context, state, DomainValue::satisfyGreaterThan, DomainValue::satisfyGreaterThan);
-    state = satisfyBoundOrder(state, left, right, EnvState::satisfyExpressionLessEqualThanInBoundOrder);
+    state = satisfyBoundOrder(state, left, right, State::satisfyExpressionLessEqualThanInBoundOrder);
     return state;
   }
 
   @Override
-  public EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state) {
+  public State<ElementT, VariableT> satisfyComplement(State<ElementT, VariableT> state) {
     state = satisfyForSingleSide(left, right, context, state, DomainValue::satisfyGreaterThan, DomainValue::satisfyGreaterThan);
     state = satisfyForSingleSide(right, left, context, state, DomainValue::satisfyLessEqualThan, DomainValue::satisfyLessEqualThan);
-    state = satisfyBoundOrder(state, right, left, EnvState::satisfyExpressionLessThanInBoundOrder);
+    state = satisfyBoundOrder(state, right, left, State::satisfyExpressionLessThanInBoundOrder);
     return state;
   }
 

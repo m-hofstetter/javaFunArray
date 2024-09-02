@@ -1,7 +1,7 @@
 package analysis.common;
 
 import abstractdomain.DomainValue;
-import funarray.EnvState;
+import funarray.State;
 
 /**
  * The result of a {@link Analysis}.
@@ -14,5 +14,5 @@ import funarray.EnvState;
 public record AnalysisResult<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
-        EnvState<ElementT, VariableT> resultState, String protocol) {
+        State<ElementT, VariableT> resultState, String protocol) {
 }

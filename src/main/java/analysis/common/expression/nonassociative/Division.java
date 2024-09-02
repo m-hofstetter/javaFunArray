@@ -4,8 +4,8 @@ import abstractdomain.DomainValue;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Set;
 
 public class Division<
@@ -23,7 +23,7 @@ public class Division<
   }
 
   @Override
-  public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
+  public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     try {
       return Set.of(new NormalExpression("0", context.getVariableDomain().concretize(evaluate(environment))));
     } catch (ConcretizationException e) {
@@ -32,7 +32,7 @@ public class Division<
   }
 
   @Override
-  public VariableT evaluate(EnvState<ElementT, VariableT> environment) {
+  public VariableT evaluate(State<ElementT, VariableT> environment) {
     return dividend.evaluate(environment).divide(divisor.evaluate(environment));
   }
 

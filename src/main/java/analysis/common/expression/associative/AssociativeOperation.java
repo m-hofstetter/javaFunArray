@@ -5,7 +5,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
-import funarray.EnvState;
+import funarray.State;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BinaryOperator;
@@ -42,7 +42,7 @@ public abstract class AssociativeOperation<
             .collect(Collectors.joining(operatorSymbol));
   }
 
-  protected VariableT evaluate(EnvState<ElementT, VariableT> environment, BinaryOperator<VariableT> operation) {
+  protected VariableT evaluate(State<ElementT, VariableT> environment, BinaryOperator<VariableT> operation) {
     var operandList = new ArrayList<>(operands);
     var result = operandList.get(0).evaluate(environment);
     for (int i = 1; i < operandList.size(); i++) {

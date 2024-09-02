@@ -5,8 +5,8 @@ import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public record ArrayElement<
   public static final String STRING_TEMPLATE = "%s[%s]";
 
   @Override
-  public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
+  public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     var values = getElements(environment);
 
     return values.stream()
@@ -41,7 +41,7 @@ public record ArrayElement<
   }
 
   @Override
-  public VariableT evaluate(EnvState<ElementT, VariableT> environment) {
+  public VariableT evaluate(State<ElementT, VariableT> environment) {
     return getElements(environment).stream()
             // array access with index not in fun array will result in unknown value. By
             // intersecting all elements, only those array accesses with a non-trivial value remain.
@@ -55,14 +55,14 @@ public record ArrayElement<
     return STRING_TEMPLATE.formatted(arrayRef, index.toString());
   }
 
-  private Set<ElementT> getElements(EnvState<ElementT, VariableT> environment) {
+  private Set<ElementT> getElements(State<ElementT, VariableT> environment) {
     return index.normalise(environment).stream()
             .map(e -> environment.getArrayElement(arrayRef, e))
             .collect(Collectors.toSet());
   }
 
   @Override
-  public EnvState<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, EnvState<ElementT, VariableT> environmentState) {
+  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> environmentState) {
     return environmentState.assignArrayElement(
             arrayRef,
             index.normalise(environmentState),

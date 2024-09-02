@@ -3,7 +3,7 @@ package analysis.common.condition;
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
+import funarray.State;
 
 public record EqualTo<
         ElementT extends DomainValue<ElementT>,
@@ -12,18 +12,18 @@ public record EqualTo<
                                                   AnalysisContext<ElementT, VariableT> context) implements Condition<ElementT, VariableT> {
 
   @Override
-  public EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state) {
+  public State<ElementT, VariableT> satisfy(State<ElementT, VariableT> state) {
     state = satisfyForSingleSide(left, right, context, state, DomainValue::satisfyEqual, DomainValue::satisfyEqual);
     state = satisfyForSingleSide(right, left, context, state, DomainValue::satisfyEqual, DomainValue::satisfyEqual);
-    state = satisfyBoundOrder(state, left, right, EnvState::satisfyExpressionEqualToInBoundOrder);
+    state = satisfyBoundOrder(state, left, right, State::satisfyExpressionEqualToInBoundOrder);
     return state;
   }
 
   @Override
-  public EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state) {
+  public State<ElementT, VariableT> satisfyComplement(State<ElementT, VariableT> state) {
     state = satisfyForSingleSide(left, right, context, state, DomainValue::satisfyNotEqual, DomainValue::satisfyNotEqual);
     state = satisfyForSingleSide(right, left, context, state, DomainValue::satisfyNotEqual, DomainValue::satisfyNotEqual);
-    state = satisfyBoundOrder(state, right, left, EnvState::satisfyExpressionUnequalToInBoundOrder);
+    state = satisfyBoundOrder(state, right, left, State::satisfyExpressionUnequalToInBoundOrder);
     return state;
   }
 

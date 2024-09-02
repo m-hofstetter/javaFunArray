@@ -7,7 +7,7 @@ import analysis.common.AnalysisResult;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.atom.ArrayElement;
 import analysis.common.expression.atom.Variable;
-import funarray.EnvState;
+import funarray.State;
 
 public record Havoc<
         ElementT extends DomainValue<ElementT>,
@@ -20,7 +20,7 @@ public record Havoc<
           \033[0;36m%s\033[0m""";
 
   @Override
-  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var modified = switch (assignee) {
       case ArrayElement<ElementT, VariableT> arrayElement -> startingState.assignArrayElement(
               arrayElement.arrayRef(),

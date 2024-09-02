@@ -1,13 +1,13 @@
 package analysis.common.expression;
 
 import abstractdomain.DomainValue;
-import funarray.EnvState;
+import funarray.State;
 
 public interface Assignable<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>> extends Expression<ElementT, VariableT> {
-  EnvState<ElementT, VariableT> assign(
+  State<ElementT, VariableT> assign(
           Expression<ElementT, VariableT> value,
-          EnvState<ElementT, VariableT> environmentState
+          State<ElementT, VariableT> environmentState
   );
 }

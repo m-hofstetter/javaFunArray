@@ -16,8 +16,8 @@ import analysis.common.statement.Decrement;
 import analysis.common.statement.Increment;
 import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class AnalysisTest {
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
-    var environment = new EnvState<>(Map.of("A", funArray), Map.of(
+    var environment = new State<>(Map.of("A", funArray), Map.of(
             "a", Interval.unknown(),
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
@@ -80,7 +80,7 @@ public class AnalysisTest {
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
-    var environment = new EnvState<>(Map.of("A", funArray), Map.of(
+    var environment = new State<>(Map.of("A", funArray), Map.of(
             "a", Interval.unknown(),
             "b", Interval.unknown(),
             "A.length", Interval.unknown(),
@@ -133,7 +133,7 @@ public class AnalysisTest {
     var loopCondition = new LessThan<>(new Variable<>("s", context), new Variable<>("S.length", context), context);
     var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s", context), context), new Constant<>(0, context), context);
 
-    var environment = new EnvState<>(Map.of(
+    var environment = new State<>(Map.of(
             "S", arraySource,
             "P", arrayPositive,
             "N", arrayNegative

@@ -4,8 +4,8 @@ import abstractdomain.DomainValue;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class Multiplication<
   }
 
   @Override
-  public Set<NormalExpression> normalise(EnvState<ElementT, VariableT> environment) {
+  public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     var values = operands.stream()
             .map(e -> e.evaluate(environment))
             .collect(Collectors.toSet());
@@ -35,7 +35,7 @@ public class Multiplication<
   }
 
   @Override
-  public VariableT evaluate(EnvState<ElementT, VariableT> environment) {
+  public VariableT evaluate(State<ElementT, VariableT> environment) {
     return evaluate(environment, VariableT::multiply);
   }
 

@@ -5,7 +5,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import funarray.EnvState;
+import funarray.State;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public record While<
   }
 
   @Override
-  public AnalysisResult<ElementT, VariableT> run(EnvState<ElementT, VariableT> startingState) {
+  public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var state = startingState;
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);

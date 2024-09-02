@@ -4,8 +4,8 @@ import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import analysis.common.expression.atom.ArrayElement;
-import funarray.EnvState;
 import funarray.NormalExpression;
+import funarray.State;
 import java.util.function.BinaryOperator;
 
 /**
@@ -18,12 +18,12 @@ public interface Condition<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>> {
 
-  default EnvState<ElementT, VariableT> satisfyForSingleSide(Expression<ElementT, VariableT> left,
-                                                             Expression<ElementT, VariableT> right,
-                                                             AnalysisContext<ElementT, VariableT> context,
-                                                             EnvState<ElementT, VariableT> state,
-                                                             BinaryOperator<ElementT> operatorElement,
-                                                             BinaryOperator<VariableT> operatorVariable) {
+  default State<ElementT, VariableT> satisfyForSingleSide(Expression<ElementT, VariableT> left,
+                                                          Expression<ElementT, VariableT> right,
+                                                          AnalysisContext<ElementT, VariableT> context,
+                                                          State<ElementT, VariableT> state,
+                                                          BinaryOperator<ElementT> operatorElement,
+                                                          BinaryOperator<VariableT> operatorVariable) {
     if (left instanceof ArrayElement<ElementT, VariableT> arrayElement) {
       for (var indexNormalForm : arrayElement.index().normalise(state)) {
         state = state.satisfyForValues(
@@ -41,10 +41,10 @@ public interface Condition<
     return state;
   }
 
-  default EnvState<ElementT, VariableT> satisfyBoundOrder(EnvState<ElementT, VariableT> state,
-                                                          Expression<ElementT, VariableT> left,
-                                                          Expression<ElementT, VariableT> right,
-                                                          BoundOrderModification<ElementT, VariableT> modification) {
+  default State<ElementT, VariableT> satisfyBoundOrder(State<ElementT, VariableT> state,
+                                                       Expression<ElementT, VariableT> left,
+                                                       Expression<ElementT, VariableT> right,
+                                                       BoundOrderModification<ElementT, VariableT> modification) {
     for (NormalExpression l : left.normalise(state)) {
       for (NormalExpression r : right.normalise(state)) {
         state = modification.apply(state, l, r);
@@ -59,7 +59,7 @@ public interface Condition<
    * @param state the state.
    * @return the state with the condition satisfied.
    */
-  EnvState<ElementT, VariableT> satisfy(EnvState<ElementT, VariableT> state);
+  State<ElementT, VariableT> satisfy(State<ElementT, VariableT> state);
 
   /**
    * Ensures the condition is not satisfied.
@@ -67,12 +67,12 @@ public interface Condition<
    * @param state the state.
    * @return the state with the condition not satisfied.
    */
-  EnvState<ElementT, VariableT> satisfyComplement(EnvState<ElementT, VariableT> state);
+  State<ElementT, VariableT> satisfyComplement(State<ElementT, VariableT> state);
 
   @FunctionalInterface
   interface BoundOrderModification<
           ElementT extends DomainValue<ElementT>,
           VariableT extends DomainValue<VariableT>> {
-    EnvState<ElementT, VariableT> apply(EnvState<ElementT, VariableT> state, NormalExpression left, NormalExpression right);
+    State<ElementT, VariableT> apply(State<ElementT, VariableT> state, NormalExpression left, NormalExpression right);
   }
 }
