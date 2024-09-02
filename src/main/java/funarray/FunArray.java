@@ -97,9 +97,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
             .collect(Collectors.joining(" "));
   }
 
-  public FunArray<ElementT> insertExpression(String varRef, NormalExpression expression) {
+  public FunArray<ElementT> insertExpression(String varRef, Set<NormalExpression> expressions) {
     var newBounds = new ArrayList<>(bounds.stream()
-            .map(b -> b.adaptForChangedVariableValue(varRef, expression))
+            .map(b -> b.adaptForChangedVariableValues(varRef, expressions))
             .toList());
     var newValues = new ArrayList<>(values);
     var newEmptiness = new ArrayList<>(emptiness);

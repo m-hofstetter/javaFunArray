@@ -126,9 +126,6 @@ public class AnalysisTest {
     var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
     var arrayPositive = parseIntervalFunArray("{0 p} ⊥ {P.length}");
     var arrayNegative = parseIntervalFunArray("{0 n} ⊥ {N.length}");
-    var expS = new NormalExpression("s");
-    var expP = new NormalExpression("p");
-    var expN = new NormalExpression("n");
 
     var loopCondition = new LessThan<>(new Variable<>("s", context), new Variable<>("S.length", context), context);
     var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s", context), context), new Constant<>(0, context), context);
@@ -171,6 +168,28 @@ public class AnalysisTest {
     );
     System.out.println(result.protocol());
     assertThat(result.resultState().arrays()).isEqualTo(expected);
+
+  }
+
+  @Test
+  public void tempsortIntoArraysTest() {
+
+    final var context = IntervalAnalysisContext.INSTANCE;
+
+    var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
+
+    var environment = new State<>(Map.of(
+            "S", arraySource
+    ), Map.of(
+            "s", Interval.of(0),
+            "S.length", Interval.unknown()
+    ), context);
+
+
+    var program = new Increment<>(new Variable<>("s", context), context);
+
+    var result = program.run(environment);
+    System.out.println(result.protocol());
 
   }
 }

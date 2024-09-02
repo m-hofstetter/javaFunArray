@@ -45,7 +45,7 @@ public class ExpressionTest {
 
     assertThat(constant.toString()).isEqualTo("0");
     assertThat(constant.evaluate(environment)).isEqualTo(Interval.of(0));
-    assertThat(constant.normalise(environment)).isEmpty();
+    assertThat(constant.normalise(environment)).containsExactly(new NormalExpression("0", 0));
   }
 
   @Test

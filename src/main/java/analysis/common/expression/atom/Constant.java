@@ -16,7 +16,7 @@ public record Constant<
 
   @Override
   public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
-    return Set.of();
+    return Set.of(new NormalExpression("0", constant));
   }
 
   @Override

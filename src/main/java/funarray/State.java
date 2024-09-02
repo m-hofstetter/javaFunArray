@@ -48,13 +48,7 @@ public record State<
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
-                            funArrayEntry -> {
-                              var funArray = funArrayEntry.getValue();
-                              for (NormalExpression expression : expressions) {
-                                funArray = funArray.insertExpression(varRef, expression);
-                              }
-                              return funArray;
-                            }
+                    funArrayEntry -> funArrayEntry.getValue().insertExpression(varRef, expressions)
                     )
             );
 
@@ -225,7 +219,7 @@ public record State<
   }
 
   public VariableT calculateExpression(NormalExpression expression) {
-    var variableValue = variables.get(expression.varRef());
+    var variableValue = getVariableValue(expression.varRef());
     return variableValue.addConstant(expression.constant());
   }
 

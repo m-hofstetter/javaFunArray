@@ -6,6 +6,7 @@ import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
 import abstractdomain.interval.value.Interval;
 import funarray.exception.FunArrayLogicException;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class FunArrayTest {
@@ -13,7 +14,7 @@ public class FunArrayTest {
   @Test
   void addToVariableTest() {
     var funArray = parseIntervalFunArray("{a} [-∞, ∞] {b}");
-    var modified = funArray.insertExpression("b", new NormalExpression("b", 3));
+    var modified = funArray.insertExpression("b", Set.of(new NormalExpression("b", 3)));
     assertThat(modified).isEqualTo(parseIntervalFunArray("{a} [-∞, ∞] {b-3}"));
   }
 
@@ -179,7 +180,7 @@ public class FunArrayTest {
   void insertVariableTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}");
 
-    funArray = funArray.insertExpression("b", new NormalExpression("a"));
+    funArray = funArray.insertExpression("b", Set.of(new NormalExpression("a")));
 
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [-∞, ∞] {a b} [-∞, ∞] {A.length}")
