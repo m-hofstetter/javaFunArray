@@ -64,7 +64,7 @@ public record IfThenElse<
     var resultIf = ifAnalysis.run(satisfiedState);
     var complementSatisfiedState = condition.satisfyComplement(startingState);
     var resultElse = elseAnalysis.run(complementSatisfiedState);
-    var joinedState = resultIf.resultState().join(resultElse.resultState(), context.getElementDomain().getUnreachable());
+    var joinedState = resultIf.resultState().join(resultElse.resultState());
     var joinedAssertions = resultIf.assertions().join(resultElse.assertions());
 
     var protocol = PROTOCOL_TEMPLATE.formatted(condition,

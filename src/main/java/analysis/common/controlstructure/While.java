@@ -43,7 +43,7 @@ public record While<
     for (int i = 0; i < WIDENING_LOOP_HARD_LIMIT; i++) {
       var satisfiedState = condition.satisfy(state);
       var result = bodyAnalysis.run(satisfiedState);
-      var nextState = state.widen(result.resultState(), context.getElementDomain().getUnreachable());
+      var nextState = state.widen(result.resultState());
       if (state.equals(nextState)) {
         // fixpoint has been reached
         var resultState = condition.satisfyComplement(state);

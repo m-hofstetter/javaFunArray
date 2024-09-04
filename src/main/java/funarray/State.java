@@ -118,12 +118,11 @@ public record State<
     return funArraysString + "\n" + variablesString;
   }
 
-  public State<ElementT, VariableT> join(State<ElementT, VariableT> other,
-                                         ElementT unreachable) {
+  public State<ElementT, VariableT> join(State<ElementT, VariableT> other) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> e.getValue().join(other.arrays().get(e.getKey()), unreachable)
+                    e -> e.getValue().join(other.arrays().get(e.getKey()), context.getElementDomain().getUnreachable())
             ));
 
     var modifiedVariables = variables.entrySet().stream()
@@ -135,12 +134,11 @@ public record State<
     return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
-  public State<ElementT, VariableT> widen(State<ElementT, VariableT> other,
-                                          ElementT unreachable) {
+  public State<ElementT, VariableT> widen(State<ElementT, VariableT> other) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,
-                    e -> e.getValue().widen(other.arrays().get(e.getKey()), unreachable)
+                    e -> e.getValue().widen(other.arrays().get(e.getKey()), context.getElementDomain().getUnreachable())
             ));
 
     var modifiedVariables = variables.entrySet().stream()
