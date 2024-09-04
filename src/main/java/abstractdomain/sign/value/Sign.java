@@ -297,4 +297,9 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
             .filter(e -> !other.elements.contains(e))
             .collect(Collectors.toSet()));
   }
+
+  @Override
+  public boolean isReachable() {
+    return !elements.isEmpty();
+  }
 }

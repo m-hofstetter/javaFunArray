@@ -314,4 +314,9 @@ public final class ReachableInterval extends Interval {
     }
     return new Unreachable();
   }
+
+  @Override
+  public boolean isReachable() {
+    return true;
+  }
 }

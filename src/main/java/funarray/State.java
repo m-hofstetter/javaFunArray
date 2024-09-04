@@ -223,4 +223,9 @@ public record State<
     return variableValue.addConstant(expression.constant());
   }
 
+  public boolean isReachable() {
+    return variables.values().stream().allMatch(DomainValue::isReachable)
+           && arrays.values().stream().allMatch(FunArray::isReachable);
+  }
+
 }

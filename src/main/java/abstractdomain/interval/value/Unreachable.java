@@ -121,4 +121,9 @@ final class Unreachable extends Interval {
   public Interval satisfyNotEqual(Interval other) {
     return this;
   }
+
+  @Override
+  public boolean isReachable() {
+    return false;
+  }
 }

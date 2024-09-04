@@ -552,4 +552,8 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   public Set<NormalExpression> getExpressions() {
     return bounds.stream().flatMap(e -> e.expressions().stream()).collect(Collectors.toSet());
   }
+
+  public boolean isReachable() {
+    return values.stream().allMatch(DomainValue::isReachable);
+  }
 }

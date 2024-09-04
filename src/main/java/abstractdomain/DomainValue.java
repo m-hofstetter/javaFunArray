@@ -181,4 +181,6 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @return the domain value with the condition satisfied.
    */
   T satisfyNotEqual(T other);
+
+  boolean isReachable();
 }
