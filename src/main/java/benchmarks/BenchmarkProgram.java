@@ -14,6 +14,8 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
 
   StatementT assign(AssignableT assignee, ExpressionT value);
 
+  StatementT assign(String assigneeVariable, ExpressionT value);
+
   // Analysis utility
   StatementT havoc(AssignableT assignee);
 
@@ -55,4 +57,6 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
   ConditionT true_();
 
   ConditionT false_();
+
+  StatementT stop();
 }
