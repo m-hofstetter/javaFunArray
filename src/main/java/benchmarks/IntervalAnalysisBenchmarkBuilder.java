@@ -61,6 +61,11 @@ public class IntervalAnalysisBenchmarkBuilder
   }
 
   @Override
+  public Analysis<Interval, Interval> assign(String assigneeVariable, Expression<Interval, Interval> value) {
+    return assign(variable(assigneeVariable), value);
+  }
+
+  @Override
   public Analysis<Interval, Interval> havoc(Assignable<Interval, Interval> assignee) {
     return new Havoc<>(assignee, CONTEXT);
   }
@@ -157,6 +162,11 @@ public class IntervalAnalysisBenchmarkBuilder
   @Override
   public Condition<Interval, Interval> false_() {
     //TODO
+    return null;
+  }
+
+  @Override
+  public Analysis<Interval, Interval> stop() {
     return null;
   }
 }
