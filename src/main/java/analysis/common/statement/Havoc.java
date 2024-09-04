@@ -1,5 +1,7 @@
 package analysis.common.statement;
 
+import static analysis.common.AnalysisResult.AssertionResult.noAssert;
+
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
@@ -35,6 +37,6 @@ public record Havoc<
     };
 
     var protocol = PROTOCOL_TEMPLATE.formatted(assignee, modified);
-    return new AnalysisResult<>(modified, protocol);
+    return new AnalysisResult<>(modified, protocol, noAssert());
   }
 }

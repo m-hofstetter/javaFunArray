@@ -65,6 +65,7 @@ public record IfThenElse<
     var complementSatisfiedState = condition.satisfyComplement(startingState);
     var resultElse = elseAnalysis.run(complementSatisfiedState);
     var joinedState = resultIf.resultState().join(resultElse.resultState(), context.getElementDomain().getUnreachable());
+    var joinedAssertions = resultIf.assertions().join(resultElse.assertions());
 
     var protocol = PROTOCOL_TEMPLATE.formatted(condition,
             satisfiedState.toString().indent(INDENTATION),
@@ -73,6 +74,6 @@ public record IfThenElse<
             resultElse.protocol().indent(INDENTATION),
             joinedState.toString());
 
-    return new AnalysisResult<>(joinedState, protocol);
+    return new AnalysisResult<>(joinedState, protocol, joinedAssertions);
   }
 }

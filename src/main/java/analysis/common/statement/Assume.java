@@ -1,5 +1,7 @@
 package analysis.common.statement;
 
+import static analysis.common.AnalysisResult.AssertionResult.noAssert;
+
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
@@ -19,6 +21,6 @@ public record Assume<
   public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var satisifed = condition.satisfy(startingState);
     var protocol = PROTOCOL_TEMPLATE.formatted(condition, satisifed);
-    return new AnalysisResult<>(satisifed, protocol);
+    return new AnalysisResult<>(satisifed, protocol, noAssert());
   }
 }

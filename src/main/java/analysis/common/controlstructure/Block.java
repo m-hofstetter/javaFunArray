@@ -1,5 +1,7 @@
 package analysis.common.controlstructure;
 
+import static analysis.common.AnalysisResult.AssertionResult.noAssert;
+
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
@@ -26,11 +28,13 @@ public record Block<
   @Override
   public AnalysisResult<VariableT, ElementT> run(State<VariableT, ElementT> startingState) {
     var protocolSteps = new ArrayList<String>();
+    var assertions = noAssert();
     for (Analysis<VariableT, ElementT> s : statements) {
       var stepResult = s.run(startingState);
       protocolSteps.add(stepResult.protocol());
       startingState = stepResult.resultState();
+      assertions = assertions.join(stepResult.assertions());
     }
-    return new AnalysisResult<>(startingState, String.join("\n", protocolSteps));
+    return new AnalysisResult<>(startingState, String.join("\n", protocolSteps), assertions);
   }
 }

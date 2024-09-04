@@ -1,5 +1,7 @@
 package analysis.common.statement;
 
+import static analysis.common.AnalysisResult.AssertionResult.noAssert;
+
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
@@ -30,6 +32,6 @@ public class Assign<
   public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
     var modifiedState = target.assign(source, startingState);
     var protocol = PROTOCOL_TEMPLATE.formatted(target, source, modifiedState);
-    return new AnalysisResult<>(modifiedState, protocol);
+    return new AnalysisResult<>(modifiedState, protocol, noAssert());
   }
 }

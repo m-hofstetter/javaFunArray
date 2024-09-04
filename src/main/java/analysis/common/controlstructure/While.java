@@ -54,7 +54,8 @@ public record While<
                         satisfiedState.toString().indent(INDENTATION),
                         result.protocol().indent(INDENTATION),
                         resultState
-                )
+                ),
+                result.assertions()
         );
       }
       state = nextState;
