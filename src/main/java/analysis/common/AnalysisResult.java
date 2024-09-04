@@ -21,16 +21,16 @@ public record AnalysisResult<
         AssertionResult assertions) {
 
   public record AssertionResult(int positive, int negative, int indeterminable) {
-    public static AssertionResult positiveAssert() {
-      return new AssertionResult(1, 0, 0);
+    public AssertionResult positiveAssert() {
+      return new AssertionResult(positive + 1, negative, indeterminable);
     }
 
-    public static AssertionResult negativeAssert() {
-      return new AssertionResult(0, 1, 0);
+    public AssertionResult negativeAssert() {
+      return new AssertionResult(positive, negative + 1, indeterminable);
     }
 
-    public static AssertionResult indeterminableAssert() {
-      return new AssertionResult(0, 0, 1);
+    public AssertionResult indeterminableAssert() {
+      return new AssertionResult(positive, negative, indeterminable + 1);
     }
 
     public static AssertionResult noAssert() {
