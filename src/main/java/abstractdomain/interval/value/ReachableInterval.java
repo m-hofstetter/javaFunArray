@@ -245,9 +245,6 @@ public final class ReachableInterval extends Interval {
   @Override
   public Interval satisfyLessEqualThan(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
-      if (reachableOther.upperLimit.equals(InfInt.posInf())) {
-        return this;
-      }
       return this.meet(of(InfInt.negInf(), reachableOther.upperLimit));
     }
     return new Unreachable();
@@ -256,9 +253,6 @@ public final class ReachableInterval extends Interval {
   @Override
   public Interval satisfyGreaterEqualThan(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
-      if (reachableOther.lowerLimit.equals(InfInt.negInf())) {
-        return this;
-      }
       return this.meet(of(reachableOther.lowerLimit, InfInt.posInf()));
     }
     return new Unreachable();
@@ -267,10 +261,7 @@ public final class ReachableInterval extends Interval {
   @Override
   public Interval satisfyLessThan(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
-      if (reachableOther.lowerLimit.equals(InfInt.negInf())) {
-        return new Unreachable();
-      }
-      return this.meet(of(InfInt.negInf(), reachableOther.lowerLimit.subtract(1)));
+      return this.meet(of(InfInt.negInf(), reachableOther.upperLimit.subtract(1)));
     }
     return new Unreachable();
   }
@@ -278,10 +269,7 @@ public final class ReachableInterval extends Interval {
   @Override
   public Interval satisfyGreaterThan(Interval other) {
     if (other instanceof ReachableInterval reachableOther) {
-      if (reachableOther.upperLimit.equals(InfInt.posInf())) {
-        return new Unreachable();
-      }
-      return this.meet(of(reachableOther.upperLimit.add(1), InfInt.posInf()));
+      return this.meet(of(reachableOther.lowerLimit.add(1), InfInt.posInf()));
     }
     return new Unreachable();
   }

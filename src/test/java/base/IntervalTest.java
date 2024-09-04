@@ -139,16 +139,16 @@ public class IntervalTest {
     assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.of(InfInt.negInf(), 5))).isEqualTo(Interval.of(0, 10));
     assertThat(Interval.of(0, 10).satisfyGreaterEqualThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
 
-    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(5, 10))).isEqualTo(Interval.of(0, 4));
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(5, 10))).isEqualTo(Interval.of(0, 9));
     assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(15, 20))).isEqualTo(Interval.of(0, 10));
     assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(0, 0))).isEqualTo(Interval.unreachable());
-    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(InfInt.negInf(), 10))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyLessThan(Interval.of(InfInt.negInf(), 10))).isEqualTo(Interval.of(0, 9));
     assertThat(Interval.of(0, 10).satisfyLessThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
 
-    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, 5))).isEqualTo(Interval.of(6, 10));
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, 5))).isEqualTo(Interval.of(1, 10));
     assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(-10, -5))).isEqualTo(Interval.of(0, 10));
     assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(10, 10))).isEqualTo(Interval.unreachable());
-    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, InfInt.posInf()))).isEqualTo(Interval.unreachable());
+    assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.of(0, InfInt.posInf()))).isEqualTo(Interval.of(1, 10));
     assertThat(Interval.of(0, 10).satisfyGreaterThan(Interval.unreachable())).isEqualTo(Interval.unreachable());
   }
 
@@ -197,4 +197,69 @@ public class IntervalTest {
     assertThat(Interval.of(-3, 1).absoluteValue()).isEqualTo(Interval.of(0, 3));
     assertThat(Interval.of(-3, -1).absoluteValue()).isEqualTo(Interval.of(1, 3));
   }
+
+  @Test
+  public void lessThanTest() {
+    var reference = Interval.of(0, 3);
+
+    assertThat(
+            Interval.of(0, 3).satisfyLessThan(reference)
+    ).isEqualTo(Interval.of(0, 2));
+
+    assertThat(
+            Interval.of(0, 6).satisfyLessThan(reference)
+    ).isEqualTo(Interval.of(0, 2));
+
+    assertThat(
+            Interval.of(0, 1).satisfyLessThan(reference)
+    ).isEqualTo(Interval.of(0, 1));
+
+    assertThat(
+            Interval.of(-5, -2).satisfyLessThan(reference)
+    ).isEqualTo(Interval.of(-5, -2));
+  }
+
+  @Test
+  public void lessEqualTest() {
+    var reference = Interval.of(0, 3);
+
+    assertThat(
+            Interval.of(0, 3).satisfyLessEqualThan(reference)
+    ).isEqualTo(Interval.of(0, 3));
+
+    assertThat(
+            Interval.of(0, 6).satisfyLessEqualThan(reference)
+    ).isEqualTo(Interval.of(0, 3));
+
+    assertThat(
+            Interval.of(0, 1).satisfyLessEqualThan(reference)
+    ).isEqualTo(Interval.of(0, 1));
+
+    assertThat(
+            Interval.of(-5, -2).satisfyLessEqualThan(reference)
+    ).isEqualTo(Interval.of(-5, -2));
+  }
+
+  @Test
+  public void greaterTest() {
+    var reference = Interval.of(0, 3);
+
+    assertThat(
+            Interval.of(0, 3).satisfyGreaterThan(reference)
+    ).isEqualTo(Interval.of(1, 3));
+
+    assertThat(
+            Interval.of(0, 6).satisfyGreaterThan(reference)
+    ).isEqualTo(Interval.of(1, 6));
+
+    assertThat(
+            Interval.of(-3, 2).satisfyGreaterThan(reference)
+    ).isEqualTo(Interval.of(1, 2));
+
+    assertThat(
+            Interval.of(-5, 10).satisfyGreaterThan(reference)
+    ).isEqualTo(Interval.of(1, 10));
+  }
+
+
 }
