@@ -2,6 +2,7 @@ package funarray;
 
 import abstractdomain.DomainValue;
 import funarray.exception.FunArrayLogicException;
+import funarray.varref.Reference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -60,7 +61,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   public FunArray(Bound length, ElementT unknown) {
     this(
             List.of(
-                    new Bound(new NormalExpression("0")),
+                    new Bound(new NormalExpression(Reference.zero())),
                     length
             ),
             List.of(unknown),
@@ -69,7 +70,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public FunArray(String length, ElementT unknown) {
-    this(new Bound(new NormalExpression(length)), unknown);
+    this(new Bound(new NormalExpression(Reference.of(length))), unknown);
   }
 
   @Override
@@ -97,7 +98,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
             .collect(Collectors.joining(" "));
   }
 
-  public FunArray<ElementT> insertExpression(String varRef, Set<NormalExpression> expressions) {
+  public FunArray<ElementT> insertExpression(Reference varRef, Set<NormalExpression> expressions) {
     var newBounds = new ArrayList<>(bounds.stream()
             .map(b -> b.adaptForChangedVariableValues(varRef, expressions))
             .toList());
@@ -107,7 +108,7 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(newBounds, newValues, newEmptiness);
   }
 
-  public FunArray<ElementT> removeVariableOccurrences(String varRef) {
+  public FunArray<ElementT> removeVariableOccurrences(Reference varRef) {
     return new FunArray<>(
             bounds.stream().map(b -> b.removeVariableOccurrences(varRef)).toList(),
             values, emptiness

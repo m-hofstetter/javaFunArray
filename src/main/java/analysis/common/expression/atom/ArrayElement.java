@@ -7,6 +7,7 @@ import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public record ArrayElement<
             // be concretized and has to be filtered out.
             .filter(Objects::nonNull)
             .findAny()
-            .map(e -> Set.of(new NormalExpression("0", e)))
+            .map(e -> Set.of(new NormalExpression(Reference.zero(), e)))
             .orElse(Set.of());
   }
 

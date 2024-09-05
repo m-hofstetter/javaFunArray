@@ -5,6 +5,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Set;
 
 public record Constant<
@@ -16,7 +17,7 @@ public record Constant<
 
   @Override
   public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
-    return Set.of(new NormalExpression("0", constant));
+    return Set.of(new NormalExpression(Reference.zero(), constant));
   }
 
   @Override

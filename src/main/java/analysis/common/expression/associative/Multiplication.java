@@ -6,6 +6,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class Multiplication<
     var product = values.stream().reduce(context.getVariableDomain().abstract_(1), DomainValue::multiply);
 
     try {
-      return Set.of(new NormalExpression("0", context.getVariableDomain().concretize(product)));
+      return Set.of(new NormalExpression(Reference.zero(), context.getVariableDomain().concretize(product)));
     } catch (ConcretizationException _) {
       return Set.of();
     }

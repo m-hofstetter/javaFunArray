@@ -1,6 +1,6 @@
 package funarray.varref;
 
-public interface Reference {
+public sealed interface Reference permits VariableReference, ZeroReference {
   static Reference of(String ref) {
     return new VariableReference(ref);
   }

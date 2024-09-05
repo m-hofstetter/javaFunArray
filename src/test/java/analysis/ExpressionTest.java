@@ -16,6 +16,7 @@ import analysis.common.expression.nonassociative.Subtraction;
 import analysis.interval.IntervalAnalysisContext;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -30,12 +31,11 @@ public class ExpressionTest {
                   "A", parseIntervalFunArray("{0 a} [-100, 100] {b} [-100, 100] {c A.length}")
           ),
           Map.of(
-                  "a", Interval.unknown(),
-                  "b", Interval.of(5, 10),
-                  "c", Interval.of(20, 20),
-                  "A.length", Interval.unknown(),
-                  "0", Interval.of(0),
-                  "temp", Interval.unknown()
+                  Reference.of("a"), Interval.unknown(),
+                  Reference.of("b"), Interval.of(5, 10),
+                  Reference.of("c"), Interval.of(20, 20),
+                  Reference.of("A.length"), Interval.unknown(),
+                  Reference.of("temp"), Interval.unknown()
           ), context
   );
 
@@ -45,7 +45,7 @@ public class ExpressionTest {
 
     assertThat(constant.toString()).isEqualTo("0");
     assertThat(constant.evaluate(environment)).isEqualTo(Interval.of(0));
-    assertThat(constant.normalise(environment)).containsExactly(new NormalExpression("0", 0));
+    assertThat(constant.normalise(environment)).containsExactly(new NormalExpression(0));
   }
 
   @Test
@@ -103,7 +103,7 @@ public class ExpressionTest {
 
     assertThat(normalisableMultiplication.toString()).isEqualTo("c * 5");
     assertThat(normalisableMultiplication.evaluate(environment)).isEqualTo(Interval.of(100));
-    assertThat(normalisableMultiplication.normalise(environment)).containsExactly(new NormalExpression("0", 100));
+    assertThat(normalisableMultiplication.normalise(environment)).containsExactly(new NormalExpression(100));
   }
 
   @Test

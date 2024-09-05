@@ -24,6 +24,7 @@ import analysis.common.statement.Assign;
 import analysis.common.statement.Assume;
 import analysis.common.statement.Havoc;
 import analysis.interval.IntervalAnalysisContext;
+import funarray.varref.Reference;
 import java.util.Collection;
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Assignable<Interval, Interval> variable(String varName) {
-    return new Variable<>(varName, CONTEXT);
+    return new Variable<>(Reference.of(varName), CONTEXT);
   }
 
   @Override

@@ -1,5 +1,6 @@
 package funarray;
 
+import funarray.varref.Reference;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -21,7 +22,7 @@ public record Bound(Set<NormalExpression> expressions) {
   }
 
   public Bound adaptForChangedVariableValues(
-          String changedVariableRef,
+          Reference changedVariableRef,
           Set<NormalExpression> newValues
   ) {
     var modifiedExpressions = expressions.stream().flatMap(
@@ -54,7 +55,7 @@ public record Bound(Set<NormalExpression> expressions) {
    * @param varRef the variable.
    * @return the modified bound.
    */
-  public Bound removeVariableOccurrences(String varRef) {
+  public Bound removeVariableOccurrences(Reference varRef) {
     var modifiedExpressions = expressions.stream()
             .filter(e -> !e.containsVariable(varRef))
             .collect(Collectors.toSet());

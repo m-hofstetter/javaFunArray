@@ -6,6 +6,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Set;
 
 public class Division<
@@ -25,7 +26,7 @@ public class Division<
   @Override
   public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
     try {
-      return Set.of(new NormalExpression("0", context.getVariableDomain().concretize(evaluate(environment))));
+      return Set.of(new NormalExpression(Reference.zero(), context.getVariableDomain().concretize(evaluate(environment))));
     } catch (ConcretizationException e) {
       return Set.of();
     }

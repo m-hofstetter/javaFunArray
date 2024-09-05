@@ -1,5 +1,9 @@
 package funarray;
 
+import funarray.varref.Reference;
+import funarray.varref.VariableReference;
+import funarray.varref.ZeroReference;
+
 /**
  * An expression in normal form v + k. See Patrick Cousot, Radhia Cousot, and Francesco Logozzo.
  * 2011. A parametric segmentation functor for fully automatic and scalable array content analysis.
@@ -9,10 +13,22 @@ package funarray;
  * @param varRef the reference for a variable v
  * @param constant the constant k
  */
-public record NormalExpression(String varRef, int constant) {
+public record NormalExpression(Reference varRef, int constant) {
+
+  public NormalExpression(Reference variable) {
+    this(variable, 0);
+  }
 
   public NormalExpression(String variable) {
-    this(variable, 0);
+    this(Reference.of(variable), 0);
+  }
+
+  public NormalExpression(String variable, int constant) {
+    this(Reference.of(variable), constant);
+  }
+
+  public NormalExpression(int constant) {
+    this(Reference.zero(), constant);
   }
 
   public NormalExpression increase(int value) {
@@ -47,18 +63,25 @@ public record NormalExpression(String varRef, int constant) {
     return this.constant() >= other.constant();
   }
 
-  public boolean containsVariable(String varRef) {
+  public boolean containsVariable(Reference varRef) {
     return this.varRef.equals(varRef);
   }
 
   @Override
   public String toString() {
-    if (constant == 0) {
-      return varRef;
-    }
-    if (varRef.equals("0")) {
-      return String.valueOf(constant);
-    }
-    return "%s%s%s".formatted(varRef, constant < 0 ? "" : "+", constant);
+    return switch (varRef) {
+      case ZeroReference _ -> Integer.toString(constant);
+      case VariableReference r -> {
+        if (constant == 0) {
+          yield r.toString();
+        }
+        yield "%s%s%s".formatted(r, constant < 0 ? "" : "+", constant);
+      }
+    };
+  }
+
+  @Override
+  public int hashCode() {
+    return (varRef.toString() + constant).hashCode();
   }
 }

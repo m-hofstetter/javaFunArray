@@ -6,6 +6,7 @@ import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
 import abstractdomain.interval.value.Interval;
 import funarray.exception.FunArrayLogicException;
+import funarray.varref.Reference;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ public class FunArrayTest {
   @Test
   void addToVariableTest() {
     var funArray = parseIntervalFunArray("{a} [-∞, ∞] {b}");
-    var modified = funArray.insertExpression("b", Set.of(new NormalExpression("b", 3)));
+    var modified = funArray.insertExpression(Reference.of("b"), Set.of(new NormalExpression("b", 3)));
     assertThat(modified).isEqualTo(parseIntervalFunArray("{a} [-∞, ∞] {b-3}"));
   }
 
@@ -22,12 +23,12 @@ public class FunArrayTest {
   void insertTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {x A.length}");
 
-    funArray = funArray.insert(new NormalExpression("0"), Interval.of(0));
+    funArray = funArray.insert(new NormalExpression(0), Interval.of(0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x A.length}?")
     );
 
-    funArray = funArray.insert(new NormalExpression("0", 1), Interval.of(0, 0));
+    funArray = funArray.insert(new NormalExpression(1), Interval.of(0, 0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [0, 0] {2} [-∞, ∞] {x A.length}?")
     );
@@ -37,7 +38,7 @@ public class FunArrayTest {
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
 
-    funArray = funArray.insert(new NormalExpression("0"), Interval.of(0));
+    funArray = funArray.insert(new NormalExpression(0), Interval.of(0));
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [0, 0] {1} [-∞, ∞] {x-1 A.length-1}? [0, 0] {x A.length}")
     );
@@ -87,10 +88,10 @@ public class FunArrayTest {
   void getTest() {
     var funArray = parseIntervalFunArray("{0} [0, 0] {1} [1, 1] {2}");
 
-    assertThat(funArray.get(new NormalExpression("0")))
+    assertThat(funArray.get(new NormalExpression(0)))
             .isEqualTo(Interval.of(0));
 
-    assertThat(funArray.get(new NormalExpression("0", 1)))
+    assertThat(funArray.get(new NormalExpression(1)))
             .isEqualTo(Interval.of(1));
   }
 
@@ -180,7 +181,7 @@ public class FunArrayTest {
   void insertVariableTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}");
 
-    funArray = funArray.insertExpression("b", Set.of(new NormalExpression("a")));
+    funArray = funArray.insertExpression(Reference.of("b"), Set.of(new NormalExpression("a")));
 
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [-∞, ∞] {a b} [-∞, ∞] {A.length}")
@@ -191,7 +192,7 @@ public class FunArrayTest {
   void removeVariableOccurrenceTest() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a b} [-∞, ∞] {A.length}");
 
-    funArray = funArray.removeVariableOccurrences("b");
+    funArray = funArray.removeVariableOccurrences(Reference.of("b"));
 
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}")

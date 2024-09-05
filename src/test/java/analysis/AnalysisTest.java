@@ -18,6 +18,7 @@ import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -34,11 +35,10 @@ public class AnalysisTest {
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
     var environment = new State<>(Map.of("A", funArray), Map.of(
-            "a", Interval.unknown(),
-            "b", Interval.unknown(),
-            "A.length", Interval.unknown(),
-            "0", Interval.of(0),
-            "temp", Interval.unknown()), context);
+            Reference.of("a"), Interval.unknown(),
+            Reference.of("b"), Interval.unknown(),
+            Reference.of("A.length"), Interval.unknown(),
+            Reference.of("temp"), Interval.unknown()), context);
 
     var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
     var positiveIntCondition = new LessThan<>(new ArrayElement<>("A", new Variable<>("a", context), context), new Constant<>(0, context), context);
@@ -81,11 +81,10 @@ public class AnalysisTest {
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
     var environment = new State<>(Map.of("A", funArray), Map.of(
-            "a", Interval.unknown(),
-            "b", Interval.unknown(),
-            "A.length", Interval.unknown(),
-            "0", Interval.of(0),
-            "temp", Interval.unknown()), context);
+            Reference.of("a"), Interval.unknown(),
+            Reference.of("b"), Interval.unknown(),
+            Reference.of("A.length"), Interval.unknown(),
+            Reference.of("temp"), Interval.unknown()), context);
 
 
     var loopCondition = new LessThan<>(new Variable<>("a", context), new Variable<>("b", context), context);
@@ -135,11 +134,10 @@ public class AnalysisTest {
             "P", arrayPositive,
             "N", arrayNegative
     ), Map.of(
-            "s", Interval.of(0),
-            "p", Interval.of(0),
-            "n", Interval.of(0),
-            "S.length", Interval.unknown(),
-            "0", Interval.of(0)
+            Reference.of("s"), Interval.of(0),
+            Reference.of("p"), Interval.of(0),
+            Reference.of("n"), Interval.of(0),
+            Reference.of("S.length"), Interval.unknown()
     ), context);
 
 
@@ -181,8 +179,8 @@ public class AnalysisTest {
     var environment = new State<>(Map.of(
             "S", arraySource
     ), Map.of(
-            "s", Interval.of(0),
-            "S.length", Interval.unknown()
+            Reference.of("s"), Interval.of(0),
+            Reference.of("S.length"), Interval.unknown()
     ), context);
 
 

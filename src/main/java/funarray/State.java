@@ -2,6 +2,9 @@ package funarray;
 
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
+import funarray.varref.Reference;
+import funarray.varref.VariableReference;
+import funarray.varref.ZeroReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +23,7 @@ public record State<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         Map<String, FunArray<ElementT>> arrays,
-        Map<String, VariableT> variables,
+        Map<Reference, VariableT> variables,
         AnalysisContext<ElementT, VariableT> context) {
 
   public State {
@@ -36,7 +39,7 @@ public record State<
                     arrayRef -> new FunArray<>(arrayRef + ".length", context.getElementDomain().getUnknown())
             )),
             variables.stream().collect(Collectors.toMap(
-                    varRef -> varRef,
+                    Reference::of,
                     _ -> context.getVariableDomain().getUnknown()
             )),
             context
@@ -44,7 +47,7 @@ public record State<
 
   }
 
-  public State<ElementT, VariableT> assignVariable(String varRef, Set<NormalExpression> expressions) {
+  public State<ElementT, VariableT> assignVariable(Reference varRef, Set<NormalExpression> expressions) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -58,7 +61,7 @@ public record State<
     return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
-  public State<ElementT, VariableT> assignVariable(String varRef, VariableT value) {
+  public State<ElementT, VariableT> assignVariable(Reference varRef, VariableT value) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -75,7 +78,7 @@ public record State<
   /**
    * Assigns a value to the FunArray at a given index.
    *
-   * @param index the index.
+   * @param indeces the indeces.
    * @param value the value.
    * @return the altered FunArray
    */
@@ -150,11 +153,11 @@ public record State<
     return new State<>(modifiedFunArrays, modifiedVariables, context);
   }
 
-  public VariableT getVariableValue(String varRef) {
-    if (varRef.equals("0")) {
-      return context.getVariableDomain().getZeroValue();
-    }
-    return variables.get(varRef);
+  public VariableT getVariableValue(Reference varRef) {
+    return switch (varRef) {
+      case VariableReference variableReference -> variables.get(variableReference);
+      case ZeroReference _ -> context.getVariableDomain().getZeroValue();
+    };
   }
 
   public State<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,

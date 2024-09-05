@@ -1,6 +1,6 @@
 package funarray.varref;
 
-public class VariableReference implements Reference {
+public final class VariableReference implements Reference {
 
   private final String name;
 
@@ -15,5 +15,15 @@ public class VariableReference implements Reference {
       return this.name.equals(otherVariableReference.name);
     }
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 }

@@ -6,13 +6,18 @@ import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.State;
+import funarray.varref.Reference;
 import java.util.Set;
 
 public record Variable<
         ElementT extends DomainValue<ElementT>,
-        VariableT extends DomainValue<VariableT>>(String variableRef,
+        VariableT extends DomainValue<VariableT>>(Reference variableRef,
                                                   AnalysisContext<ElementT, VariableT> context)
         implements Assignable<ElementT, VariableT> {
+
+  public Variable(String variableRef, AnalysisContext<ElementT, VariableT> context) {
+    this(Reference.of(variableRef), context);
+  }
 
   @Override
   public Set<NormalExpression> normalise(State<ElementT, VariableT> environment) {
@@ -26,7 +31,7 @@ public record Variable<
 
   @Override
   public String toString() {
-    return variableRef;
+    return variableRef.toString();
   }
 
   @Override

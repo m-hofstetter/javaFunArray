@@ -10,6 +10,7 @@ import abstractdomain.sign.value.Sign;
 import funarray.Bound;
 import funarray.FunArray;
 import funarray.NormalExpression;
+import funarray.varref.Reference;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -55,7 +56,7 @@ public class IntervalFunArrayParserTest {
     var f = IntervalFunArrayParser.parseIntervalFunArray("{0} [0, 0] {b+1} ⊥ {c-1}");
     var comparand = new FunArray<>(
             List.of(
-                    new Bound(new NormalExpression("0")),
+                    new Bound(new NormalExpression(Reference.zero())),
                     new Bound(new NormalExpression("b", 1)),
                     new Bound(new NormalExpression("c", -1))
             ), List.of(
