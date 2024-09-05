@@ -20,35 +20,6 @@ public record Bound(Set<NormalExpression> expressions) {
     this(Set.of(expression));
   }
 
-
-  public Bound adaptForChangedVariableValue(
-          String changedVariableRef,
-          NormalExpression newValue
-  ) {
-    var modifiedExpressions = expressions.stream().flatMap(
-            expression -> {
-              if (expression.containsVariable(newValue.varRef())) {
-                if (expression.containsVariable(changedVariableRef)) {
-                  return Stream.of(expression.increase(-newValue.constant()));
-                } else {
-                  return Stream.of(
-                          expression,
-                          new NormalExpression(changedVariableRef, expression.constant() - newValue.constant())
-                  );
-                }
-              } else {
-                if (expression.containsVariable(changedVariableRef)) {
-                  return Stream.of();
-                } else {
-                  return Stream.of(expression);
-                }
-              }
-            }
-    ).collect(Collectors.toSet());
-
-    return new Bound(modifiedExpressions);
-  }
-
   public Bound adaptForChangedVariableValues(
           String changedVariableRef,
           Set<NormalExpression> newValues
