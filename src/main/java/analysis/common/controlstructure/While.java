@@ -48,6 +48,7 @@ public record While<
         var resultState = condition.satisfyComplement(state);
         return new AnalysisResult<>(
                 resultState,
+                result.exitStates(),
                 PROTOCOL_TEMPLATE.formatted(
                         condition,
                         satisfiedState.toString().indent(INDENTATION),

@@ -7,6 +7,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import funarray.state.State;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -28,13 +29,15 @@ public record Block<
   @Override
   public AnalysisResult<VariableT, ElementT> run(State<VariableT, ElementT> startingState) {
     var protocolSteps = new ArrayList<String>();
+    var exitStates = new HashSet<State<VariableT, ElementT>>();
     var assertions = noAssert();
     for (Analysis<VariableT, ElementT> s : statements) {
       var stepResult = s.run(startingState);
       protocolSteps.add(stepResult.protocol());
       startingState = stepResult.resultState();
       assertions = assertions.join(stepResult.assertions());
+      exitStates.addAll(stepResult.exitStates());
     }
-    return new AnalysisResult<>(startingState, String.join("\n", protocolSteps), assertions);
+    return new AnalysisResult<>(startingState, exitStates, String.join("\n", protocolSteps), assertions);
   }
 }

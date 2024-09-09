@@ -7,6 +7,8 @@ import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
 import funarray.state.State;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A control structure that executes either one of two given statements depending on whether a
@@ -73,6 +75,13 @@ public record IfThenElse<
             resultElse.protocol().indent(INDENTATION),
             joinedState.toString());
 
-    return new AnalysisResult<>(joinedState, protocol, joinedAssertions);
+    return new AnalysisResult<>(
+            joinedState,
+            Stream.concat(
+                    resultIf.exitStates().stream(),
+                    resultElse.exitStates().stream()
+            ).collect(Collectors.toSet()),
+            protocol,
+            joinedAssertions);
   }
 }

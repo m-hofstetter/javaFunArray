@@ -4,6 +4,7 @@ import abstractdomain.DomainValue;
 import funarray.state.State;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * The result of a {@link Analysis}.
@@ -17,8 +18,16 @@ public record AnalysisResult<
         ElementT extends DomainValue<ElementT>,
         VariableT extends DomainValue<VariableT>>(
         State<ElementT, VariableT> resultState,
+        Set<State<ElementT, VariableT>> exitStates,
         String protocol,
         AssertionResult assertions) {
+
+  public AnalysisResult(
+          State<ElementT, VariableT> resultState,
+          String protocol,
+          AssertionResult assertions) {
+    this(resultState, Set.of(), protocol, assertions);
+  }
 
   public record AssertionResult(int positive, int negative, int indeterminable) {
     public AssertionResult positiveAssert() {

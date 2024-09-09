@@ -255,4 +255,8 @@ public record ReachableState<
     return new ReachableState<>(modifiedFunArrays, variables(), context);
   }
 
+  @Override
+  public int hashCode() {
+    return toString().hashCode();
+  }
 }
