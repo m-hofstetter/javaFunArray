@@ -30,7 +30,7 @@ public class standard_seq_init_ground implements Benchmark {
                                                                     "a",
                                                                     program.variable("i")),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "a",
                                                                                     program.subtraction(
@@ -40,7 +40,7 @@ public class standard_seq_init_ground implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -65,7 +65,7 @@ public class standard_seq_init_ground implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

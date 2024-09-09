@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class standard_copy7_ground_2 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -27,7 +26,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "a",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("a"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -49,7 +48,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -71,7 +70,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -93,7 +92,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -115,7 +114,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -137,7 +136,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -159,7 +158,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -181,7 +180,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -204,7 +203,7 @@ public class standard_copy7_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

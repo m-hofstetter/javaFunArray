@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class ifcompf implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -57,7 +56,7 @@ public class ifcompf implements Benchmark {
                                                                                             "a",
                                                                                             program.variable("i")),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "a",
                                                                                                             program.subtraction(
@@ -67,7 +66,7 @@ public class ifcompf implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -97,7 +96,7 @@ public class ifcompf implements Benchmark {
                                                                                             "b",
                                                                                             program.variable("i")),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "b",
                                                                                                             program.subtraction(
@@ -111,7 +110,7 @@ public class ifcompf implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -141,7 +140,7 @@ public class ifcompf implements Benchmark {
                                                                                             "c",
                                                                                             program.variable("i")),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "c",
                                                                                                             program.subtraction(
@@ -155,7 +154,7 @@ public class ifcompf implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -173,14 +172,14 @@ public class ifcompf implements Benchmark {
                                                                             "c",
                                                                             program.variable("i")),
                                                                     program.multiplication(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.variable("i"),
                                                                                     program.variable("i"),
                                                                                     program.variable("i"))))),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

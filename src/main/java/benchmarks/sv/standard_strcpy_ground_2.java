@@ -31,7 +31,7 @@ public class standard_strcpy_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -55,7 +55,7 @@ public class standard_strcpy_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -78,7 +78,7 @@ public class standard_strcpy_ground_2 implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

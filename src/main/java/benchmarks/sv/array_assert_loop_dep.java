@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 
 public class array_assert_loop_dep implements Benchmark {
@@ -28,7 +27,7 @@ public class array_assert_loop_dep implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -49,7 +48,7 @@ public class array_assert_loop_dep implements Benchmark {
                                                     program.if_(
                                                             program.unequalTo(
                                                                     program.addition(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.variable("i"),
                                                                                     program.constant(1))),
                                                                     program.constant(15000)),
@@ -59,7 +58,7 @@ public class array_assert_loop_dep implements Benchmark {
                                                                                     program.arrayElement(
                                                                                             "a",
                                                                                             program.addition(
-                                                                                                    Set.of(
+                                                                                                    List.of(
                                                                                                             program.variable("i"),
                                                                                                             program.constant(1)))),
                                                                                     program.constant(20)))),
@@ -68,7 +67,7 @@ public class array_assert_loop_dep implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

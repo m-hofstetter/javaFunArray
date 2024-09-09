@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class array_tiling_tcpy implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -35,22 +34,22 @@ public class array_tiling_tcpy implements Benchmark {
                                                                     "acopy",
                                                                     program.subtraction(
                                                                             program.multiplication(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.constant(2),
                                                                                             program.variable("S"))),
                                                                             program.addition(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.variable("i"),
                                                                                             program.constant(1))))),
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.subtraction(
                                                                             program.multiplication(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.constant(2),
                                                                                             program.variable("S"))),
                                                                             program.addition(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.variable("i"),
                                                                                             program.constant(1)))))),
                                                     program.assign(
@@ -63,7 +62,7 @@ public class array_tiling_tcpy implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -73,7 +72,7 @@ public class array_tiling_tcpy implements Benchmark {
                                     program.lessThan(
                                             program.variable("i"),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(2),
                                                             program.variable("S")))),
                                     program.block(
@@ -89,7 +88,7 @@ public class array_tiling_tcpy implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

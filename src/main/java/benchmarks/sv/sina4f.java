@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class sina4f implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -52,7 +51,7 @@ public class sina4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -69,7 +68,7 @@ public class sina4f implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -79,7 +78,7 @@ public class sina4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -96,7 +95,7 @@ public class sina4f implements Benchmark {
                                                                     "a",
                                                                     program.variable("i")),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "a",
                                                                                     program.variable("i")),
@@ -106,7 +105,7 @@ public class sina4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -123,7 +122,7 @@ public class sina4f implements Benchmark {
                                                                     "b",
                                                                     program.variable("i")),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "a",
                                                                                     program.variable("i")),
@@ -131,7 +130,7 @@ public class sina4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -152,7 +151,7 @@ public class sina4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

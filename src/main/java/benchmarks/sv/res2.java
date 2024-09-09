@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class res2 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -52,7 +51,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -69,7 +68,7 @@ public class res2 implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -79,7 +78,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -99,7 +98,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -116,7 +115,7 @@ public class res2 implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -126,7 +125,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -146,7 +145,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -163,7 +162,7 @@ public class res2 implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -173,7 +172,7 @@ public class res2 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assert_(
@@ -182,7 +181,7 @@ public class res2 implements Benchmark {
                                                     "sum",
                                                     program.constant(0)),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(3),
                                                             program.variable("N"))))),
                             program.assign(

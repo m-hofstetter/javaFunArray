@@ -1,10 +1,8 @@
 package benchmarks.sv;
 
-import java.util.List;
-import java.util.Set;
-
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
+import java.util.List;
 
 public class zero_sum_m3 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -39,7 +37,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -54,7 +52,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "sum",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("sum"),
                                                                                                     program.arrayElement(
                                                                                                             "a",
@@ -62,7 +60,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -77,7 +75,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "sum",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("sum"),
                                                                                                     program.arrayElement(
                                                                                                             "a",
@@ -85,7 +83,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -100,7 +98,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "sum",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("sum"),
                                                                                                     program.arrayElement(
                                                                                                             "a",
@@ -108,7 +106,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -130,7 +128,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -152,7 +150,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
@@ -174,7 +172,7 @@ public class zero_sum_m3 implements Benchmark {
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.constant(1))))))),
                                                     program.assert_(

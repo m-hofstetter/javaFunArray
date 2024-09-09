@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class sorting_selectionsort_2_ground implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -30,7 +29,7 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -48,7 +47,7 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                     program.assign(
                                                             "s",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1)))),
                                                     program.while_(
@@ -75,7 +74,7 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                                             program.assign(
                                                                                     "k",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("k"),
                                                                                                     program.constant(1))))))),
                                                     program.if_(
@@ -115,7 +114,7 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                                             program.assign(
                                                                                     "y",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("x"),
                                                                                                     program.constant(1)))),
                                                                             program.while_(
@@ -135,19 +134,19 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                                                                     program.assign(
                                                                                                             "y",
                                                                                                             program.addition(
-                                                                                                                    Set.of(
+                                                                                                                    List.of(
                                                                                                                             program.variable("y"),
                                                                                                                             program.constant(1))))))),
                                                                             program.assign(
                                                                                     "x",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("x"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1)))),
                                                     program.while_(
@@ -167,13 +166,13 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                                             program.assign(
                                                                                     "x",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("x"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -188,7 +187,7 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                     program.assign(
                                                             "y",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1)))),
                                                     program.while_(
@@ -208,13 +207,13 @@ public class sorting_selectionsort_2_ground implements Benchmark {
                                                                             program.assign(
                                                                                     "y",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("y"),
                                                                                                     program.constant(1))))))),
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

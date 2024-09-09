@@ -1,10 +1,8 @@
 package benchmarks.sv;
 
-import java.util.List;
-import java.util.Set;
-
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
+import java.util.List;
 
 public class standard_two_index_06 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -31,7 +29,7 @@ public class standard_two_index_06 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -53,13 +51,13 @@ public class standard_two_index_06 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(6)))),
                                                     program.assign(
                                                             "j",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("j"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -82,22 +80,22 @@ public class standard_two_index_06 implements Benchmark {
                                                                     program.arrayElement(
                                                                             "b",
                                                                             program.addition(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.multiplication(
-                                                                                                    Set.of(
+                                                                                                    List.of(
                                                                                                             program.constant(6),
                                                                                                             program.variable("j"))),
                                                                                             program.constant(1)))))),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(6)))),
                                                     program.assign(
                                                             "j",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("j"),
                                                                             program.constant(1))))))),
                             program.assign(

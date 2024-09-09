@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class standard_compareModified_ground implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -38,7 +37,7 @@ public class standard_compareModified_ground implements Benchmark {
                                                     program.assign(
                                                             "j",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("j"),
                                                                             program.constant(1))))))),
                             program.while_(
@@ -72,7 +71,7 @@ public class standard_compareModified_ground implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.if_(
@@ -101,7 +100,7 @@ public class standard_compareModified_ground implements Benchmark {
                                                                             program.assign(
                                                                                     "x",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("x"),
                                                                                                     program.constant(1))))))))),
                                     program.block(
@@ -126,7 +125,7 @@ public class standard_compareModified_ground implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

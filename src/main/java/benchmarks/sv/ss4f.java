@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class ss4f implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -52,7 +51,7 @@ public class ss4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -69,7 +68,7 @@ public class ss4f implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -79,7 +78,7 @@ public class ss4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -96,7 +95,7 @@ public class ss4f implements Benchmark {
                                                                     "a",
                                                                     program.variable("i")),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "a",
                                                                                     program.variable("i")),
@@ -106,7 +105,7 @@ public class ss4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -128,7 +127,7 @@ public class ss4f implements Benchmark {
                                                                     "sum",
                                                                     program.constant(0)),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.arrayElement(
                                                                                     "sum",
                                                                                     program.constant(0)),
@@ -138,7 +137,7 @@ public class ss4f implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assert_(
@@ -147,10 +146,10 @@ public class ss4f implements Benchmark {
                                                     "sum",
                                                     program.constant(0)),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.variable("N"),
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("N"),
                                                                             program.constant(1))))))),
                             program.assign(

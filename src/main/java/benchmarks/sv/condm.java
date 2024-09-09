@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class condm implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -47,7 +46,7 @@ public class condm implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -72,7 +71,7 @@ public class condm implements Benchmark {
                                                                                             "a",
                                                                                             program.variable("i")),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "a",
                                                                                                             program.variable("i")),
@@ -84,7 +83,7 @@ public class condm implements Benchmark {
                                                                                             "a",
                                                                                             program.variable("i")),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "a",
                                                                                                             program.variable("i")),
@@ -92,7 +91,7 @@ public class condm implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -117,7 +116,7 @@ public class condm implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

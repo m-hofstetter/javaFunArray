@@ -52,7 +52,7 @@ public class s2iff implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -77,7 +77,7 @@ public class s2iff implements Benchmark {
                                                                                             "sum",
                                                                                             program.constant(0)),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "sum",
                                                                                                             program.constant(0)),
@@ -91,7 +91,7 @@ public class s2iff implements Benchmark {
                                                                                             "sum",
                                                                                             program.constant(0)),
                                                                                     program.multiplication(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "sum",
                                                                                                             program.constant(0)),
@@ -101,7 +101,7 @@ public class s2iff implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assert_(
@@ -110,7 +110,7 @@ public class s2iff implements Benchmark {
                                                     "sum",
                                                     program.constant(0)),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(3),
                                                             program.variable("N"))))),
                             program.assign(

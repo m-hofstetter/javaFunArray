@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class standard_partition_ground_1 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -48,7 +47,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                                             program.assign(
                                                                                     "b",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("b"),
                                                                                                     program.constant(1)))))),
                                                             program.block(
@@ -56,7 +55,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                     program.assign(
                                                             "a",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("a"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -86,7 +85,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                                             program.assign(
                                                                                     "c",
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("c"),
                                                                                                     program.constant(1)))))),
                                                             program.block(
@@ -94,7 +93,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                     program.assign(
                                                             "a",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("a"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -115,7 +114,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -136,7 +135,7 @@ public class standard_partition_ground_1 implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

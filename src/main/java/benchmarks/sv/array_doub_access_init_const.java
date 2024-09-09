@@ -1,10 +1,8 @@
 package benchmarks.sv;
 
-import java.util.List;
-import java.util.Set;
-
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
+import java.util.List;
 
 public class array_doub_access_init_const implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -27,7 +25,7 @@ public class array_doub_access_init_const implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.multiplication(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.constant(2),
                                                                                     program.variable("i")))),
                                                             program.constant(0)),
@@ -35,9 +33,9 @@ public class array_doub_access_init_const implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.addition(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.multiplication(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.constant(2),
                                                                                                     program.variable("i"))),
                                                                                     program.constant(1)))),
@@ -45,7 +43,7 @@ public class array_doub_access_init_const implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -55,7 +53,7 @@ public class array_doub_access_init_const implements Benchmark {
                                     program.lessEqualThan(
                                             program.variable("i"),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(2),
                                                             program.variable("N")))),
                                     program.block(
@@ -69,7 +67,7 @@ public class array_doub_access_init_const implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

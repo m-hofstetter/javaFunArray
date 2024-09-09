@@ -1,10 +1,8 @@
 package benchmarks.sv;
 
-import java.util.List;
-import java.util.Set;
-
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
+import java.util.List;
 
 public class standard_vararg_ground implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -31,7 +29,7 @@ public class standard_vararg_ground implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.while_(
@@ -45,7 +43,7 @@ public class standard_vararg_ground implements Benchmark {
                                                     program.assign(
                                                             "a",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("a"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -66,7 +64,7 @@ public class standard_vararg_ground implements Benchmark {
                                                     program.assign(
                                                             "x",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("x"),
                                                                             program.constant(1))))))),
                             program.assign(

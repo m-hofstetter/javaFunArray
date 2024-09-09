@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class indp4 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -44,19 +43,19 @@ public class indp4 implements Benchmark {
                                                                     "a",
                                                                     program.variable("i")),
                                                             program.multiplication(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.addition(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.variable("i"),
                                                                                             program.constant(1))),
                                                                             program.addition(
-                                                                                    Set.of(
+                                                                                    List.of(
                                                                                             program.variable("i"),
                                                                                             program.constant(1)))))),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -80,7 +79,7 @@ public class indp4 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -104,7 +103,7 @@ public class indp4 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -122,16 +121,16 @@ public class indp4 implements Benchmark {
                                                                             "a",
                                                                             program.variable("i")),
                                                                     program.addition(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.multiplication(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.variable("i"),
                                                                                                     program.variable("i"))),
                                                                                     program.constant(1))))),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

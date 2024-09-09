@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class array_tripl_access_init_const implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -26,7 +25,7 @@ public class array_tripl_access_init_const implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.multiplication(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.constant(3),
                                                                                     program.variable("i")))),
                                                             program.constant(0)),
@@ -34,9 +33,9 @@ public class array_tripl_access_init_const implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.addition(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.multiplication(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.constant(3),
                                                                                                     program.variable("i"))),
                                                                                     program.constant(1)))),
@@ -45,9 +44,9 @@ public class array_tripl_access_init_const implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.addition(
-                                                                            Set.of(
+                                                                            List.of(
                                                                                     program.multiplication(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.constant(3),
                                                                                                     program.variable("i"))),
                                                                                     program.constant(2)))),
@@ -55,7 +54,7 @@ public class array_tripl_access_init_const implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -65,7 +64,7 @@ public class array_tripl_access_init_const implements Benchmark {
                                     program.lessEqualThan(
                                             program.variable("i"),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(3),
                                                             program.variable("N")))),
                                     program.block(
@@ -79,7 +78,7 @@ public class array_tripl_access_init_const implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(

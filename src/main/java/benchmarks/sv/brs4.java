@@ -3,7 +3,6 @@ package benchmarks.sv;
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
 import java.util.List;
-import java.util.Set;
 
 public class brs4 implements Benchmark {
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
@@ -62,7 +61,7 @@ public class brs4 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assign(
@@ -92,7 +91,7 @@ public class brs4 implements Benchmark {
                                                                                             "sum",
                                                                                             program.constant(0)),
                                                                                     program.addition(
-                                                                                            Set.of(
+                                                                                            List.of(
                                                                                                     program.arrayElement(
                                                                                                             "sum",
                                                                                                             program.constant(0)),
@@ -102,7 +101,7 @@ public class brs4 implements Benchmark {
                                                     program.assign(
                                                             "i",
                                                             program.addition(
-                                                                    Set.of(
+                                                                    List.of(
                                                                             program.variable("i"),
                                                                             program.constant(1))))))),
                             program.assert_(
@@ -111,7 +110,7 @@ public class brs4 implements Benchmark {
                                                     "sum",
                                                     program.constant(0)),
                                             program.multiplication(
-                                                    Set.of(
+                                                    List.of(
                                                             program.constant(4),
                                                             program.variable("N"))))),
                             program.assign(
