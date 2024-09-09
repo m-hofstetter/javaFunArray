@@ -15,7 +15,7 @@ import analysis.common.expression.nonassociative.Modulo;
 import analysis.common.expression.nonassociative.Subtraction;
 import analysis.interval.IntervalAnalysisContext;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.ReachableState;
 import funarray.varref.Reference;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class ExpressionTest {
   AnalysisContext<Interval, Interval> context = IntervalAnalysisContext.INSTANCE;
 
 
-  State<Interval, Interval> environment = new State<>(
+  ReachableState<Interval, Interval> environment = new ReachableState<>(
           Map.of(
                   "A", parseIntervalFunArray("{0 a} [-100, 100] {b} [-100, 100] {c A.length}")
           ),

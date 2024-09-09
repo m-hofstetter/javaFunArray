@@ -1,7 +1,7 @@
 package analysis.common;
 
 import abstractdomain.DomainValue;
-import funarray.State;
+import funarray.state.State;
 import java.util.Arrays;
 import java.util.Collection;
 

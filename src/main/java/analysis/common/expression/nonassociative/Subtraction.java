@@ -5,7 +5,8 @@ import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.State;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

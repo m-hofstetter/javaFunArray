@@ -5,7 +5,7 @@ import static analysis.common.AnalysisResult.AssertionResult.noAssert;
 import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
-import funarray.State;
+import funarray.state.State;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,7 @@ package analysis.common.expression;
 
 import abstractdomain.DomainValue;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.State;
 import java.util.Set;
 
 public interface Expression<

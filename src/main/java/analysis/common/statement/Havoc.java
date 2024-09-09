@@ -9,7 +9,7 @@ import analysis.common.AnalysisResult;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.atom.ArrayElement;
 import analysis.common.expression.atom.Variable;
-import funarray.State;
+import funarray.state.State;
 
 public record Havoc<
         ElementT extends DomainValue<ElementT>,

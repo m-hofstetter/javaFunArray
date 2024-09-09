@@ -6,7 +6,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.State;
 import funarray.varref.Reference;
 import java.util.Objects;
 import java.util.Set;
@@ -63,11 +63,11 @@ public record ArrayElement<
   }
 
   @Override
-  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> environmentState) {
-    return environmentState.assignArrayElement(
+  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> state) {
+    return state.assignArrayElement(
             arrayRef,
-            index.normalise(environmentState),
-            context.convertVariableValueToArrayElementValue(value.evaluate(environmentState))
+            index.normalise(state),
+            context.convertVariableValueToArrayElementValue(value.evaluate(state))
     );
   }
 }

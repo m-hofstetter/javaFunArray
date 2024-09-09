@@ -7,7 +7,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
-import funarray.State;
+import funarray.state.State;
 
 public class Assign<
         ElementT extends DomainValue<ElementT>,

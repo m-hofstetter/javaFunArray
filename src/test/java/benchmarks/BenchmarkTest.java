@@ -9,7 +9,7 @@ import benchmarks.sv.indp5;
 import benchmarks.sv.sina4f;
 import benchmarks.sv.standard_compare_ground;
 import benchmarks.sv.standard_password_ground;
-import funarray.State;
+import funarray.state.ReachableState;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,7 +38,7 @@ public class BenchmarkTest {
 
     var analysis = benchmark.statement(builder);
 
-    var startingState = new State<>(
+    var startingState = new ReachableState<>(
             benchmark.integerVariables(),
             benchmark.arrayVariables(),
             CONTEXT

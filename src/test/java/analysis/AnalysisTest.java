@@ -17,7 +17,7 @@ import analysis.common.statement.Increment;
 import analysis.interval.IntervalAnalysisContext;
 import analysis.signinterval.SignIntervalAnalysisContext;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.ReachableState;
 import funarray.varref.Reference;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class AnalysisTest {
 
     var funArray = parseIntervalFunArray("{0 a} [-100, 100] {A.length b}");
 
-    var environment = new State<>(Map.of("A", funArray), Map.of(
+    var environment = new ReachableState<>(Map.of("A", funArray), Map.of(
             Reference.of("a"), Interval.unknown(),
             Reference.of("b"), Interval.unknown(),
             Reference.of("A.length"), Interval.unknown(),
@@ -80,7 +80,7 @@ public class AnalysisTest {
 
     var funArray = parseSignFunArray("{0 a} ⊤ {A.length b}");
 
-    var environment = new State<>(Map.of("A", funArray), Map.of(
+    var environment = new ReachableState<>(Map.of("A", funArray), Map.of(
             Reference.of("a"), Interval.unknown(),
             Reference.of("b"), Interval.unknown(),
             Reference.of("A.length"), Interval.unknown(),
@@ -129,7 +129,7 @@ public class AnalysisTest {
     var loopCondition = new LessThan<>(new Variable<>("s", context), new Variable<>("S.length", context), context);
     var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s", context), context), new Constant<>(0, context), context);
 
-    var environment = new State<>(Map.of(
+    var environment = new ReachableState<>(Map.of(
             "S", arraySource,
             "P", arrayPositive,
             "N", arrayNegative

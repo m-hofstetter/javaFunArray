@@ -5,7 +5,7 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import analysis.common.expression.atom.Constant;
 import analysis.common.expression.atom.Variable;
-import funarray.State;
+import funarray.state.State;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.BinaryOperator;

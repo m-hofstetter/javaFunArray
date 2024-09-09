@@ -5,7 +5,8 @@ import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.ReachableState;
+import funarray.state.State;
 import funarray.varref.Reference;
 import java.util.Set;
 
@@ -35,12 +36,12 @@ public record Variable<
   }
 
   @Override
-  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> environmentState) {
-    var normalExpressions = value.normalise(environmentState);
+  public State<ElementT, VariableT> assign(Expression<ElementT, VariableT> value, State<ElementT, VariableT> state) {
+    var normalExpressions = value.normalise(state);
     if (normalExpressions.isEmpty()) {
-      return environmentState.assignVariable(variableRef, value.evaluate(environmentState));
+      return state.assignVariable(variableRef, value.evaluate(state));
     } else {
-      return environmentState.assignVariable(variableRef, normalExpressions);
+      return state.assignVariable(variableRef, normalExpressions);
     }
   }
 }

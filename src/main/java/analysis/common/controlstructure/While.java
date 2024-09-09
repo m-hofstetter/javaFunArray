@@ -5,7 +5,7 @@ import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import funarray.State;
+import funarray.state.State;
 import java.util.List;
 
 /**
@@ -13,7 +13,6 @@ import java.util.List;
  *
  * @param condition    the condition.
  * @param bodyAnalysis the statement to execute while the condition is true.
- * @param unreachable  the unreachable element for abstract joining.
  * @param <ElementT>   the domain to abstract array element values with.
  * @param <VariableT>  the domain to abstract variable values with.
  */

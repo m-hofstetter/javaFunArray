@@ -7,7 +7,7 @@ import analysis.common.condition.LessThan;
 import analysis.common.expression.atom.Variable;
 import analysis.interval.IntervalAnalysisContext;
 import base.infint.InfInt;
-import funarray.State;
+import funarray.state.ReachableState;
 import funarray.varref.Reference;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ public class ConditionTest {
   @Test
   void lessThanTest() {
     final var context = IntervalAnalysisContext.INSTANCE;
-    var state = new State<>(Map.of(), Map.of(
+    var state = new ReachableState<>(Map.of(), Map.of(
             Reference.of("a"), Interval.of(0),
             Reference.of("b"), Interval.of(InfInt.negInf(), InfInt.posInf())
     ), context);

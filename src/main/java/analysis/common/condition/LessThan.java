@@ -3,7 +3,7 @@ package analysis.common.condition;
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.State;
+import funarray.state.State;
 
 public record LessThan<
         ElementT extends DomainValue<ElementT>,

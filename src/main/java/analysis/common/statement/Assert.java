@@ -6,7 +6,7 @@ import abstractdomain.DomainValue;
 import analysis.common.Analysis;
 import analysis.common.AnalysisResult;
 import analysis.common.condition.Condition;
-import funarray.State;
+import funarray.state.State;
 
 public record Assert<
         ElementT extends DomainValue<ElementT>,

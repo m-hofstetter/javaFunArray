@@ -4,7 +4,7 @@ import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
-import funarray.State;
+import funarray.state.State;
 import funarray.varref.Reference;
 import java.util.Set;
 
