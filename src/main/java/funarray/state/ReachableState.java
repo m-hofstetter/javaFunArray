@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -190,45 +191,25 @@ public record ReachableState<
   @Override
   public ReachableState<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
                                                                                         NormalExpression right) {
-    var modifiedFunArrays = arrays.entrySet().stream()
-            .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().satisfyBoundExpressionLessEqualThan(left, right)
-            ));
-    return new ReachableState<>(modifiedFunArrays, variables(), context);
+    return forAllArrays(e -> e.satisfyBoundExpressionLessEqualThan(left, right));
   }
 
   @Override
   public ReachableState<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
                                                                                    NormalExpression right) {
-    var modifiedFunArrays = arrays.entrySet().stream()
-            .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().satisfyBoundExpressionLessThan(left, right)
-            ));
-    return new ReachableState<>(modifiedFunArrays, variables(), context);
+    return forAllArrays(e -> e.satisfyBoundExpressionLessThan(left, right));
   }
 
   @Override
   public ReachableState<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
                                                                                   NormalExpression right) {
-    var modifiedFunArrays = arrays.entrySet().stream()
-            .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().satisfyBoundExpressionEqualTo(left, right)
-            ));
-    return new ReachableState<>(modifiedFunArrays, variables(), context);
+    return forAllArrays(e -> e.satisfyBoundExpressionEqualTo(left, right));
   }
 
   @Override
   public ReachableState<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
                                                                                     NormalExpression right) {
-    var modifiedFunArrays = arrays.entrySet().stream()
-            .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> e.getValue().satisfyBoundExpressionUnequalTo(left, right)
-            ));
-    return new ReachableState<>(modifiedFunArrays, variables(), context);
+    return forAllArrays(e -> e.satisfyBoundExpressionUnequalTo(left, right));
   }
 
   @Override
@@ -262,6 +243,15 @@ public record ReachableState<
   public boolean isReachable() {
     return variables.values().stream().allMatch(DomainValue::isReachable)
             && arrays.values().stream().allMatch(FunArray::isReachable);
+  }
+
+  private ReachableState<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op) {
+    var modifiedFunArrays = arrays.entrySet().stream()
+            .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> op.apply(e.getValue())
+            ));
+    return new ReachableState<>(modifiedFunArrays, variables(), context);
   }
 
 }
