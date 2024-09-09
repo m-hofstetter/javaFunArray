@@ -47,6 +47,6 @@ public record Assert<
     }
 
     var protocol = PROTOCOL_TEMPLATE.formatted(condition, assertionProtocol);
-    return new AnalysisResult<>(satisifed, protocol, assertion);
+    return new AnalysisResult<>(startingState, protocol, assertion);
   }
 }
