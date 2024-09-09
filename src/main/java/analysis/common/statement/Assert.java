@@ -42,10 +42,7 @@ public record Assert<
         assertion = assertion.negativeAssert();
         assertionProtocol = NEGATIVE_ASSERTION_TEMPLATE.formatted(condition);
       } else {
-        System.out.println(startingState);
-        System.out.println(satisifed);
-        System.out.println(satisifedComplement);
-        //throw new IllegalStateException();
+        throw new IllegalStateException();
       }
     }
 

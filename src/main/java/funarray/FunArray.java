@@ -300,6 +300,8 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
           FunArray<E> resultOther) {
   }
 
+  private static final int UNIFY_LOOP_HARD_LIMIT = 10000;
+
   /**
    * Unifies this FunArray with another one, so their segment bounds coincide.
    *
@@ -330,7 +332,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
 
     int i = 0;
+    int loopLimitCount = 0;
+
     while (i < boundsThis.size() && i < boundsOther.size()) {
+      if (loopLimitCount >= UNIFY_LOOP_HARD_LIMIT) {
+        throw new RuntimeException("Something went wrong in the unifying algorithm.");
+      }
+      loopLimitCount++;
+
       var currentBoundThis = boundsThis.get(i);
       var currentBoundOther = boundsOther.get(i);
 
