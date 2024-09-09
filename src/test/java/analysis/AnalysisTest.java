@@ -166,28 +166,7 @@ public class AnalysisTest {
     );
     System.out.println(result.protocol());
     assertThat(result.resultState().arrays()).isEqualTo(expected);
-
   }
 
-  @Test
-  public void tempsortIntoArraysTest() {
 
-    final var context = IntervalAnalysisContext.INSTANCE;
-
-    var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
-
-    var environment = new State<>(Map.of(
-            "S", arraySource
-    ), Map.of(
-            Reference.of("s"), Interval.of(0),
-            Reference.of("S.length"), Interval.unknown()
-    ), context);
-
-
-    var program = new Increment<>(new Variable<>("s", context), context);
-
-    var result = program.run(environment);
-    System.out.println(result.protocol());
-
-  }
 }
