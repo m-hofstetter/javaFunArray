@@ -4,7 +4,12 @@ import abstractdomain.interval.value.Interval;
 import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.condition.Condition;
+import analysis.common.condition.EqualTo;
+import analysis.common.condition.GreaterEqualThan;
+import analysis.common.condition.GreaterThan;
+import analysis.common.condition.LessEqualThan;
 import analysis.common.condition.LessThan;
+import analysis.common.condition.NotEqualTo;
 import analysis.common.controlstructure.Block;
 import analysis.common.controlstructure.IfThenElse;
 import analysis.common.controlstructure.While;
@@ -127,33 +132,27 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Condition<Interval, Interval> lessEqualThan(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    return new LessThan<>(left, right, CONTEXT);
+    return new LessEqualThan<>(left, right, CONTEXT);
   }
 
   @Override
   public Condition<Interval, Interval> greaterThan(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    //TODO
-    return null;
+    return new GreaterThan<>(left, right, CONTEXT);
   }
 
   @Override
   public Condition<Interval, Interval> greaterEqualThan(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    //TODO
-    return null;
+    return new GreaterEqualThan<>(left, right, CONTEXT);
   }
 
   @Override
   public Condition<Interval, Interval> equalTo(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    //return new EqualTo<>(left, right, CONTEXT);
-    //TODO
-    return null;
+    return new EqualTo<>(left, right, CONTEXT);
   }
 
   @Override
   public Condition<Interval, Interval> unequalTo(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    //return new UnequalTo<>(left, right, CONTEXT);
-    //TODO
-    return null;
+    return new NotEqualTo<>(left, right, CONTEXT);
   }
 
   @Override
