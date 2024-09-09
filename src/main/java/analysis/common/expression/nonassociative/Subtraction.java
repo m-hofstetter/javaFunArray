@@ -1,14 +1,17 @@
 package analysis.common.expression.nonassociative;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
+import analysis.common.expression.associative.Addition;
 import funarray.NormalExpression;
 import funarray.state.State;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Subtraction<
         ElementT extends DomainValue<ElementT>,
@@ -39,6 +42,30 @@ public class Subtraction<
   @Override
   public VariableT evaluate(State<ElementT, VariableT> environment) {
     return minuend.evaluate(environment).subtract(subtrahend.evaluate(environment));
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(
+          Expression<ElementT, VariableT> comparand,
+          Relation<VariableT> relation,
+          State<ElementT, VariableT> state
+  ) {
+    var satisfiedMinuend = minuend.satisfy(
+            new Addition<>(List.of(comparand, subtrahend), context),
+            relation,
+            state
+    );
+    var satisfiedSubtrahend = subtrahend.satisfy(
+            new Subtraction<>(minuend, comparand, context),
+            relation.inverseOrder(),
+            state
+    );
+
+    return Stream.concat(
+            satisfiedMinuend.stream(),
+            satisfiedSubtrahend.stream()
+    ).collect(Collectors.toSet()
+    );
   }
 
   @Override

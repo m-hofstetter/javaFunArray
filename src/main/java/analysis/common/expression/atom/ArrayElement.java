@@ -1,6 +1,7 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
@@ -49,6 +50,14 @@ public record ArrayElement<
             .reduce(ElementT::meet)
             .map(context::convertArrayElementValueToVariableValue)
             .orElse(context.getVariableDomain().getUnknown());
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state) {
+    var comparandValue = comparand.evaluate(state);
+    var currentValue = evaluate(state);
+    var satisfiedValue = relation.satisfy(currentValue, comparandValue);
+    return Set.of(state.assignArrayElement(arrayRef, index.normalise(state), context.convertVariableValueToArrayElementValue(satisfiedValue)));
   }
 
   @Override

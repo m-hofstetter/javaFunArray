@@ -1,6 +1,7 @@
 package analysis.common.expression.nonassociative;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
@@ -35,6 +36,11 @@ public class Division<
   @Override
   public VariableT evaluate(State<ElementT, VariableT> environment) {
     return dividend.evaluate(environment).divide(divisor.evaluate(environment));
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state) {
+    return Set.of(state);
   }
 
   @Override

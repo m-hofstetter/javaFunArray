@@ -1,9 +1,11 @@
 package analysis.common.expression.associative;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
+import analysis.common.expression.nonassociative.Subtraction;
 import funarray.NormalExpression;
 import funarray.state.State;
 import java.util.Collection;
@@ -41,6 +43,20 @@ public class Addition<
   @Override
   public VariableT evaluate(State<ElementT, VariableT> environment) {
     return evaluate(environment, VariableT::add);
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(
+          Expression<ElementT, VariableT> comparand,
+          Relation<VariableT> relation,
+          State<ElementT, VariableT> state
+  ) {
+
+    return this.operands.stream().flatMap(summand -> {
+      var others = this.operands.stream().filter(e -> !e.equals(summand)).toList();
+      var newComparand = new Subtraction<>(comparand, new Addition<>(others, context), context);
+      return summand.satisfy(newComparand, relation, state).stream();
+    }).collect(Collectors.toSet());
   }
 
   @Override

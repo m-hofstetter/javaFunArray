@@ -1,6 +1,7 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
@@ -8,6 +9,7 @@ import funarray.NormalExpression;
 import funarray.state.ReachableState;
 import funarray.state.State;
 import funarray.varref.Reference;
+import java.util.HashMap;
 import java.util.Set;
 
 public record Variable<
@@ -43,5 +45,20 @@ public record Variable<
     } else {
       return state.assignVariable(variableRef, normalExpressions);
     }
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(
+          Expression<ElementT, VariableT> comparand,
+          Relation<VariableT> relation,
+          State<ElementT, VariableT> state) {
+
+    var comparandValue = comparand.evaluate(state);
+    var currentValue = evaluate(state);
+    var satisfiedValue = relation.satisfy(currentValue, comparandValue);
+
+    var modifiedVariables = new HashMap<>(state.variables());
+    modifiedVariables.put(variableRef, satisfiedValue);
+    return Set.of(new ReachableState<>(state.arrays(), modifiedVariables, context));
   }
 }

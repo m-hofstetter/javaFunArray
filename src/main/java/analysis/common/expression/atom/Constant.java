@@ -1,6 +1,7 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
+import abstractdomain.Relation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
@@ -23,6 +24,18 @@ public record Constant<
   @Override
   public VariableT evaluate(State<ElementT, VariableT> environment) {
     return context.getVariableDomain().abstract_(constant);
+  }
+
+  @Override
+  public Set<State<ElementT, VariableT>> satisfy(
+          Expression<ElementT, VariableT> comparand,
+          Relation<VariableT> relation,
+          State<ElementT, VariableT> state
+  ) {
+    if (relation.isSatisfied(this.evaluate(state), comparand.evaluate(state))) {
+      return Set.of(state);
+    }
+    return Set.of();
   }
 
   @Override
