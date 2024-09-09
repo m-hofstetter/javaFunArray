@@ -21,9 +21,9 @@ public abstract class AssociativeOperation<
   public AssociativeOperation(Collection<Expression<ElementT, VariableT>> operands,
                               AnalysisContext<ElementT, VariableT> context) {
     this.context = context;
-    if (operands.size() < 2) {
-      throw new IllegalArgumentException("Associative operation needs to have at least two operands.");
-    }
+//    if (operands.size() < 2) {
+//      throw new IllegalArgumentException("Associative operation needs to have at least two operands.");
+//    }
     this.operands = operands;
   }
 
