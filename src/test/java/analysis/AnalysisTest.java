@@ -123,8 +123,8 @@ public class AnalysisTest {
     final var context = IntervalAnalysisContext.INSTANCE;
 
     var arraySource = parseIntervalFunArray("{0 s} [-100, 100] {S.length}");
-    var arrayPositive = parseIntervalFunArray("{0 p} ⊥ {P.length}");
-    var arrayNegative = parseIntervalFunArray("{0 n} ⊥ {N.length}");
+    var arrayPositive = parseIntervalFunArray("{0 p} [-100, 100] {P.length}");
+    var arrayNegative = parseIntervalFunArray("{0 n} [-100, 100] {N.length}");
 
     var loopCondition = new LessThan<>(new Variable<>("s", context), new Variable<>("S.length", context), context);
     var negativeIntCondition = new LessThan<>(new ArrayElement<>("S", new Variable<>("s", context), context), new Constant<>(0, context), context);
@@ -161,8 +161,8 @@ public class AnalysisTest {
     var result = program.run(environment);
 
     var expected = Map.of("S", parseIntervalFunArray("{0} [-100, 100] {S.length s}?"),
-            "P", parseIntervalFunArray("{0} [0, 100] {p}? ⊥ {P.length}?"),
-            "N", parseIntervalFunArray("{0} [-100, -1] {n}? ⊥ {N.length}?")
+            "P", parseIntervalFunArray("{0} [0, 100] {p}? [-100, 100] {P.length}?"),
+            "N", parseIntervalFunArray("{0} [-100, -1] {n}? [-100, 100] {N.length}?")
     );
     System.out.println(result.protocol());
     assertThat(result.resultState().arrays()).isEqualTo(expected);
