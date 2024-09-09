@@ -65,4 +65,10 @@ public record AnalysisResult<
               this.indeterminable() + other.indeterminable());
     }
   }
+
+  @Override
+  public String toString() {
+    return "Assertions: %d positive, %d indeterminable, %d negative "
+            .formatted(assertions.positive(), assertions.indeterminable(), assertions.negative());
+  }
 }

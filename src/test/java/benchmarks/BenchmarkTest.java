@@ -45,6 +45,6 @@ public class BenchmarkTest {
     );
 
     var result = analysis.run(startingState);
-    System.out.println(result.protocol());
+    System.out.println(result);
   }
 }
