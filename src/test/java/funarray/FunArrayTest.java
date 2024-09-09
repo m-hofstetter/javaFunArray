@@ -199,4 +199,9 @@ public class FunArrayTest {
     );
   }
 
+  @Test
+  void test() {
+    var p = parseIntervalFunArray("N: {0 n p-1} ⊥ {N.length}");
+  }
+
 }

@@ -8,6 +8,7 @@ import funarray.varref.Reference;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
 
 public class UnreachableState<
         ElementT extends DomainValue<ElementT>,
@@ -112,6 +113,11 @@ public class UnreachableState<
   @Override
   public AnalysisContext<ElementT, VariableT> context() {
     return context;
+  }
+
+  @Override
+  public State<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op) {
+    return this;
   }
 
   @Override

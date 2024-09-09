@@ -443,6 +443,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
+  public FunArray<ElementT> satisfyBoundExpressionGreaterThan(NormalExpression left, NormalExpression right) {
+    return satisfyBoundExpressionLessThan(right, left);
+  }
+
   public FunArray<ElementT> satisfyBoundExpressionLessThan(NormalExpression left, NormalExpression right) {
     int leftIndex;
     int rightIndex;
@@ -469,6 +473,10 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       // --> Condition cannot be satisfied
       throw new FunArrayLogicException("Condition cannot be satisfied!");
     }
+  }
+
+  public FunArray<ElementT> satisfyBoundExpressionGreaterEqualThan(NormalExpression left, NormalExpression right) {
+    return satisfyBoundExpressionLessEqualThan(right, left);
   }
 
   public FunArray<ElementT> satisfyBoundExpressionEqualTo(NormalExpression left, NormalExpression right) {
@@ -531,6 +539,17 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       }
     }
     throw new IndexOutOfBoundsException();
+  }
+
+  public FunArray<ElementT> satisfyBoundExpressionRelation(BoundRelation relation, NormalExpression left, NormalExpression right) {
+    return switch (relation) {
+      case LESS -> satisfyBoundExpressionLessThan(left, right);
+      case GREATER -> satisfyBoundExpressionGreaterThan(left, right);
+      case LESS_EQUAL -> satisfyBoundExpressionLessEqualThan(left, right);
+      case GREATER_EQUAL -> satisfyBoundExpressionGreaterEqualThan(left, right);
+      case EQUAL -> satisfyBoundExpressionEqualTo(left, right);
+      case NOT_EQUAL -> satisfyBoundExpressionUnequalTo(left, right);
+    };
   }
 
 

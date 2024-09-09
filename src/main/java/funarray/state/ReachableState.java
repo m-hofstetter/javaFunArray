@@ -245,7 +245,8 @@ public record ReachableState<
             && arrays.values().stream().allMatch(FunArray::isReachable);
   }
 
-  private ReachableState<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op) {
+  @Override
+  public ReachableState<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op) {
     var modifiedFunArrays = arrays.entrySet().stream()
             .collect(Collectors.toMap(
                     Map.Entry::getKey,

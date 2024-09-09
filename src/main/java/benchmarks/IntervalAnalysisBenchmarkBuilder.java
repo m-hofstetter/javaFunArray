@@ -4,9 +4,7 @@ import abstractdomain.interval.value.Interval;
 import analysis.common.Analysis;
 import analysis.common.AnalysisContext;
 import analysis.common.condition.Condition;
-import analysis.common.condition.EqualTo;
 import analysis.common.condition.LessThan;
-import analysis.common.condition.UnequalTo;
 import analysis.common.controlstructure.Block;
 import analysis.common.controlstructure.IfThenElse;
 import analysis.common.controlstructure.While;
@@ -146,12 +144,16 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Condition<Interval, Interval> equalTo(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    return new EqualTo<>(left, right, CONTEXT);
+    //return new EqualTo<>(left, right, CONTEXT);
+    //TODO
+    return null;
   }
 
   @Override
   public Condition<Interval, Interval> unequalTo(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
-    return new UnequalTo<>(left, right, CONTEXT);
+    //return new UnequalTo<>(left, right, CONTEXT);
+    //TODO
+    return null;
   }
 
   @Override
