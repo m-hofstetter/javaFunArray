@@ -488,15 +488,19 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return satisfyBoundExpressionLessEqualThan(right, left);
   }
 
-  public FunArray<ElementT> satisfyBoundExpressionEqualTo(NormalExpression left, NormalExpression right) {
-    int leftIndex;
-    int rightIndex;
+  public FunArray<ElementT> satisfyBoundExpressionEqualTo(NormalExpression a, NormalExpression b) {
+    int indexA;
+    int indexB;
+
     try {
-      leftIndex = findIndex(left);
-      rightIndex = findIndex(right);
+      indexA = findIndex(a);
+      indexB = findIndex(b);
     } catch (IndexOutOfBoundsException e) {
       return this;
     }
+
+    int leftIndex = Integer.min(indexA, indexB);
+    int rightIndex = Integer.max(indexA, indexB);
 
     if (leftIndex == rightIndex) {
       return this;
@@ -505,35 +509,39 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     var modifiedValues = new ArrayList<>(values);
     var modifiedEmptiness = new ArrayList<>(emptiness);
 
-    var boundsToBeSquashed = modifiedBounds.subList(rightIndex, leftIndex + 1);
+    var boundsToBeSquashed = modifiedBounds.subList(leftIndex, rightIndex + 1);
     var squashedBound = Bound.union(boundsToBeSquashed);
     boundsToBeSquashed.clear();
     boundsToBeSquashed.add(squashedBound);
 
-    modifiedValues.subList(rightIndex, leftIndex).clear();
-    modifiedEmptiness.subList(rightIndex, leftIndex).clear();
+    modifiedValues.subList(leftIndex, rightIndex).clear();
+    modifiedEmptiness.subList(leftIndex, rightIndex).clear();
 
     return new FunArray<>(modifiedBounds, modifiedValues, modifiedEmptiness);
 
   }
 
-  public FunArray<ElementT> satisfyBoundExpressionUnequalTo(NormalExpression left, NormalExpression right) {
-    int leftIndex;
-    int rightIndex;
+  public FunArray<ElementT> satisfyBoundExpressionUnequalTo(NormalExpression a, NormalExpression b) {
+    int indexA;
+    int indexB;
+
     try {
-      leftIndex = findIndex(left);
-      rightIndex = findIndex(right);
+      indexA = findIndex(a);
+      indexB = findIndex(b);
     } catch (IndexOutOfBoundsException e) {
       return this;
     }
+
+    int leftIndex = Integer.min(indexA, indexB);
+    int rightIndex = Integer.max(indexA, indexB);
 
     if (leftIndex != rightIndex) {
       return this;
     }
 
     var modifiedBounds = new ArrayList<>(bounds);
-    var newLeftBound = modifiedBounds.get(leftIndex).difference(Set.of(left));
-    var newRightBound = modifiedBounds.get(rightIndex).difference(Set.of(right));
+    var newLeftBound = modifiedBounds.get(leftIndex).difference(Set.of(a));
+    var newRightBound = modifiedBounds.get(rightIndex).difference(Set.of(b));
 
     modifiedBounds.set(leftIndex, newLeftBound);
     modifiedBounds.set(rightIndex, newRightBound);
