@@ -131,12 +131,12 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval addConstant(int constant) {
+  public Interval addConstant(long constant) {
     return add(of(constant, constant));
   }
 
   @Override
-  public Interval subtractConstant(int constant) {
+  public Interval subtractConstant(long constant) {
     return addConstant(-constant);
   }
 
@@ -161,7 +161,7 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval multiplyByConstant(int constant) {
+  public Interval multiplyByConstant(long constant) {
     return new ReachableInterval(this.lowerLimit.multiply(constant), this.upperLimit.multiply(constant));
   }
 
@@ -196,7 +196,7 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval divideByConstant(int constant) {
+  public Interval divideByConstant(long constant) {
     if (constant == 0) {
       throw new ArithmeticException("Cannot divide by zero.");
     }
@@ -227,7 +227,7 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public Interval modulo(int constant) {
+  public Interval modulo(long constant) {
     return new ReachableInterval(this.lowerLimit.modulo(constant), this.upperLimit.modulo(constant));
   }
 

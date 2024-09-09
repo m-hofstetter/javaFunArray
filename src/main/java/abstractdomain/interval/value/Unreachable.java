@@ -48,12 +48,12 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval addConstant(int constant) {
+  public Interval addConstant(long constant) {
     return this;
   }
 
   @Override
-  public Interval subtractConstant(int constant) {
+  public Interval subtractConstant(long constant) {
     return this;
   }
 
@@ -63,7 +63,7 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval multiplyByConstant(int constant) {
+  public Interval multiplyByConstant(long constant) {
     return this;
   }
 
@@ -73,7 +73,7 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval divideByConstant(int constant) {
+  public Interval divideByConstant(long constant) {
     return this;
   }
 
@@ -83,7 +83,7 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public Interval modulo(int constant) {
+  public Interval modulo(long constant) {
     return this;
   }
 

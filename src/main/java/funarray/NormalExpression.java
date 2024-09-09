@@ -13,7 +13,7 @@ import funarray.varref.ZeroReference;
  * @param varRef the reference for a variable v
  * @param constant the constant k
  */
-public record NormalExpression(Reference varRef, int constant) {
+public record NormalExpression(Reference varRef, long constant) {
 
   public NormalExpression(Reference variable) {
     this(variable, 0);
@@ -27,11 +27,11 @@ public record NormalExpression(Reference varRef, int constant) {
     this(Reference.of(variable), constant);
   }
 
-  public NormalExpression(int constant) {
+  public NormalExpression(long constant) {
     this(Reference.zero(), constant);
   }
 
-  public NormalExpression increase(int value) {
+  public NormalExpression increase(long value) {
     return new NormalExpression(varRef, constant + value);
   }
 
@@ -70,7 +70,7 @@ public record NormalExpression(Reference varRef, int constant) {
   @Override
   public String toString() {
     return switch (varRef) {
-      case ZeroReference _ -> Integer.toString(constant);
+      case ZeroReference _ -> Long.toString(constant);
       case VariableReference r -> {
         if (constant == 0) {
           yield r.toString();

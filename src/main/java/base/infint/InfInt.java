@@ -6,7 +6,7 @@ package base.infint;
 public abstract sealed class InfInt implements Comparable<InfInt>
         permits Infinity, FiniteInteger {
 
-  public static InfInt of(int value) {
+  public static InfInt of(long value) {
     return new FiniteInteger(value);
   }
 
@@ -90,19 +90,19 @@ public abstract sealed class InfInt implements Comparable<InfInt>
     return add(value.negate());
   }
 
-  public InfInt subtract(int value) {
+  public InfInt subtract(long value) {
     return subtract(InfInt.of(value));
   }
 
   public abstract InfInt multiply(InfInt value);
 
-  public InfInt multiply(int value) {
+  public InfInt multiply(long value) {
     return this.multiply(InfInt.of(value));
   }
 
   public abstract InfInt divide(InfInt value);
 
-  public InfInt divide(int value) {
+  public InfInt divide(long value) {
     return this.divide(InfInt.of(value));
   }
 
@@ -114,7 +114,7 @@ public abstract sealed class InfInt implements Comparable<InfInt>
    */
   public abstract InfInt modulo(InfInt value);
 
-  public InfInt modulo(int value) {
+  public InfInt modulo(long value) {
     return this.modulo(InfInt.of(value));
   }
 

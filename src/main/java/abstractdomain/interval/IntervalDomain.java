@@ -15,12 +15,12 @@ public class IntervalDomain implements Domain<Interval> {
   }
 
   @Override
-  public Interval abstract_(int concreteValue) {
+  public Interval abstract_(long concreteValue) {
     return Interval.of(concreteValue);
   }
 
   @Override
-  public int concretize(Interval interval) throws ConcretizationException {
+  public long concretize(Interval interval) throws ConcretizationException {
     if (interval instanceof ReachableInterval reachableInterval) {
       if (reachableInterval.getLowerLimit().equals(reachableInterval.getUpperLimit()))
         if (reachableInterval.getLowerLimit() instanceof FiniteInteger finiteInt) {

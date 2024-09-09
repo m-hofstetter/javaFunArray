@@ -18,12 +18,12 @@ public class SignDomain implements Domain<Sign> {
   }
 
   @Override
-  public Sign abstract_(int concreteValue) {
+  public Sign abstract_(long concreteValue) {
     return Sign.of(concreteValue);
   }
 
   @Override
-  public int concretize(Sign sign) throws ConcretizationException {
+  public long concretize(Sign sign) throws ConcretizationException {
     if (sign.equals(Sign.of(0))) {
       return 0;
     }

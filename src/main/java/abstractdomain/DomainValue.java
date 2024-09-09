@@ -61,7 +61,7 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @param constant an integer.
    * @return the transformed domain value.
    */
-  T addConstant(int constant);
+  T addConstant(long constant);
 
   /**
    * The abstract subtraction transformation.
@@ -69,7 +69,7 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @param constant an integer.
    * @return the transformed domain value.
    */
-  T subtractConstant(int constant);
+  T subtractConstant(long constant);
 
   /**
    * The abstract multiplication transformation.
@@ -85,7 +85,7 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @param constant an integer.
    * @return the transformed domain value.
    */
-  T multiplyByConstant(int constant);
+  T multiplyByConstant(long constant);
 
   /**
    * The abstract division transformation.
@@ -101,7 +101,7 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @param constant an integer.
    * @return the transformed domain value.
    */
-  T divideByConstant(int constant);
+  T divideByConstant(long constant);
 
   /**
    * The abstract modulo transformation.
@@ -117,7 +117,7 @@ public interface DomainValue<T extends DomainValue<T>> {
    * @param constant an integer.
    * @return the modulo.
    */
-  T modulo(int constant);
+  T modulo(long constant);
 
   /**
    * The absolute value transformation.

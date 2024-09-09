@@ -8,9 +8,9 @@ import lombok.Getter;
 @Getter
 public final class FiniteInteger extends InfInt {
 
-  private final int value;
+  private final long value;
 
-  public FiniteInteger(int value) {
+  public FiniteInteger(long value) {
     this.value = value;
   }
 
@@ -19,13 +19,13 @@ public final class FiniteInteger extends InfInt {
     return switch (other) {
       case NegativeInfinity n -> 1;
       case PositiveInfinity p -> -1;
-      case FiniteInteger f -> Integer.compare(value, f.getValue());
+      case FiniteInteger f -> Long.compare(value, f.getValue());
     };
   }
 
   @Override
   public String toString() {
-    return Integer.toString(value);
+    return Long.toString(value);
   }
 
   @Override

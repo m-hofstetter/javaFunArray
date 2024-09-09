@@ -20,7 +20,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
     this.elements = Set.copyOf(elements);
   }
 
-  public static Sign of(int value) {
+  public static Sign of(long value) {
     if (value == 0) {
       return new Sign(Set.of(ZERO));
     } else if (value >= 1) {
@@ -142,7 +142,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign addConstant(int constant) {
+  public Sign addConstant(long constant) {
     SignElement constantSign;
     if (constant == 0) {
       constantSign = SignElement.ZERO;
@@ -155,7 +155,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign subtractConstant(int constant) {
+  public Sign subtractConstant(long constant) {
     return addConstant(-constant);
   }
 
@@ -165,7 +165,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign multiplyByConstant(int constant) {
+  public Sign multiplyByConstant(long constant) {
     return null;//TODO
   }
 
@@ -175,7 +175,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign divideByConstant(int constant) {
+  public Sign divideByConstant(long constant) {
     return null;//TODO
   }
 
@@ -185,7 +185,7 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public Sign modulo(int constant) {
+  public Sign modulo(long constant) {
     return null;//TODO
   }
 

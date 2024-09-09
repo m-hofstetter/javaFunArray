@@ -74,7 +74,7 @@ public record Bound(Set<NormalExpression> expressions) {
     return expressions.isEmpty();
   }
 
-  public Bound increase(int amount) {
+  public Bound increase(long amount) {
     return new Bound(expressions.stream()
             .map(e -> e.increase(amount))
             .collect(Collectors.toSet()));

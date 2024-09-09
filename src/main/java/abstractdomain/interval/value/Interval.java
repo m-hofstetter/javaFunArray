@@ -21,19 +21,19 @@ public abstract sealed class Interval
     return new ReachableInterval(lowerLimit, upperLimit);
   }
 
-  public static Interval of(InfInt lowerLimit, int upperLimit) {
+  public static Interval of(InfInt lowerLimit, long upperLimit) {
     return new ReachableInterval(lowerLimit, InfInt.of(upperLimit));
   }
 
-  public static Interval of(int lowerLimit, InfInt upperLimit) {
+  public static Interval of(long lowerLimit, InfInt upperLimit) {
     return new ReachableInterval(InfInt.of(lowerLimit), upperLimit);
   }
 
-  public static Interval of(int lowerLimit, int upperLimit) {
+  public static Interval of(long lowerLimit, long upperLimit) {
     return new ReachableInterval(InfInt.of(lowerLimit), InfInt.of(upperLimit));
   }
 
-  public static Interval of(int bothLimits) {
+  public static Interval of(long bothLimits) {
     return new ReachableInterval(InfInt.of(bothLimits), InfInt.of(bothLimits));
   }
 }
