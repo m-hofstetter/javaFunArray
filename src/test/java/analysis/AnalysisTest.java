@@ -164,7 +164,6 @@ public class AnalysisTest {
             "P", parseIntervalFunArray("{0} [0, 100] {p}? [-100, 100] {P.length}?"),
             "N", parseIntervalFunArray("{0} [-100, -1] {n}? [-100, 100] {N.length}?")
     );
-    System.out.println(result.protocol());
     assertThat(result.resultState().arrays()).isEqualTo(expected);
   }
 

@@ -198,10 +198,4 @@ public class FunArrayTest {
             parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}")
     );
   }
-
-  @Test
-  void test() {
-    var p = parseIntervalFunArray("N: {0 n p-1} ⊥ {N.length}");
-  }
-
 }
