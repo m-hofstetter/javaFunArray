@@ -169,6 +169,6 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Analysis<Interval, Interval> stop() {
-    return null;
+    return new Exit<>();
   }
 }
