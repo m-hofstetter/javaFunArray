@@ -23,8 +23,10 @@ import analysis.common.expression.atom.Variable;
 import analysis.common.expression.nonassociative.Division;
 import analysis.common.expression.nonassociative.Modulo;
 import analysis.common.expression.nonassociative.Subtraction;
+import analysis.common.statement.Assert;
 import analysis.common.statement.Assign;
 import analysis.common.statement.Assume;
+import analysis.common.statement.Exit;
 import analysis.common.statement.Havoc;
 import analysis.interval.IntervalAnalysisContext;
 import funarray.varref.Reference;
@@ -81,8 +83,7 @@ public class IntervalAnalysisBenchmarkBuilder
 
   @Override
   public Analysis<Interval, Interval> assert_(Condition<Interval, Interval> condition) {
-    //TODO
-    return null;
+    return new Assert<>(condition);
   }
 
   @Override
