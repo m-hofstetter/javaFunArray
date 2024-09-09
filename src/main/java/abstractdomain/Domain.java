@@ -12,4 +12,17 @@ public interface Domain<T extends DomainValue<T>> {
   T getUnreachable();
 
   T getZeroValue();
+
+  Relation<T> lessThan();
+
+  Relation<T> lessEqualThan();
+
+  Relation<T> greaterThan();
+
+  Relation<T> greaterEqualThan();
+
+  Relation<T> equalTo();
+
+  Relation<T> unequalTo();
+
 }

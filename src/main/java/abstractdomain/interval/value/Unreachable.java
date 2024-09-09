@@ -123,6 +123,36 @@ final class Unreachable extends Interval {
   }
 
   @Override
+  public boolean greaterThan(Interval other) {
+    return false;
+  }
+
+  @Override
+  public boolean lessThan(Interval other) {
+    return false;
+  }
+
+  @Override
+  public boolean greaterEqualThan(Interval other) {
+    return false;
+  }
+
+  @Override
+  public boolean lessEqualThan(Interval other) {
+    return false;
+  }
+
+  @Override
+  public boolean equal(Interval other) {
+    return false;
+  }
+
+  @Override
+  public boolean notEqual(Interval other) {
+    return false;
+  }
+
+  @Override
   public boolean isReachable() {
     return false;
   }

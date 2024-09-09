@@ -299,6 +299,36 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
+  public boolean greaterThan(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
+  public boolean lessThan(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
+  public boolean greaterEqualThan(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
+  public boolean lessEqualThan(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
+  public boolean equal(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
+  public boolean notEqual(Sign other) {
+    return false; //TODO
+  }
+
+  @Override
   public boolean isReachable() {
     return !elements.isEmpty();
   }

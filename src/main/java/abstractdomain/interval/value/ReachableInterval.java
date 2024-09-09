@@ -304,6 +304,58 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
+  public boolean greaterThan(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable -> this.lowerLimit.isGreaterThan(reachable.getLowerLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
+  public boolean lessThan(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable -> this.upperLimit.isLessThan(reachable.getUpperLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
+  public boolean greaterEqualThan(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable ->
+              this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
+  public boolean lessEqualThan(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable ->
+              this.upperLimit.isLessEqualThan(reachable.getUpperLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
+  public boolean equal(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable ->
+              this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit()) && this.upperLimit.isLessEqualThan(reachable.getUpperLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
+  public boolean notEqual(Interval other) {
+    return switch (other) {
+      case ReachableInterval reachable ->
+              this.lowerLimit.isGreaterEqualThan(reachable.getUpperLimit()) || this.upperLimit.isLessEqualThan(reachable.getLowerLimit());
+      case Unreachable _ -> false;
+    };
+  }
+
+  @Override
   public boolean isReachable() {
     return true;
   }

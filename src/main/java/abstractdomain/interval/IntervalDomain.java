@@ -1,6 +1,7 @@
 package abstractdomain.interval;
 
 import abstractdomain.Domain;
+import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
 import abstractdomain.interval.value.Interval;
 import abstractdomain.interval.value.ReachableInterval;
@@ -42,5 +43,155 @@ public class IntervalDomain implements Domain<Interval> {
   @Override
   public Interval getZeroValue() {
     return Interval.of(0, 0);
+  }
+
+  @Override
+  public Relation<Interval> lessThan() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyLessThan(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.lessThan(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.greaterThan();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.greaterEqualThan();
+      }
+    };
+  }
+
+  @Override
+  public Relation<Interval> lessEqualThan() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyLessEqualThan(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.lessEqualThan(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.greaterEqualThan();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.greaterThan();
+      }
+    };
+  }
+
+  @Override
+  public Relation<Interval> greaterThan() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyGreaterThan(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.greaterThan(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.lessThan();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.lessEqualThan();
+      }
+    };
+  }
+
+  @Override
+  public Relation<Interval> greaterEqualThan() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyGreaterEqualThan(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.greaterEqualThan(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.lessEqualThan();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.lessThan();
+      }
+    };
+  }
+
+  @Override
+  public Relation<Interval> equalTo() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyEqual(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.equal(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.equalTo();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.unequalTo();
+      }
+    };
+  }
+
+  @Override
+  public Relation<Interval> unequalTo() {
+    return new Relation<>() {
+      @Override
+      public Interval satisfy(Interval comparandum, Interval comparand) {
+        return comparandum.satisfyNotEqual(comparand);
+      }
+
+      @Override
+      public boolean isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.notEqual(comparand);
+      }
+
+      @Override
+      public Relation<Interval> inverseOrder() {
+        return INSTANCE.unequalTo();
+      }
+
+      @Override
+      public Relation<Interval> complementaryOrder() {
+        return INSTANCE.equalTo();
+      }
+    };
   }
 }
