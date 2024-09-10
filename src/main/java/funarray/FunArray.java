@@ -1,6 +1,11 @@
 package funarray;
 
+import static abstractdomain.TriBool.FALSE;
+import static abstractdomain.TriBool.TRUE;
+import static abstractdomain.TriBool.UNKNOWN;
+
 import abstractdomain.DomainValue;
+import abstractdomain.TriBool;
 import funarray.exception.FunArrayLogicException;
 import funarray.varref.Reference;
 import java.util.ArrayList;
@@ -414,6 +419,16 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return new FunArray<>(thisUnified.bounds, modifiedValues, modifiedEmptiness);
   }
 
+  public TriBool isLessEqualSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft <= indexRight) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
   public FunArray<ElementT> satisfyBoundExpressionLessEqualThan(NormalExpression left, NormalExpression right) {
     int leftIndex;
     int rightIndex;
@@ -452,8 +467,34 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
+  public TriBool isGreaterSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft > indexRight) {
+      if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+        return UNKNOWN;
+      }
+      return TRUE;
+    }
+    return FALSE;
+  }
+
   public FunArray<ElementT> satisfyBoundExpressionGreaterThan(NormalExpression left, NormalExpression right) {
     return satisfyBoundExpressionLessThan(right, left);
+  }
+
+  public TriBool isLessSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft < indexRight) {
+      if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+        return UNKNOWN;
+      }
+      return TRUE;
+    }
+    return FALSE;
   }
 
   public FunArray<ElementT> satisfyBoundExpressionLessThan(NormalExpression left, NormalExpression right) {
@@ -484,8 +525,31 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
   }
 
+  public TriBool isGreaterEqualSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft >= indexRight) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
   public FunArray<ElementT> satisfyBoundExpressionGreaterEqualThan(NormalExpression left, NormalExpression right) {
     return satisfyBoundExpressionLessEqualThan(right, left);
+  }
+
+  public TriBool isEqualSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft == indexRight) {
+      return TRUE;
+    }
+    if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+      return UNKNOWN;
+    }
+    return FALSE;
   }
 
   public FunArray<ElementT> satisfyBoundExpressionEqualTo(NormalExpression a, NormalExpression b) {
@@ -519,6 +583,19 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
     return new FunArray<>(modifiedBounds, modifiedValues, modifiedEmptiness);
 
+  }
+
+  public TriBool isNotEqualSatisfied(NormalExpression left, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    if (indexLeft == indexRight) {
+      return FALSE;
+    }
+    if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+      return UNKNOWN;
+    }
+    return TRUE;
   }
 
   public FunArray<ElementT> satisfyBoundExpressionUnequalTo(NormalExpression a, NormalExpression b) {
@@ -569,6 +646,19 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     };
   }
 
+  public TriBool isConditionSatisfied(NormalExpression left, BoundRelation relation, NormalExpression right) {
+    var indexLeft = findIndex(left);
+    var indexRight = findIndex(right);
+
+    return switch (relation) {
+      case LESS -> isLessSatisfied(left, right);
+      case GREATER -> isGreaterSatisfied(left, right);
+      case LESS_EQUAL -> isLessEqualSatisfied(left, right);
+      case GREATER_EQUAL -> isGreaterEqualSatisfied(left, right);
+      case EQUAL -> isEqualSatisfied(left, right);
+      case NOT_EQUAL -> isNotEqualSatisfied(left, right);
+    };
+  }
 
   public FunArray<ElementT> join(FunArray<ElementT> other, ElementT unreachable) {
     return unifyOperation(ElementT::join, other, unreachable, unreachable);
