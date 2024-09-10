@@ -13,16 +13,16 @@ public interface Domain<T extends DomainValue<T>> {
 
   T getZeroValue();
 
-  Relation<T> lessThan();
+  ValueRelation<T> lessThan();
 
-  Relation<T> lessEqualThan();
+  ValueRelation<T> lessEqualThan();
 
-  Relation<T> greaterThan();
+  ValueRelation<T> greaterThan();
 
-  Relation<T> greaterEqualThan();
+  ValueRelation<T> greaterEqualThan();
 
-  Relation<T> equalTo();
+  ValueRelation<T> equalTo();
 
-  Relation<T> unequalTo();
+  ValueRelation<T> unequalTo();
 
 }

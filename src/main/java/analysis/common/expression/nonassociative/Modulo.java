@@ -1,7 +1,7 @@
 package analysis.common.expression.nonassociative;
 
 import abstractdomain.DomainValue;
-import abstractdomain.Relation;
+import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
@@ -44,7 +44,7 @@ public class Modulo<
   }
 
   @Override
-  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state) {
+  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, ValueRelation<VariableT> relation, State<ElementT, VariableT> state) {
     return Set.of(state);
   }
 }

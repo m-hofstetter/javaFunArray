@@ -1,7 +1,7 @@
 package analysis.common.condition;
 
 import abstractdomain.DomainValue;
-import abstractdomain.Relation;
+import abstractdomain.ValueRelation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.BoundRelation;
@@ -23,10 +23,10 @@ public abstract class Condition<
   protected final Expression<ElementT, VariableT> right;
   protected final AnalysisContext<ElementT, VariableT> context;
   protected final BoundRelation boundRelation;
-  protected final Relation<VariableT> relation;
+  protected final ValueRelation<VariableT> relation;
   protected final String operatorSymbol;
 
-  public Condition(Expression<ElementT, VariableT> left, Expression<ElementT, VariableT> right, AnalysisContext<ElementT, VariableT> context, BoundRelation boundRelation, Relation<VariableT> relation, String operatorSymbol) {
+  public Condition(Expression<ElementT, VariableT> left, Expression<ElementT, VariableT> right, AnalysisContext<ElementT, VariableT> context, BoundRelation boundRelation, ValueRelation<VariableT> relation, String operatorSymbol) {
     this.left = left;
     this.right = right;
     this.context = context;
@@ -38,7 +38,7 @@ public abstract class Condition<
 
   State<ElementT, VariableT> satisfy(
           State<ElementT, VariableT> state,
-          Relation<VariableT> relation,
+          ValueRelation<VariableT> relation,
           BoundRelation boundRelation
   ) {
     if (state instanceof UnreachableState<ElementT, VariableT>) {

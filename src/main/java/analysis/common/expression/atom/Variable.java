@@ -1,7 +1,7 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
-import abstractdomain.Relation;
+import abstractdomain.ValueRelation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
@@ -50,7 +50,7 @@ public record Variable<
   @Override
   public Set<State<ElementT, VariableT>> satisfy(
           Expression<ElementT, VariableT> comparand,
-          Relation<VariableT> relation,
+          ValueRelation<VariableT> relation,
           State<ElementT, VariableT> state) {
 
     var comparandValue = comparand.evaluate(state);

@@ -1,7 +1,7 @@
 package analysis.common.expression;
 
 import abstractdomain.DomainValue;
-import abstractdomain.Relation;
+import abstractdomain.ValueRelation;
 import funarray.NormalExpression;
 import funarray.state.State;
 import java.util.Set;
@@ -14,5 +14,5 @@ public interface Expression<
 
   VariableT evaluate(State<ElementT, VariableT> environment);
 
-  Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state);
+  Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, ValueRelation<VariableT> relation, State<ElementT, VariableT> state);
 }

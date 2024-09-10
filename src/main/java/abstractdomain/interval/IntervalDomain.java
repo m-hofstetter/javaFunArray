@@ -3,7 +3,7 @@ package abstractdomain.interval;
 import static abstractdomain.TriBool.TRUE;
 
 import abstractdomain.Domain;
-import abstractdomain.Relation;
+import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import abstractdomain.interval.value.Interval;
 import abstractdomain.interval.value.ReachableInterval;
@@ -48,8 +48,8 @@ public class IntervalDomain implements Domain<Interval> {
   }
 
   @Override
-  public Relation<Interval> lessThan() {
-    return new Relation<>() {
+  public ValueRelation<Interval> lessThan() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyLessThan(comparand);
@@ -61,20 +61,20 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.greaterThan();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.greaterEqualThan();
       }
     };
   }
 
   @Override
-  public Relation<Interval> lessEqualThan() {
-    return new Relation<>() {
+  public ValueRelation<Interval> lessEqualThan() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyLessEqualThan(comparand);
@@ -86,20 +86,20 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.greaterEqualThan();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.greaterThan();
       }
     };
   }
 
   @Override
-  public Relation<Interval> greaterThan() {
-    return new Relation<>() {
+  public ValueRelation<Interval> greaterThan() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyGreaterThan(comparand);
@@ -111,20 +111,20 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.lessThan();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.lessEqualThan();
       }
     };
   }
 
   @Override
-  public Relation<Interval> greaterEqualThan() {
-    return new Relation<>() {
+  public ValueRelation<Interval> greaterEqualThan() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyGreaterEqualThan(comparand);
@@ -136,20 +136,20 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.lessEqualThan();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.lessThan();
       }
     };
   }
 
   @Override
-  public Relation<Interval> equalTo() {
-    return new Relation<>() {
+  public ValueRelation<Interval> equalTo() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyEqual(comparand);
@@ -161,20 +161,20 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.equalTo();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.unequalTo();
       }
     };
   }
 
   @Override
-  public Relation<Interval> unequalTo() {
-    return new Relation<>() {
+  public ValueRelation<Interval> unequalTo() {
+    return new ValueRelation<>() {
       @Override
       public Interval satisfy(Interval comparandum, Interval comparand) {
         return comparandum.satisfyNotEqual(comparand);
@@ -186,12 +186,12 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public Relation<Interval> inverseOrder() {
+      public ValueRelation<Interval> inverseOrder() {
         return INSTANCE.unequalTo();
       }
 
       @Override
-      public Relation<Interval> complementaryOrder() {
+      public ValueRelation<Interval> complementaryOrder() {
         return INSTANCE.equalTo();
       }
     };
