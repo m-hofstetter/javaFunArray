@@ -7,6 +7,7 @@ import analysis.common.expression.Expression;
 import funarray.BoundRelation;
 import funarray.NormalExpression;
 import funarray.state.State;
+import funarray.state.UnreachableState;
 
 /**
  * A condition for branching control structures in an {@link analysis.common.Analysis}.
@@ -40,6 +41,9 @@ public abstract class Condition<
           Relation<VariableT> relation,
           BoundRelation boundRelation
   ) {
+    if (state instanceof UnreachableState<ElementT, VariableT>) {
+      return state;
+    }
 
     for (NormalExpression l : left.normalise(state)) {
       for (NormalExpression r : right.normalise(state)) {

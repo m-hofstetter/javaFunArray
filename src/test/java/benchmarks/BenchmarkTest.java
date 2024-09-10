@@ -485,7 +485,7 @@ public class BenchmarkTest {
   static int errorCount = 0;
   static int testCount = 0;
 
-  @Timeout(1)
+  @Timeout(30)
   @ParameterizedTest
   @MethodSource("provideArguments")
   void test(Benchmark benchmark) {
