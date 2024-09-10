@@ -1,8 +1,7 @@
 package abstractdomain.interval;
 
-import static abstractdomain.TriBool.TRUE;
-
 import abstractdomain.Domain;
+import abstractdomain.TriBool;
 import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import abstractdomain.interval.value.Interval;
@@ -56,8 +55,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.lessThan(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.lessThan(comparand);
       }
 
       @Override
@@ -81,8 +80,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.lessEqualThan(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.lessEqualThan(comparand);
       }
 
       @Override
@@ -106,8 +105,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.greaterThan(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.greaterThan(comparand);
       }
 
       @Override
@@ -131,8 +130,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.greaterEqualThan(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.greaterEqualThan(comparand);
       }
 
       @Override
@@ -156,8 +155,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.equal(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.equal(comparand);
       }
 
       @Override
@@ -181,8 +180,8 @@ public class IntervalDomain implements Domain<Interval> {
       }
 
       @Override
-      public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.notEqual(comparand).equals(TRUE);
+      public TriBool isSatisfied(Interval comparandum, Interval comparand) {
+        return comparandum.notEqual(comparand);
       }
 
       @Override

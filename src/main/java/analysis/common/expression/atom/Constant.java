@@ -32,10 +32,10 @@ public record Constant<
           ValueRelation<VariableT> relation,
           State<ElementT, VariableT> state
   ) {
-    if (relation.isSatisfied(this.evaluate(state), comparand.evaluate(state))) {
-      return Set.of(state);
-    }
-    return Set.of();
+    return switch (relation.isSatisfied(this.evaluate(state), comparand.evaluate(state))) {
+      case TRUE, UNKNOWN -> Set.of(state);
+      case FALSE -> Set.of();
+    };
   }
 
   @Override
