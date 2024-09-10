@@ -1,5 +1,9 @@
 package abstractdomain.interval.value;
 
+import static abstractdomain.TriBool.UNKNOWN;
+
+import abstractdomain.TriBool;
+
 final class Unreachable extends Interval {
 
   @Override
@@ -123,33 +127,33 @@ final class Unreachable extends Interval {
   }
 
   @Override
-  public boolean greaterThan(Interval other) {
-    return false;
+  public TriBool greaterThan(Interval other) {
+    return UNKNOWN;
   }
 
   @Override
-  public boolean lessThan(Interval other) {
-    return false;
+  public TriBool lessThan(Interval other) {
+    return UNKNOWN;
   }
 
   @Override
-  public boolean greaterEqualThan(Interval other) {
-    return false;
+  public TriBool greaterEqualThan(Interval other) {
+    return UNKNOWN;
   }
 
   @Override
-  public boolean lessEqualThan(Interval other) {
-    return false;
+  public TriBool lessEqualThan(Interval other) {
+    return UNKNOWN;
   }
 
   @Override
-  public boolean equal(Interval other) {
-    return false;
+  public TriBool equal(Interval other) {
+    return UNKNOWN;
   }
 
   @Override
-  public boolean notEqual(Interval other) {
-    return false;
+  public TriBool notEqual(Interval other) {
+    return UNKNOWN;
   }
 
   @Override

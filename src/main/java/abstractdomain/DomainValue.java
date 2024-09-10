@@ -182,17 +182,17 @@ public interface DomainValue<T extends DomainValue<T>> {
    */
   T satisfyNotEqual(T other);
 
-  boolean greaterThan(T other);
+  TriBool greaterThan(T other);
 
-  boolean lessThan(T other);
+  TriBool lessThan(T other);
 
-  boolean greaterEqualThan(T other);
+  TriBool greaterEqualThan(T other);
 
-  boolean lessEqualThan(T other);
+  TriBool lessEqualThan(T other);
 
-  boolean equal(T other);
+  TriBool equal(T other);
 
-  boolean notEqual(T other);
+  TriBool notEqual(T other);
 
   boolean isReachable();
 }

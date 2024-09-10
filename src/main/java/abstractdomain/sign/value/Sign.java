@@ -1,10 +1,12 @@
 package abstractdomain.sign.value;
 
+import static abstractdomain.TriBool.FALSE;
 import static abstractdomain.sign.value.Sign.SignElement.NEGATIVE;
 import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
 import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 
 import abstractdomain.DomainValue;
+import abstractdomain.TriBool;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -299,33 +301,33 @@ public record Sign(Set<SignElement> elements) implements DomainValue<Sign> {
   }
 
   @Override
-  public boolean greaterThan(Sign other) {
-    return false; //TODO
+  public TriBool greaterThan(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override
-  public boolean lessThan(Sign other) {
-    return false; //TODO
+  public TriBool lessThan(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override
-  public boolean greaterEqualThan(Sign other) {
-    return false; //TODO
+  public TriBool greaterEqualThan(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override
-  public boolean lessEqualThan(Sign other) {
-    return false; //TODO
+  public TriBool lessEqualThan(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override
-  public boolean equal(Sign other) {
-    return false; //TODO
+  public TriBool equal(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override
-  public boolean notEqual(Sign other) {
-    return false; //TODO
+  public TriBool notEqual(Sign other) {
+    return FALSE; //TODO
   }
 
   @Override

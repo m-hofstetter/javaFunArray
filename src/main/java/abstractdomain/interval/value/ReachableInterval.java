@@ -1,5 +1,10 @@
 package abstractdomain.interval.value;
 
+import static abstractdomain.TriBool.FALSE;
+import static abstractdomain.TriBool.TRUE;
+import static abstractdomain.TriBool.UNKNOWN;
+
+import abstractdomain.TriBool;
 import base.infint.InfInt;
 import lombok.Getter;
 
@@ -304,54 +309,102 @@ public final class ReachableInterval extends Interval {
   }
 
   @Override
-  public boolean greaterThan(Interval other) {
+  public TriBool greaterThan(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable -> this.lowerLimit.isGreaterThan(reachable.getLowerLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.lowerLimit.isGreaterThan(reachable.getLowerLimit())) {
+          if (this.lowerLimit.isGreaterThan(reachable.getUpperLimit())) {
+            yield TRUE;
+          }
+          yield UNKNOWN;
+        }
+        yield FALSE;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 
   @Override
-  public boolean lessThan(Interval other) {
+  public TriBool lessThan(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable -> this.upperLimit.isLessThan(reachable.getUpperLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.upperLimit.isLessThan(reachable.getUpperLimit())) {
+          if (this.upperLimit.isLessThan(reachable.getLowerLimit())) {
+            yield TRUE;
+          }
+          yield UNKNOWN;
+        }
+        yield FALSE;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 
   @Override
-  public boolean greaterEqualThan(Interval other) {
+  public TriBool greaterEqualThan(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable ->
-              this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit())) {
+          if (this.lowerLimit.isGreaterEqualThan(reachable.upperLimit)) {
+            yield TRUE;
+          }
+          yield UNKNOWN;
+        }
+        yield FALSE;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 
   @Override
-  public boolean lessEqualThan(Interval other) {
+  public TriBool lessEqualThan(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable ->
-              this.upperLimit.isLessEqualThan(reachable.getUpperLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.upperLimit.isLessEqualThan(reachable.getUpperLimit())) {
+          if (this.upperLimit.isLessEqualThan(reachable.getLowerLimit())) {
+            yield TRUE;
+          }
+          yield UNKNOWN;
+        }
+        yield FALSE;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 
   @Override
-  public boolean equal(Interval other) {
+  public TriBool equal(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable ->
-              this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit()) && this.upperLimit.isLessEqualThan(reachable.getUpperLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.lowerLimit.equals(reachable.getLowerLimit())
+                && this.upperLimit.equals(reachable.getUpperLimit())
+                && this.lowerLimit.equals(this.upperLimit)) {
+          yield TRUE;
+        }
+        if (this.upperLimit.isLessThan(reachable.lowerLimit) || this.lowerLimit.isGreaterThan(reachable.upperLimit)) {
+          yield FALSE;
+        }
+        yield UNKNOWN;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 
   @Override
-  public boolean notEqual(Interval other) {
+  public TriBool notEqual(Interval other) {
     return switch (other) {
-      case ReachableInterval reachable ->
-              this.lowerLimit.isGreaterEqualThan(reachable.getUpperLimit()) || this.upperLimit.isLessEqualThan(reachable.getLowerLimit());
-      case Unreachable _ -> false;
+      case ReachableInterval reachable -> {
+        if (this.lowerLimit.equals(reachable.getLowerLimit())
+                && this.upperLimit.equals(reachable.getUpperLimit())
+                && this.lowerLimit.equals(this.upperLimit)) {
+          yield FALSE;
+        }
+        if (this.upperLimit.isLessThan(reachable.lowerLimit) || this.lowerLimit.isGreaterThan(reachable.upperLimit)) {
+          yield TRUE;
+        }
+        yield UNKNOWN;
+      }
+      case Unreachable _ -> UNKNOWN;
     };
   }
 

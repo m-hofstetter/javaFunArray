@@ -1,5 +1,7 @@
 package abstractdomain.interval;
 
+import static abstractdomain.TriBool.TRUE;
+
 import abstractdomain.Domain;
 import abstractdomain.Relation;
 import abstractdomain.exception.ConcretizationException;
@@ -55,7 +57,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.lessThan(comparand);
+        return comparandum.lessThan(comparand).equals(TRUE);
       }
 
       @Override
@@ -80,7 +82,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.lessEqualThan(comparand);
+        return comparandum.lessEqualThan(comparand).equals(TRUE);
       }
 
       @Override
@@ -105,7 +107,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.greaterThan(comparand);
+        return comparandum.greaterThan(comparand).equals(TRUE);
       }
 
       @Override
@@ -130,7 +132,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.greaterEqualThan(comparand);
+        return comparandum.greaterEqualThan(comparand).equals(TRUE);
       }
 
       @Override
@@ -155,7 +157,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.equal(comparand);
+        return comparandum.equal(comparand).equals(TRUE);
       }
 
       @Override
@@ -180,7 +182,7 @@ public class IntervalDomain implements Domain<Interval> {
 
       @Override
       public boolean isSatisfied(Interval comparandum, Interval comparand) {
-        return comparandum.notEqual(comparand);
+        return comparandum.notEqual(comparand).equals(TRUE);
       }
 
       @Override
