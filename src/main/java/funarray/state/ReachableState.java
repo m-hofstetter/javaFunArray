@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -186,51 +185,6 @@ public record ReachableState<
       case VariableReference variableReference -> variables.get(variableReference);
       case ZeroReference _ -> context.getVariableDomain().getZeroValue();
     };
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
-                                                                                        NormalExpression right) {
-    return forAllArrays(e -> e.satisfyBoundExpressionLessEqualThan(left, right));
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
-                                                                                   NormalExpression right) {
-    return forAllArrays(e -> e.satisfyBoundExpressionLessThan(left, right));
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
-                                                                                  NormalExpression right) {
-    return forAllArrays(e -> e.satisfyBoundExpressionEqualTo(left, right));
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
-                                                                                    NormalExpression right) {
-    return forAllArrays(e -> e.satisfyBoundExpressionUnequalTo(left, right));
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
-                                                              VariableT comparand,
-                                                              BinaryOperator<VariableT> operator) {
-    var modifiedVariables = new HashMap<>(variables);
-    var comparandAsValue = comparand.subtractConstant(comparandum.constant());
-    var satisfiedComparandumValue = operator.apply(getVariableValue(comparandum.varRef()), comparandAsValue);
-    modifiedVariables.put(comparandum.varRef(), satisfiedComparandumValue);
-    return new ReachableState<>(arrays, modifiedVariables, context);
-  }
-
-  @Override
-  public ReachableState<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
-                                                              NormalExpression indexComparandum,
-                                                              ElementT comparand,
-                                                              BinaryOperator<ElementT> operator) {
-    var valueAtIndex = getArrayElement(arrRefComparandum, indexComparandum);
-    var modifiedValue = operator.apply(valueAtIndex, comparand);
-    return assignArrayElement(arrRefComparandum, indexComparandum, modifiedValue);
   }
 
   @Override

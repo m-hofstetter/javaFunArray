@@ -7,7 +7,6 @@ import funarray.NormalExpression;
 import funarray.varref.Reference;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
 public interface State<ElementT extends DomainValue<ElementT>, VariableT extends DomainValue<VariableT>> {
@@ -33,27 +32,6 @@ public interface State<ElementT extends DomainValue<ElementT>, VariableT extends
   State<ElementT, VariableT> widen(State<ElementT, VariableT> other);
 
   VariableT getVariableValue(Reference varRef);
-
-  State<ElementT, VariableT> satisfyExpressionLessEqualThanInBoundOrder(NormalExpression left,
-                                                                        NormalExpression right);
-
-  State<ElementT, VariableT> satisfyExpressionLessThanInBoundOrder(NormalExpression left,
-                                                                   NormalExpression right);
-
-  State<ElementT, VariableT> satisfyExpressionEqualToInBoundOrder(NormalExpression left,
-                                                                  NormalExpression right);
-
-  State<ElementT, VariableT> satisfyExpressionUnequalToInBoundOrder(NormalExpression left,
-                                                                    NormalExpression right);
-
-  State<ElementT, VariableT> satisfyForValues(NormalExpression comparandum,
-                                              VariableT comparand,
-                                              BinaryOperator<VariableT> operator);
-
-  State<ElementT, VariableT> satisfyForValues(String arrRefComparandum,
-                                              NormalExpression indexComparandum,
-                                              ElementT comparand,
-                                              BinaryOperator<ElementT> operator);
 
   VariableT calculateExpression(NormalExpression expression);
 
