@@ -1,5 +1,8 @@
 package base;
 
+import static abstractdomain.TriBool.FALSE;
+import static abstractdomain.TriBool.TRUE;
+import static abstractdomain.TriBool.UNKNOWN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -262,4 +265,34 @@ public class IntervalTest {
   }
 
 
+  @Test
+  public void isLessEqualThanTest() {
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(10, 15))
+    ).isEqualTo(TRUE);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(5, 10))
+    ).isEqualTo(TRUE);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(3, 10))
+    ).isEqualTo(UNKNOWN);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(0, 5))
+    ).isEqualTo(UNKNOWN);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(-5, 5))
+    ).isEqualTo(UNKNOWN);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(-5, 2))
+    ).isEqualTo(UNKNOWN);
+
+    assertThat(
+            Interval.of(0, 5).lessEqualThan(Interval.of(-10, -5))
+    ).isEqualTo(FALSE);
+  }
 }

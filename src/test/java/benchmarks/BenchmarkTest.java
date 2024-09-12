@@ -484,6 +484,7 @@ public class BenchmarkTest {
   static int assertionCount = 0;
   static int errorCount = 0;
   static int testCount = 0;
+  static int nonTrivialEndStates = 0;
 
   @Timeout(30)
   @ParameterizedTest
@@ -510,6 +511,18 @@ public class BenchmarkTest {
       throw e;
     }
 
+    var nonTrivial = result.resultState().arrays().values().stream().anyMatch(a -> {
+      if (a.values().size() > 1) {
+        return true;
+      }
+      return !a.values().getFirst().equals(CONTEXT.getElementDomain().getUnknown());
+    });
+
+    if (nonTrivial) {
+      nonTrivialEndStates++;
+    }
+
+
 
     positiveAssertions += result.assertions().positive();
     negativeAssertions += result.assertions().negative();
@@ -535,8 +548,10 @@ public class BenchmarkTest {
                     Positive assertions: %d out of %d (%2.2f%%)
                     Negative assertions: %d out of %d (%2.2f%%)
                     Errors: %d out of %d tests run (%2.2f%%)
+                    Non-trivial results: %d out of %d tests run (%2.2f%%)
                     %n""", positiveAssertions, assertionCount, (positiveAssertions * 100f) / assertionCount,
             negativeAssertions, assertionCount, (negativeAssertions * 100f) / assertionCount,
-            errorCount, testCount, (errorCount * 100f) / testCount);
+            errorCount, testCount, (errorCount * 100f) / testCount,
+            nonTrivialEndStates, testCount, (nonTrivialEndStates * 100f) / testCount);
   }
 }

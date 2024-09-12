@@ -1,11 +1,9 @@
 package funarray;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static util.IntervalFunArrayParser.parseIntervalFunArray;
 
 import abstractdomain.interval.value.Interval;
-import funarray.exception.FunArrayLogicException;
 import funarray.varref.Reference;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -127,10 +125,10 @@ public class FunArrayTest {
   void satisfyBoundExpressionLessEqualThanTest_notPossible() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b} [-∞, ∞] {A.length}");
 
-    assertThrows(FunArrayLogicException.class, () -> funArray.satisfyBoundExpressionLessEqualThan(
+    assertThat(funArray.satisfyBoundExpressionLessEqualThan(
             new NormalExpression("b"),
             new NormalExpression("a")
-    ));
+    )).isEqualTo(parseIntervalFunArray("{0} [-∞, ∞] {A.length}"));
   }
 
   @Test
@@ -165,10 +163,10 @@ public class FunArrayTest {
   void satisfyBoundExpressionLessThanTest_notPossible() {
     var funArray = parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {b} [-∞, ∞] {A.length}");
 
-    assertThrows(FunArrayLogicException.class, () -> funArray.satisfyBoundExpressionLessThan(
+    assertThat(funArray.satisfyBoundExpressionLessThan(
             new NormalExpression("b"),
             new NormalExpression("a")
-    ));
+    )).isEqualTo(parseIntervalFunArray("{0} [-∞, ∞] {A.length}"));
   }
 
   @Test
@@ -197,5 +195,19 @@ public class FunArrayTest {
     assertThat(funArray).isEqualTo(
             parseIntervalFunArray("{0} [-∞, ∞] {a} [-∞, ∞] {A.length}")
     );
+  }
+
+  @Test
+  void unifyTest_switchedBoundExpressions() {
+    var arrayA = parseIntervalFunArray("{0} [2, 2] {1}? [4, 4] {i}? [-∞, ∞] {A.length}?");
+    var arrayB = parseIntervalFunArray("{0} [2, 2] {i}? [2, 2] {1}? [-∞, ∞] {A.length}?");
+
+    var expectedA = parseIntervalFunArray("{0} [-∞, ∞] {A.length}?");
+    var expectedB = parseIntervalFunArray("{0} [-∞, ∞] {A.length}?");
+
+    var unifiedArrays = arrayA.unify(arrayB, Interval.unreachable(), Interval.unreachable());
+
+    assertThat(unifiedArrays.resultThis()).isEqualTo(expectedA);
+    assertThat(unifiedArrays.resultOther()).isEqualTo(expectedB);
   }
 }
