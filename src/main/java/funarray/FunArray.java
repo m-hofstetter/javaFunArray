@@ -6,7 +6,6 @@ import static abstractdomain.TriBool.UNKNOWN;
 
 import abstractdomain.DomainValue;
 import abstractdomain.TriBool;
-import funarray.exception.FunArrayLogicException;
 import funarray.varref.Reference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -355,6 +354,13 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
       var difference = currentBoundThis.difference(currentBoundOther);
       var relativeComplement = currentBoundThis.relativeComplement(currentBoundOther);
 
+      if (intersection.isEmpty()) {
+        boundsThis.set(i, intersection);
+        boundsOther.set(i, intersection);
+        i++;
+        continue;
+      }
+
       if (!difference.isEmpty()) {
         boundsThis.set(i, difference);
         boundsThis.add(i, intersection);
@@ -372,8 +378,8 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     }
 
     return new UnifyResult<>(
-            new FunArray<>(boundsThis, valuesThis, emptinessThis),
-            new FunArray<>(boundsOther, valuesOther, emptinessOther)
+            new FunArray<>(boundsThis, valuesThis, emptinessThis).removeEmptyBounds(),
+            new FunArray<>(boundsOther, valuesOther, emptinessOther).removeEmptyBounds()
     );
   }
 
