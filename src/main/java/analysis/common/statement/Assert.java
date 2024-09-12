@@ -23,30 +23,20 @@ public record Assert<
 
   @Override
   public AnalysisResult<ElementT, VariableT> run(State<ElementT, VariableT> startingState) {
-    var satisifed = condition.satisfy(startingState);
-    var satisifedComplement = condition.satisfyComplement(startingState);
+    var assertionResult = condition.isSatisfied(startingState);
 
-    var assertionProtocol = "";
-    var assertion = noAssert();
+    var assertion = switch (assertionResult) {
+      case TRUE -> noAssert().positiveAssert();
+      case UNKNOWN -> noAssert().indeterminableAssert();
+      case FALSE -> noAssert().negativeAssert();
+    };
 
-    if (satisifed.isReachable()) {
-      if (satisifedComplement.isReachable()) {
-        assertion = assertion.indeterminableAssert();
-        assertionProtocol = INDETERMINABLE_ASSERTION_TEMPLATE.formatted(condition);
-      } else {
-        assertion = assertion.positiveAssert();
-        assertionProtocol = POSITIVE_ASSERTION_TEMPLATE.formatted(condition);
-      }
-    } else {
-      if (satisifedComplement.isReachable()) {
-        assertion = assertion.negativeAssert();
-        assertionProtocol = NEGATIVE_ASSERTION_TEMPLATE.formatted(condition);
-      } else {
-        throw new IllegalStateException();
-      }
-    }
+    var protocol = switch (assertionResult) {
+      case TRUE -> POSITIVE_ASSERTION_TEMPLATE.formatted(condition);
+      case UNKNOWN -> INDETERMINABLE_ASSERTION_TEMPLATE.formatted(condition);
+      case FALSE -> NEGATIVE_ASSERTION_TEMPLATE.formatted(condition);
+    };
 
-    var protocol = PROTOCOL_TEMPLATE.formatted(condition, assertionProtocol);
     return new AnalysisResult<>(startingState, protocol, assertion);
   }
 }
