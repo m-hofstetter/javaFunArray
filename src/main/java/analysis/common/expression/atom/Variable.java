@@ -2,6 +2,7 @@ package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
 import abstractdomain.ValueRelation;
+import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
 import analysis.common.expression.Expression;
@@ -57,6 +58,11 @@ public record Variable<
     var currentValue = evaluate(state);
     var satisfiedValue = relation.satisfy(currentValue, comparandValue);
 
+    try {
+      var concreteSatisfied = context.getVariableDomain().concretize(satisfiedValue);
+      return Set.of(state.assignVariable(variableRef, Set.of(new NormalExpression(concreteSatisfied))));
+    } catch (ConcretizationException _) {
+    }
     var modifiedVariables = new HashMap<>(state.variables());
     modifiedVariables.put(variableRef, satisfiedValue);
     return Set.of(new ReachableState<>(state.arrays(), modifiedVariables, context));
