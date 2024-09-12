@@ -28,6 +28,7 @@ import analysis.common.statement.Assign;
 import analysis.common.statement.Assume;
 import analysis.common.statement.Exit;
 import analysis.common.statement.Havoc;
+import analysis.common.statement.InitArray;
 import analysis.interval.IntervalAnalysisContext;
 import funarray.varref.Reference;
 import java.util.Collection;
@@ -84,6 +85,11 @@ public class IntervalAnalysisBenchmarkBuilder
   @Override
   public Analysis<Interval, Interval> assert_(Condition<Interval, Interval> condition) {
     return new Assert<>(condition);
+  }
+
+  @Override
+  public Analysis<Interval, Interval> arrayInit(String arrayRef, Expression<Interval, Interval> length) {
+    return new InitArray<>(arrayRef, length, CONTEXT);
   }
 
   @Override
@@ -154,18 +160,6 @@ public class IntervalAnalysisBenchmarkBuilder
   @Override
   public Condition<Interval, Interval> unequalTo(Expression<Interval, Interval> left, Expression<Interval, Interval> right) {
     return new NotEqualTo<>(left, right, CONTEXT);
-  }
-
-  @Override
-  public Condition<Interval, Interval> true_() {
-    //TODO
-    return null;
-  }
-
-  @Override
-  public Condition<Interval, Interval> false_() {
-    //TODO
-    return null;
   }
 
   @Override
