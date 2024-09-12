@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class condn implements Benchmark {
-  public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
-    return
+    public List<String> integerVariables() {
+        return List.of("N", "i", "nondet_int₁");
+    }
+
+    public List<String> arrayVariables() {
+        return List.of("a");
+    }
+
+    public boolean allAssertionsShouldHold() {
+        return true;
+    }
+
+    public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
+        return
             program.block(
                     List.of(
+                            program.assign(
+                                    "N",
+                                    program.constant(0)),
                             program.havoc(
                                     program.variable("N")),
                             program.if_(
@@ -29,6 +44,9 @@ public class condn implements Benchmark {
                                             program.division(
                                                     program.constant(2147483647),
                                                     program.constant(4)))),
+                            program.arrayInit(
+                                    "a",
+                                    program.variable("N")),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -42,7 +60,7 @@ public class condn implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -111,14 +129,6 @@ public class condn implements Benchmark {
                                     "c#result",
                                     program.constant(1)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("N", "i", "__VERIFIER_nondet_int₁");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a");
-  }
+    }
 
 }

@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class ifncompf implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("N", "i");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a", "b", "c");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return false;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.assign(
+                                    "N",
+                                    program.constant(0)),
                             program.havoc(
                                     program.variable("N")),
                             program.if_(
@@ -29,6 +44,15 @@ public class ifncompf implements Benchmark {
                                             program.division(
                                                     program.constant(2147483647),
                                                     program.constant(4)))),
+                            program.arrayInit(
+                                    "a",
+                                    program.variable("N")),
+                            program.arrayInit(
+                                    "b",
+                                    program.variable("N")),
+                            program.arrayInit(
+                                    "c",
+                                    program.variable("N")),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -186,14 +210,6 @@ public class ifncompf implements Benchmark {
                                     "c#result",
                                     program.constant(1)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("N", "i");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "b", "c");
   }
 
 }

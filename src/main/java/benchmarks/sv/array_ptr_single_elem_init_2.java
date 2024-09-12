@@ -5,10 +5,31 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class array_ptr_single_elem_init_2 implements Benchmark {
-  public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
-    return
+    public List<String> integerVariables() {
+        return List.of("i", "q");
+    }
+
+    public List<String> arrayVariables() {
+        return List.of("a", "b", "c");
+    }
+
+    public boolean allAssertionsShouldHold() {
+        return false;
+    }
+
+    public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
+        return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "a",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "b",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "c",
+                                    program.constant(100000)),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -18,9 +39,6 @@ public class array_ptr_single_elem_init_2 implements Benchmark {
                                             program.constant(100000)),
                                     program.block(
                                             List.of(
-                                                    program.assign(
-                                                            "q",
-                                                            program.variable("__VERIFIER_nondet_int₁")),
                                                     program.assign(
                                                             program.arrayElement(
                                                                     "a",
@@ -120,14 +138,6 @@ public class array_ptr_single_elem_init_2 implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("i", "__VERIFIER_nondet_int₁", "q");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "b", "c");
-  }
+    }
 
 }

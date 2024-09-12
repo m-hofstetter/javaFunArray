@@ -1,16 +1,32 @@
 package benchmarks.sv;
 
-import java.util.List;
-import java.util.Set;
-
 import benchmarks.Benchmark;
 import benchmarks.BenchmarkProgram;
+import java.util.List;
 
 public class standard_two_index_01 implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("i", "j", "nondet_int₁");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a", "b");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "a",
+                                    program.constant(10000)),
+                            program.arrayInit(
+                                    "b",
+                                    program.constant(10000)),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -27,7 +43,7 @@ public class standard_two_index_01 implements Benchmark {
                                                             program.arrayElement(
                                                                     "b",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -98,14 +114,6 @@ public class standard_two_index_01 implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("i", "j", "__VERIFIER_nondet_int₁");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "b");
   }
 
 }

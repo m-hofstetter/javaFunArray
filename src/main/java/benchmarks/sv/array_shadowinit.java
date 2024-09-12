@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class array_shadowinit implements Benchmark {
-  public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
-    return
+    public List<String> integerVariables() {
+        return List.of("N", "i", "k");
+    }
+
+    public List<String> arrayVariables() {
+        return List.of("a");
+    }
+
+    public boolean allAssertionsShouldHold() {
+        return true;
+    }
+
+    public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
+        return
             program.block(
                     List.of(
+                            program.assign(
+                                    "N",
+                                    program.constant(0)),
                             program.havoc(
                                     program.variable("N")),
                             program.if_(
@@ -17,6 +32,9 @@ public class array_shadowinit implements Benchmark {
                                             program.variable("N")),
                                     program.block(
                                             List.of(
+                                                    program.arrayInit(
+                                                            "a",
+                                                            program.variable("N")),
                                                     program.assign(
                                                             "i",
                                                             program.constant(0)),
@@ -73,14 +91,6 @@ public class array_shadowinit implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("N", "i", "k");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a");
-  }
+    }
 
 }

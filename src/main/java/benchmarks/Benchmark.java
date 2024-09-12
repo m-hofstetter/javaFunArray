@@ -8,4 +8,6 @@ public interface Benchmark {
   List<String> integerVariables();
 
   List<String> arrayVariables();
+
+  boolean allAssertionsShouldHold();
 }

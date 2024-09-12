@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class s4liff implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("N", "i");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("sum", "a");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return false;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.assign(
+                                    "N",
+                                    program.constant(0)),
                             program.havoc(
                                     program.variable("N")),
                             program.if_(
@@ -29,6 +44,12 @@ public class s4liff implements Benchmark {
                                             program.division(
                                                     program.constant(2147483647),
                                                     program.constant(4)))),
+                            program.arrayInit(
+                                    "sum",
+                                    program.constant(1)),
+                            program.arrayInit(
+                                    "a",
+                                    program.variable("N")),
                             program.assign(
                                     program.arrayElement(
                                             "sum",
@@ -138,14 +159,6 @@ public class s4liff implements Benchmark {
                                     "c#result",
                                     program.constant(1)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("N", "i");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("sum", "a");
   }
 
 }

@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class standard_vararg_ground implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("a", "i", "nondet_int₁", "x");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("aa");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "aa",
+                                    program.constant(100000)),
                             program.assign(
                                     "a",
                                     program.constant(0)),
@@ -25,7 +40,7 @@ public class standard_vararg_ground implements Benchmark {
                                                             program.arrayElement(
                                                                     "aa",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -71,14 +86,6 @@ public class standard_vararg_ground implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("a", "i", "__VERIFIER_nondet_int₁", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("aa");
   }
 
 }

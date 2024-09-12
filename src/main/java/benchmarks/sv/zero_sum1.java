@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class zero_sum1 implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("SIZE", "i", "sum", "nondet_short₁");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.assign(
+                                    "SIZE",
+                                    program.constant(0)),
                             program.havoc(
                                     program.variable("SIZE")),
                             program.if_(
@@ -17,6 +32,9 @@ public class zero_sum1 implements Benchmark {
                                             program.variable("SIZE")),
                                     program.block(
                                             List.of(
+                                                    program.arrayInit(
+                                                            "a",
+                                                            program.variable("SIZE")),
                                                     program.assign(
                                                             "sum",
                                                             program.constant(0)),
@@ -33,7 +51,7 @@ public class zero_sum1 implements Benchmark {
                                                                                     program.arrayElement(
                                                                                             "a",
                                                                                             program.variable("i")),
-                                                                                    program.variable("__VERIFIER_nondet_short₁")),
+                                                                                    program.variable("nondet_short₁")),
                                                                             program.assign(
                                                                                     "i",
                                                                                     program.addition(
@@ -95,14 +113,6 @@ public class zero_sum1 implements Benchmark {
                                     "c#result",
                                     program.constant(1)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("SIZE", "i", "sum", "__VERIFIER_nondet_short₁");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a");
   }
 
 }

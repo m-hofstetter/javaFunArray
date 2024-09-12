@@ -5,10 +5,25 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class standard_init2_ground_2 implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("i", "x");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "a",
+                                    program.constant(100000)),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -74,14 +89,6 @@ public class standard_init2_ground_2 implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("i", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a");
   }
 
 }

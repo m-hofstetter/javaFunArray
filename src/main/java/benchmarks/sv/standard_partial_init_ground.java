@@ -5,10 +5,31 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class standard_partial_init_ground implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("j", "i", "x", "nondet_int₁", "nondet_int₂");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("A", "B", "C");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "A",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "B",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "C",
+                                    program.constant(100000)),
                             program.assign(
                                     "j",
                                     program.constant(0)),
@@ -25,12 +46,12 @@ public class standard_partial_init_ground implements Benchmark {
                                                             program.arrayElement(
                                                                     "A",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             program.arrayElement(
                                                                     "B",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₂")),
+                                                            program.variable("nondet_int₂")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -126,14 +147,6 @@ public class standard_partial_init_ground implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("__VERIFIER_nondet_int₂", "j", "__VERIFIER_nondet_int₁", "i", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("A", "B", "C");
   }
 
 }

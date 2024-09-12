@@ -5,10 +5,28 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class array_monotonic implements Benchmark {
-  public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
-    return
+    public List<String> integerVariables() {
+        return List.of("i", "nondet_int₁");
+    }
+
+    public List<String> arrayVariables() {
+        return List.of("a", "b");
+    }
+
+    public boolean allAssertionsShouldHold() {
+        return true;
+    }
+
+    public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
+        return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "a",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "b",
+                                    program.constant(100000)),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -22,7 +40,7 @@ public class array_monotonic implements Benchmark {
                                                             program.arrayElement(
                                                                     "a",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.if_(
                                                             program.equalTo(
                                                                     program.arrayElement(
@@ -75,14 +93,6 @@ public class array_monotonic implements Benchmark {
                                                                     List.of(
                                                                             program.variable("i"),
                                                                             program.constant(2)))))))));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("i", "__VERIFIER_nondet_int₁");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "b");
-  }
+    }
 
 }

@@ -23,6 +23,8 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
 
   StatementT assert_(ConditionT condition);
 
+  StatementT arrayInit(String arrayRef, ExpressionT length);
+
   // Expressions
   ExpressionT constant(int value);
 
@@ -53,10 +55,6 @@ public interface BenchmarkProgram<ExpressionT, ConditionT, StatementT, Assignabl
   ConditionT equalTo(ExpressionT left, ExpressionT right);
 
   ConditionT unequalTo(ExpressionT left, ExpressionT right);
-
-  ConditionT true_();
-
-  ConditionT false_();
 
   StatementT stop();
 }

@@ -5,10 +5,28 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class copysome1_2 implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("z", "i", "x", "nondet_int₁", "nondet_int₂");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a1", "a2");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return false;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "a1",
+                                    program.constant(200000)),
+                            program.arrayInit(
+                                    "a2",
+                                    program.constant(200000)),
                             program.assign(
                                     "z",
                                     program.constant(150000)),
@@ -25,12 +43,12 @@ public class copysome1_2 implements Benchmark {
                                                             program.arrayElement(
                                                                     "a1",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             program.arrayElement(
                                                                     "a2",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₂")),
+                                                            program.variable("nondet_int₂")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -105,14 +123,6 @@ public class copysome1_2 implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("z", "__VERIFIER_nondet_int₂", "__VERIFIER_nondet_int₁", "i", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a1", "a2");
   }
 
 }

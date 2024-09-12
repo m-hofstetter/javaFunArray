@@ -5,13 +5,28 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class standard_copyInitSum_ground implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("incr", "i", "x");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("a", "b");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
-                            program.assign(
-                                    "incr",
-                                    program.variable("__VERIFIER_nondet_int₁")),
+                            program.arrayInit(
+                                    "a",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "b",
+                                    program.constant(100000)),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -107,14 +122,6 @@ public class standard_copyInitSum_ground implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("__VERIFIER_nondet_int₁", "incr", "i", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "b");
   }
 
 }

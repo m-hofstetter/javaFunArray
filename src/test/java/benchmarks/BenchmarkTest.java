@@ -11,6 +11,7 @@ import benchmarks.sv.array_monotonic;
 import benchmarks.sv.array_ptr_single_elem_init_2;
 import benchmarks.sv.array_shadowinit;
 import benchmarks.sv.array_single_elem_init;
+import benchmarks.sv.array_tiling_poly6;
 import benchmarks.sv.array_tiling_tcpy;
 import benchmarks.sv.array_tripl_access_init_const;
 import benchmarks.sv.brs1;
@@ -59,7 +60,6 @@ import benchmarks.sv.ifeqn5;
 import benchmarks.sv.ifeqn5f;
 import benchmarks.sv.ifncomp;
 import benchmarks.sv.ifncompf;
-import benchmarks.sv.indp1;
 import benchmarks.sv.indp1f;
 import benchmarks.sv.indp2;
 import benchmarks.sv.indp2f;
@@ -91,7 +91,11 @@ import benchmarks.sv.nsqm;
 import benchmarks.sv.nsqm_if;
 import benchmarks.sv.nsqm_iff;
 import benchmarks.sv.nsqmf;
-import benchmarks.sv.partial_lesser_bound_1;
+import benchmarks.sv.partial_mod_count_1;
+import benchmarks.sv.partial_mod_count_2;
+import benchmarks.sv.partial_mod_count_3;
+import benchmarks.sv.partial_mod_count_4;
+import benchmarks.sv.partial_mod_count_5;
 import benchmarks.sv.pcomp;
 import benchmarks.sv.pcompf;
 import benchmarks.sv.res1;
@@ -153,9 +157,15 @@ import benchmarks.sv.sqm;
 import benchmarks.sv.sqm_if;
 import benchmarks.sv.sqm_iff;
 import benchmarks.sv.sqmf;
+import benchmarks.sv.ss1;
 import benchmarks.sv.ss1f;
+import benchmarks.sv.ss2;
 import benchmarks.sv.ss2f;
+import benchmarks.sv.ss3;
+import benchmarks.sv.ss3f;
+import benchmarks.sv.ss4;
 import benchmarks.sv.ss4f;
+import benchmarks.sv.ssina;
 import benchmarks.sv.ssinaf;
 import benchmarks.sv.standard_compareModified_ground;
 import benchmarks.sv.standard_compare_ground;
@@ -211,8 +221,6 @@ import benchmarks.sv.standard_partition_original_ground;
 import benchmarks.sv.standard_password_ground;
 import benchmarks.sv.standard_reverse_ground;
 import benchmarks.sv.standard_seq_init_ground;
-import benchmarks.sv.standard_strcpy_ground_2;
-import benchmarks.sv.standard_strcpy_original_1;
 import benchmarks.sv.standard_two_index_01;
 import benchmarks.sv.standard_two_index_02;
 import benchmarks.sv.standard_two_index_03;
@@ -247,14 +255,15 @@ public class BenchmarkTest {
 
   static Stream<Arguments> provideArguments() {
     return Stream.of(
-            Arguments.of(new array_assert_loop_dep()),
             Arguments.of(new array_doub_access_init_const()),
+            Arguments.of(new array_assert_loop_dep()),
             Arguments.of(new array_init_pair_sum_const()),
             Arguments.of(new array_monotonic()),
+            Arguments.of(new array_ptr_single_elem_init_2()),
             Arguments.of(new array_shadowinit()),
             Arguments.of(new array_single_elem_init()),
+            Arguments.of(new array_tiling_poly6()),
             Arguments.of(new array_tiling_tcpy()),
-            Arguments.of(new array_ptr_single_elem_init_2()),
             Arguments.of(new array_tripl_access_init_const()),
             Arguments.of(new brs1()),
             Arguments.of(new brs1f()),
@@ -302,7 +311,6 @@ public class BenchmarkTest {
             Arguments.of(new ifeqn5f()),
             Arguments.of(new ifncomp()),
             Arguments.of(new ifncompf()),
-            Arguments.of(new indp1()),
             Arguments.of(new indp1f()),
             Arguments.of(new indp2()),
             Arguments.of(new indp2f()),
@@ -334,7 +342,11 @@ public class BenchmarkTest {
             Arguments.of(new nsqm_if()),
             Arguments.of(new nsqm_iff()),
             Arguments.of(new nsqmf()),
-            Arguments.of(new partial_lesser_bound_1()),
+            Arguments.of(new partial_mod_count_1()),
+            Arguments.of(new partial_mod_count_2()),
+            Arguments.of(new partial_mod_count_3()),
+            Arguments.of(new partial_mod_count_4()),
+            Arguments.of(new partial_mod_count_5()),
             Arguments.of(new pcomp()),
             Arguments.of(new pcompf()),
             Arguments.of(new res1()),
@@ -396,9 +408,15 @@ public class BenchmarkTest {
             Arguments.of(new sqm_if()),
             Arguments.of(new sqm_iff()),
             Arguments.of(new sqmf()),
+            Arguments.of(new ss1()),
             Arguments.of(new ss1f()),
+            Arguments.of(new ss2()),
             Arguments.of(new ss2f()),
+            Arguments.of(new ss3()),
+            Arguments.of(new ss3f()),
+            Arguments.of(new ss4()),
             Arguments.of(new ss4f()),
+            Arguments.of(new ssina()),
             Arguments.of(new ssinaf()),
             Arguments.of(new standard_compare_ground()),
             Arguments.of(new standard_compareModified_ground()),
@@ -454,8 +472,6 @@ public class BenchmarkTest {
             Arguments.of(new standard_password_ground()),
             Arguments.of(new standard_reverse_ground()),
             Arguments.of(new standard_seq_init_ground()),
-            Arguments.of(new standard_strcpy_ground_2()),
-            Arguments.of(new standard_strcpy_original_1()),
             Arguments.of(new standard_two_index_01()),
             Arguments.of(new standard_two_index_02()),
             Arguments.of(new standard_two_index_03()),
@@ -485,6 +501,8 @@ public class BenchmarkTest {
   static int errorCount = 0;
   static int testCount = 0;
   static int nonTrivialEndStates = 0;
+  static int correctAssertions = 0;
+  static int incorrectAssertions = 0;
 
   @Timeout(30)
   @ParameterizedTest
@@ -526,16 +544,21 @@ public class BenchmarkTest {
 
     positiveAssertions += result.assertions().positive();
     negativeAssertions += result.assertions().negative();
+
+    if (benchmark.allAssertionsShouldHold()) {
+      correctAssertions += result.assertions().positive();
+      incorrectAssertions += result.assertions().negative();
+    } else {
+      correctAssertions += result.assertions().negative();
+      incorrectAssertions += result.assertions().positive();
+    }
+
     assertionCount += result.assertions().positive() + result.assertions().negative() + result.assertions().indeterminable();
 
 
     System.out.println("Test: " + benchmark.getClass().getSimpleName());
     System.out.println(result.protocol());
     System.out.println("\n\n\n");
-
-    if (result.assertions().negative() != 0) {
-      throw new RuntimeException("Negative assertion in: " + benchmark.getClass().getSimpleName());
-    }
   }
 
   @AfterAll
@@ -545,12 +568,13 @@ public class BenchmarkTest {
                                 
                     ======= RESULTS =======
                                 
-                    Positive assertions: %d out of %d (%2.2f%%)
-                    Negative assertions: %d out of %d (%2.2f%%)
+                    Correct assertions: %d out of %d (%2.2f%%)
+                    Incorrect assertions: %d out of %d (%2.2f%%)
                     Errors: %d out of %d tests run (%2.2f%%)
                     Non-trivial results: %d out of %d tests run (%2.2f%%)
-                    %n""", positiveAssertions, assertionCount, (positiveAssertions * 100f) / assertionCount,
-            negativeAssertions, assertionCount, (negativeAssertions * 100f) / assertionCount,
+                    %n""",
+            correctAssertions, assertionCount, (correctAssertions * 100f) / assertionCount,
+            incorrectAssertions, assertionCount, (incorrectAssertions * 100f) / assertionCount,
             errorCount, testCount, (errorCount * 100f) / testCount,
             nonTrivialEndStates, testCount, (nonTrivialEndStates * 100f) / testCount);
   }

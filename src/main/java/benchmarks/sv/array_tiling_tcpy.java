@@ -5,13 +5,22 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class array_tiling_tcpy implements Benchmark {
-  public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
-    return
+    public List<String> integerVariables() {
+        return List.of("S", "i");
+    }
+
+    public List<String> arrayVariables() {
+        return List.of("a", "acopy");
+    }
+
+    public boolean allAssertionsShouldHold() {
+        return true;
+    }
+
+    public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
+        return
             program.block(
                     List.of(
-                            program.assign(
-                                    "S",
-                                    program.variable("__VERIFIER_nondet_int₁")),
                             program.assume(
                                     program.lessThan(
                                             program.constant(1),
@@ -20,6 +29,18 @@ public class array_tiling_tcpy implements Benchmark {
                                     program.lessThan(
                                             program.variable("S"),
                                             program.constant(1073741823))),
+                            program.arrayInit(
+                                    "a",
+                                    program.multiplication(
+                                            List.of(
+                                                    program.constant(2),
+                                                    program.variable("S")))),
+                            program.arrayInit(
+                                    "acopy",
+                                    program.multiplication(
+                                            List.of(
+                                                    program.constant(2),
+                                                    program.variable("S")))),
                             program.assign(
                                     "i",
                                     program.constant(0)),
@@ -95,14 +116,6 @@ public class array_tiling_tcpy implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("__VERIFIER_nondet_int₁", "S", "i");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("a", "acopy");
-  }
+    }
 
 }

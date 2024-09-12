@@ -5,10 +5,28 @@ import benchmarks.BenchmarkProgram;
 import java.util.List;
 
 public class standard_password_ground implements Benchmark {
+  public List<String> integerVariables() {
+    return List.of("result", "i", "x", "nondet_int₁", "nondet_int₂");
+  }
+
+  public List<String> arrayVariables() {
+    return List.of("password", "guess");
+  }
+
+  public boolean allAssertionsShouldHold() {
+    return true;
+  }
+
   public <ExpressionT, ConditionT, StatementT, AssignableT extends ExpressionT> StatementT statement(BenchmarkProgram<ExpressionT, ConditionT, StatementT, AssignableT> program) {
     return
             program.block(
                     List.of(
+                            program.arrayInit(
+                                    "password",
+                                    program.constant(100000)),
+                            program.arrayInit(
+                                    "guess",
+                                    program.constant(100000)),
                             program.assign(
                                     "result",
                                     program.constant(1)),
@@ -25,12 +43,12 @@ public class standard_password_ground implements Benchmark {
                                                             program.arrayElement(
                                                                     "password",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₁")),
+                                                            program.variable("nondet_int₁")),
                                                     program.assign(
                                                             program.arrayElement(
                                                                     "guess",
                                                                     program.variable("i")),
-                                                            program.variable("__VERIFIER_nondet_int₂")),
+                                                            program.variable("nondet_int₂")),
                                                     program.assign(
                                                             "i",
                                                             program.addition(
@@ -102,14 +120,6 @@ public class standard_password_ground implements Benchmark {
                                     "c#result",
                                     program.constant(0)),
                             program.stop()));
-  }
-
-  public List<String> integerVariables() {
-    return List.of("__VERIFIER_nondet_int₂", "result", "__VERIFIER_nondet_int₁", "i", "x");
-  }
-
-  public List<String> arrayVariables() {
-    return List.of("password", "guess");
   }
 
 }
