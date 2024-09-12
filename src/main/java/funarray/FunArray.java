@@ -160,6 +160,9 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
    * @return the modified Segmentation.
    */
   public FunArray<ElementT> insert(Set<NormalExpression> indeces, ElementT value) {
+    if (indeces.isEmpty()) {
+      return this;
+    }
     var trailingIndeces = indeces.stream()
             .map(e -> e.increase(1))
             .collect(Collectors.toSet());
@@ -420,8 +423,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isLessEqualSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
 
     if (indexLeft <= indexRight) {
       return TRUE;
@@ -449,8 +458,12 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     } else if (modifiedEmptiness.subList(rightIndex, leftIndex).stream().anyMatch(e -> !e)) {
       // Bound order states that left expression is greater than right expression
       // Condition states that left expression is less equal than right expression
-      // --> Condition cannot be satisfied
-      throw new FunArrayLogicException("Condition cannot be satisfied!");
+      // --> Condition cannot be satisfied --> Remove expressions in question
+      var newBounds = bounds.stream()
+              .map(b -> b.difference(Set.of(left, right)))
+              .toList();
+      return new FunArray<>(newBounds, values, emptiness)
+              .removeEmptyBounds();
     } else {
       // Bound order states that left expression is greater equal than right expression
       // Condition states that left expression is less equal than right expression
@@ -468,8 +481,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isGreaterSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
 
     if (indexLeft > indexRight) {
       if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
@@ -485,8 +504,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isLessSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
 
     if (indexLeft < indexRight) {
       if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
@@ -520,14 +545,25 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     } else {
       // Bound order states that left expression is greater than right expression
       // Condition states that left expression is less than right expression
-      // --> Condition cannot be satisfied
-      throw new FunArrayLogicException("Condition cannot be satisfied!");
+      // --> Condition cannot be satisfied --> Remove expressions in question
+
+      var newBounds = bounds.stream()
+              .map(b -> b.difference(Set.of(left, right)))
+              .toList();
+      return new FunArray<>(newBounds, values, emptiness)
+              .removeEmptyBounds();
     }
   }
 
   public TriBool isGreaterEqualSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
 
     if (indexLeft >= indexRight) {
       return TRUE;
@@ -540,8 +576,15 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isEqualSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
+
 
     if (indexLeft == indexRight) {
       return TRUE;
@@ -586,8 +629,14 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isNotEqualSatisfied(NormalExpression left, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
+    int indexLeft;
+    int indexRight;
+    try {
+      indexLeft = findIndex(left);
+      indexRight = findIndex(right);
+    } catch (IndexOutOfBoundsException e) {
+      return UNKNOWN;
+    }
 
     if (indexLeft == indexRight) {
       return FALSE;
@@ -647,9 +696,6 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
   }
 
   public TriBool isConditionSatisfied(NormalExpression left, BoundRelation relation, NormalExpression right) {
-    var indexLeft = findIndex(left);
-    var indexRight = findIndex(right);
-
     return switch (relation) {
       case LESS -> isLessSatisfied(left, right);
       case GREATER -> isGreaterSatisfied(left, right);
