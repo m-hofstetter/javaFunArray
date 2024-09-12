@@ -1,7 +1,13 @@
 package funarray.state;
 
+import static abstractdomain.TriBool.FALSE;
+import static abstractdomain.TriBool.TRUE;
+import static abstractdomain.TriBool.UNKNOWN;
+
 import abstractdomain.DomainValue;
+import abstractdomain.TriBool;
 import analysis.common.AnalysisContext;
+import funarray.BoundRelation;
 import funarray.FunArray;
 import funarray.NormalExpression;
 import funarray.varref.Reference;
@@ -207,6 +213,17 @@ public record ReachableState<
                     e -> op.apply(e.getValue())
             ));
     return new ReachableState<>(modifiedFunArrays, variables(), context);
+  }
+
+  @Override
+  public TriBool isSatisifed(NormalExpression left, BoundRelation relation, NormalExpression right) {
+    if (arrays.values().stream().anyMatch(a -> a.isConditionSatisfied(left, relation, right) == TRUE)) {
+      return TRUE;
+    }
+    if (arrays.values().stream().anyMatch(a -> a.isConditionSatisfied(left, relation, right) == TRUE)) {
+      return FALSE;
+    }
+    return UNKNOWN;
   }
 
   @Override

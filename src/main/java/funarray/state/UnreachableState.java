@@ -1,7 +1,9 @@
 package funarray.state;
 
 import abstractdomain.DomainValue;
+import abstractdomain.TriBool;
 import analysis.common.AnalysisContext;
+import funarray.BoundRelation;
 import funarray.FunArray;
 import funarray.NormalExpression;
 import funarray.varref.Reference;
@@ -87,6 +89,11 @@ public class UnreachableState<
   @Override
   public State<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op) {
     return this;
+  }
+
+  @Override
+  public TriBool isSatisifed(NormalExpression left, BoundRelation relation, NormalExpression right) {
+    return TriBool.UNKNOWN;
   }
 
   @Override

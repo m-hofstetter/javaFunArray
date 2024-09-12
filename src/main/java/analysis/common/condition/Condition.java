@@ -1,6 +1,10 @@
 package analysis.common.condition;
 
+import static abstractdomain.TriBool.FALSE;
+import static abstractdomain.TriBool.TRUE;
+
 import abstractdomain.DomainValue;
+import abstractdomain.TriBool;
 import abstractdomain.ValueRelation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
@@ -80,6 +84,24 @@ public abstract class Condition<
    */
   public State<ElementT, VariableT> satisfyComplement(State<ElementT, VariableT> state) {
     return satisfy(state, relation.complementaryOrder(), boundRelation.complementRelation());
+  }
+
+  public TriBool isSatisfied(State<ElementT, VariableT> state) {
+    var normalLeft = left.normalise(state);
+    var normalRight = right.normalise(state);
+
+    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> state.isSatisifed(l, boundRelation, r))).anyMatch(r -> r == TRUE)) {
+      return TRUE;
+    }
+
+    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> state.isSatisifed(l, boundRelation, r))).anyMatch(r -> r == FALSE)) {
+      return FALSE;
+    }
+
+    var evaluatedLeft = left.evaluate(state);
+    var evaluatedRight = right.evaluate(state);
+
+    return relation.isSatisfied(evaluatedLeft, evaluatedRight);
   }
 
   @Override
