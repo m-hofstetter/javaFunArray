@@ -312,13 +312,13 @@ public final class ReachableInterval extends Interval {
   public TriBool greaterThan(Interval other) {
     return switch (other) {
       case ReachableInterval reachable -> {
-        if (this.lowerLimit.isGreaterThan(reachable.getLowerLimit())) {
-          if (this.lowerLimit.isGreaterThan(reachable.getUpperLimit())) {
-            yield TRUE;
-          }
-          yield UNKNOWN;
+        if (this.lowerLimit.isGreaterThan(reachable.upperLimit)) {
+          yield TRUE;
         }
-        yield FALSE;
+        if (this.upperLimit.isLessEqualThan(reachable.lowerLimit)) {
+          yield TRUE;
+        }
+        yield UNKNOWN;
       }
       case Unreachable _ -> UNKNOWN;
     };
@@ -328,13 +328,13 @@ public final class ReachableInterval extends Interval {
   public TriBool lessThan(Interval other) {
     return switch (other) {
       case ReachableInterval reachable -> {
-        if (this.upperLimit.isLessThan(reachable.getUpperLimit())) {
-          if (this.upperLimit.isLessThan(reachable.getLowerLimit())) {
-            yield TRUE;
-          }
-          yield UNKNOWN;
+        if (this.upperLimit.isLessThan(reachable.lowerLimit)) {
+          yield TRUE;
         }
-        yield FALSE;
+        if (this.lowerLimit.isGreaterEqualThan(reachable.upperLimit)) {
+          yield FALSE;
+        }
+        yield UNKNOWN;
       }
       case Unreachable _ -> UNKNOWN;
     };
@@ -344,13 +344,13 @@ public final class ReachableInterval extends Interval {
   public TriBool greaterEqualThan(Interval other) {
     return switch (other) {
       case ReachableInterval reachable -> {
-        if (this.lowerLimit.isGreaterEqualThan(reachable.getLowerLimit())) {
-          if (this.lowerLimit.isGreaterEqualThan(reachable.upperLimit)) {
-            yield TRUE;
-          }
-          yield UNKNOWN;
+        if (this.lowerLimit.isGreaterEqualThan(reachable.upperLimit)) {
+          yield TRUE;
         }
-        yield FALSE;
+        if (this.upperLimit.isLessThan(reachable.lowerLimit)) {
+          yield TRUE;
+        }
+        yield UNKNOWN;
       }
       case Unreachable _ -> UNKNOWN;
     };
@@ -360,13 +360,13 @@ public final class ReachableInterval extends Interval {
   public TriBool lessEqualThan(Interval other) {
     return switch (other) {
       case ReachableInterval reachable -> {
-        if (this.upperLimit.isLessEqualThan(reachable.getUpperLimit())) {
-          if (this.upperLimit.isLessEqualThan(reachable.getLowerLimit())) {
-            yield TRUE;
-          }
-          yield UNKNOWN;
+        if (this.upperLimit.isLessEqualThan(reachable.lowerLimit)) {
+          yield TRUE;
         }
-        yield FALSE;
+        if (this.lowerLimit.isGreaterThan(reachable.upperLimit)) {
+          yield FALSE;
+        }
+        yield UNKNOWN;
       }
       case Unreachable _ -> UNKNOWN;
     };
