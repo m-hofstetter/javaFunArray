@@ -529,12 +529,9 @@ public class BenchmarkTest {
       throw e;
     }
 
-    var nonTrivial = result.resultState().arrays().values().stream().anyMatch(a -> {
-      if (a.values().size() > 1) {
-        return true;
-      }
-      return !a.values().getFirst().equals(CONTEXT.getElementDomain().getUnknown());
-    });
+    var nonTrivial = result.resultState().arrays().values().stream()
+            .flatMap(a -> a.values().stream())
+            .anyMatch(v -> !v.equals(CONTEXT.getElementDomain().getUnknown()));
 
     if (nonTrivial) {
       nonTrivialEndStates++;
