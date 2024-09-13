@@ -12,6 +12,7 @@ import funarray.BoundRelation;
 import funarray.NormalExpression;
 import funarray.state.State;
 import funarray.state.UnreachableState;
+import funarray.varref.ZeroReference;
 
 /**
  * A condition for branching control structures in an {@link analysis.common.Analysis}.
@@ -51,6 +52,9 @@ public abstract class Condition<
 
     for (NormalExpression l : left.normalise(state)) {
       for (NormalExpression r : right.normalise(state)) {
+        if (l.varRef() instanceof ZeroReference && r.varRef() instanceof ZeroReference) {
+          continue;
+        }
         state = state.forAllArrays(a -> a.satisfyBoundExpressionRelation(boundRelation, l, r));
       }
     }
