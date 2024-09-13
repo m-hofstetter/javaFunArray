@@ -581,21 +581,24 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
     return satisfyBoundExpressionLessEqualThan(right, left);
   }
 
-  public TriBool isEqualSatisfied(NormalExpression left, NormalExpression right) {
-    int indexLeft;
-    int indexRight;
+  public TriBool isEqualSatisfied(NormalExpression a, NormalExpression b) {
+    int indexA;
+    int indexB;
+
     try {
-      indexLeft = findIndex(left);
-      indexRight = findIndex(right);
+      indexA = findIndex(a);
+      indexB = findIndex(b);
     } catch (IndexOutOfBoundsException e) {
       return UNKNOWN;
     }
 
+    int leftIndex = Integer.min(indexA, indexB);
+    int rightIndex = Integer.max(indexA, indexB);
 
-    if (indexLeft == indexRight) {
+    if (leftIndex == rightIndex) {
       return TRUE;
     }
-    if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+    if (emptiness.subList(leftIndex, rightIndex).stream().allMatch(e -> e)) {
       return UNKNOWN;
     }
     return FALSE;
@@ -634,20 +637,24 @@ public record FunArray<ElementT extends DomainValue<ElementT>>(
 
   }
 
-  public TriBool isNotEqualSatisfied(NormalExpression left, NormalExpression right) {
-    int indexLeft;
-    int indexRight;
+  public TriBool isNotEqualSatisfied(NormalExpression a, NormalExpression b) {
+    int indexA;
+    int indexB;
+
     try {
-      indexLeft = findIndex(left);
-      indexRight = findIndex(right);
+      indexA = findIndex(a);
+      indexB = findIndex(b);
     } catch (IndexOutOfBoundsException e) {
       return UNKNOWN;
     }
 
-    if (indexLeft == indexRight) {
+    int leftIndex = Integer.min(indexA, indexB);
+    int rightIndex = Integer.max(indexA, indexB);
+
+    if (leftIndex == rightIndex) {
       return FALSE;
     }
-    if (emptiness.subList(indexLeft, indexRight).stream().allMatch(e -> e)) {
+    if (emptiness.subList(leftIndex, rightIndex).stream().allMatch(e -> e)) {
       return UNKNOWN;
     }
     return TRUE;
