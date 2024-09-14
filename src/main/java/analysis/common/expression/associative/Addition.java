@@ -1,7 +1,6 @@
 package analysis.common.expression.associative;
 
 import abstractdomain.DomainValue;
-import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
@@ -12,6 +11,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import relation.Relation;
 
 public class Addition<
         ElementT extends DomainValue<ElementT>,
@@ -48,7 +48,7 @@ public class Addition<
   @Override
   public Set<State<ElementT, VariableT>> satisfy(
           Expression<ElementT, VariableT> comparand,
-          ValueRelation<VariableT> relation,
+          Relation<VariableT> relation,
           State<ElementT, VariableT> state
   ) {
 

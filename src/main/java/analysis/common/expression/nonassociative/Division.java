@@ -1,7 +1,6 @@
 package analysis.common.expression.nonassociative;
 
 import abstractdomain.DomainValue;
-import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
@@ -9,6 +8,7 @@ import funarray.NormalExpression;
 import funarray.state.State;
 import funarray.varref.Reference;
 import java.util.Set;
+import relation.Relation;
 
 public class Division<
         ElementT extends DomainValue<ElementT>,
@@ -39,7 +39,7 @@ public class Division<
   }
 
   @Override
-  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, ValueRelation<VariableT> relation, State<ElementT, VariableT> state) {
+  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state) {
     return Set.of(state);
   }
 

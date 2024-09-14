@@ -1,10 +1,9 @@
 package analysis.common.condition;
 
-import static funarray.BoundRelation.GREATER_EQUAL;
-
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
+import relation.GreaterEqual;
 
 public final class GreaterEqualThan<
         ElementT extends DomainValue<ElementT>,
@@ -13,6 +12,6 @@ public final class GreaterEqualThan<
   public GreaterEqualThan(Expression<ElementT, VariableT> left,
                           Expression<ElementT, VariableT> right,
                           AnalysisContext<ElementT, VariableT> context) {
-    super(left, right, context, GREATER_EQUAL, context.getVariableDomain().greaterEqualThan(), "≥");
+    super(left, right, context, new GreaterEqual<>(), "≥");
   }
 }

@@ -1,10 +1,9 @@
 package analysis.common.condition;
 
-import static funarray.BoundRelation.EQUAL;
-
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
+import relation.Equal;
 
 public final class EqualTo<
         ElementT extends DomainValue<ElementT>,
@@ -13,6 +12,6 @@ public final class EqualTo<
   public EqualTo(Expression<ElementT, VariableT> left,
                  Expression<ElementT, VariableT> right,
                  AnalysisContext<ElementT, VariableT> context) {
-    super(left, right, context, EQUAL, context.getVariableDomain().equalTo(), "=");
+    super(left, right, context, new Equal<>(), "=");
   }
 }

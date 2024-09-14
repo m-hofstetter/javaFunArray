@@ -1,13 +1,13 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
-import abstractdomain.ValueRelation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
 import funarray.NormalExpression;
 import funarray.state.State;
 import funarray.varref.Reference;
 import java.util.Set;
+import relation.Relation;
 
 public record Constant<
         ElementT extends DomainValue<ElementT>,
@@ -29,7 +29,7 @@ public record Constant<
   @Override
   public Set<State<ElementT, VariableT>> satisfy(
           Expression<ElementT, VariableT> comparand,
-          ValueRelation<VariableT> relation,
+          Relation<VariableT> relation,
           State<ElementT, VariableT> state
   ) {
     return switch (relation.isSatisfied(this.evaluate(state), comparand.evaluate(state))) {

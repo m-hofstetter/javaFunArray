@@ -2,17 +2,17 @@ package analysis.common.condition;
 
 import static abstractdomain.TriBool.FALSE;
 import static abstractdomain.TriBool.TRUE;
+import static abstractdomain.TriBool.UNKNOWN;
 
 import abstractdomain.DomainValue;
 import abstractdomain.TriBool;
-import abstractdomain.ValueRelation;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
-import funarray.BoundRelation;
 import funarray.NormalExpression;
 import funarray.state.State;
 import funarray.state.UnreachableState;
 import funarray.varref.ZeroReference;
+import relation.Relation;
 
 /**
  * A condition for branching control structures in an {@link analysis.common.Analysis}.
@@ -27,15 +27,13 @@ public abstract class Condition<
   protected final Expression<ElementT, VariableT> left;
   protected final Expression<ElementT, VariableT> right;
   protected final AnalysisContext<ElementT, VariableT> context;
-  protected final BoundRelation boundRelation;
-  protected final ValueRelation<VariableT> relation;
+  protected final Relation<VariableT> relation;
   protected final String operatorSymbol;
 
-  public Condition(Expression<ElementT, VariableT> left, Expression<ElementT, VariableT> right, AnalysisContext<ElementT, VariableT> context, BoundRelation boundRelation, ValueRelation<VariableT> relation, String operatorSymbol) {
+  public Condition(Expression<ElementT, VariableT> left, Expression<ElementT, VariableT> right, AnalysisContext<ElementT, VariableT> context, Relation<VariableT> relation, String operatorSymbol) {
     this.left = left;
     this.right = right;
     this.context = context;
-    this.boundRelation = boundRelation;
     this.relation = relation;
     this.operatorSymbol = operatorSymbol;
   }
@@ -43,8 +41,7 @@ public abstract class Condition<
 
   State<ElementT, VariableT> satisfy(
           State<ElementT, VariableT> state,
-          ValueRelation<VariableT> relation,
-          BoundRelation boundRelation
+          Relation<VariableT> relation
   ) {
     if (state instanceof UnreachableState<ElementT, VariableT>) {
       return state;
@@ -55,7 +52,7 @@ public abstract class Condition<
         if (l.varRef() instanceof ZeroReference && r.varRef() instanceof ZeroReference) {
           continue;
         }
-        state = state.forAllArrays(a -> a.satisfyBoundExpressionRelation(boundRelation, l, r));
+        state = state.forAllArrays(a -> relation.satisfy(a, l, r));
       }
     }
 
@@ -77,7 +74,7 @@ public abstract class Condition<
    * @return the state with the condition satisfied.
    */
   public State<ElementT, VariableT> satisfy(State<ElementT, VariableT> state) {
-    return satisfy(state, relation, boundRelation);
+    return satisfy(state, relation);
   }
 
   /**
@@ -87,18 +84,18 @@ public abstract class Condition<
    * @return the state with the condition not satisfied.
    */
   public State<ElementT, VariableT> satisfyComplement(State<ElementT, VariableT> state) {
-    return satisfy(state, relation.complementaryOrder(), boundRelation.complementRelation());
+    return satisfy(state, relation.complementaryOrder());
   }
 
   public TriBool isSatisfied(State<ElementT, VariableT> state) {
     var normalLeft = left.normalise(state);
     var normalRight = right.normalise(state);
 
-    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> state.isSatisifed(l, boundRelation, r))).anyMatch(r -> r == TRUE)) {
+    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> anyArrayBoundOrderSatisfies(state, relation, l, r))).anyMatch(r -> r == TRUE)) {
       return TRUE;
     }
 
-    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> state.isSatisifed(l, boundRelation, r))).anyMatch(r -> r == FALSE)) {
+    if (normalLeft.stream().flatMap(l -> normalRight.stream().map(r -> anyArrayBoundOrderSatisfies(state, relation, l, r))).anyMatch(r -> r == FALSE)) {
       return FALSE;
     }
 
@@ -106,6 +103,16 @@ public abstract class Condition<
     var evaluatedRight = right.evaluate(state);
 
     return relation.isSatisfied(evaluatedLeft, evaluatedRight);
+  }
+
+  private TriBool anyArrayBoundOrderSatisfies(State<ElementT, VariableT> state, Relation<VariableT> relation, NormalExpression left, NormalExpression right) {
+    if (state.arrays().values().stream().anyMatch(a -> relation.isSatisfied(a, left, right) == TRUE)) {
+      return TRUE;
+    }
+    if (state.arrays().values().stream().anyMatch(a -> relation.isSatisfied(a, left, right) == TRUE)) {
+      return FALSE;
+    }
+    return UNKNOWN;
   }
 
   @Override

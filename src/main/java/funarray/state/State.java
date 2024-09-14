@@ -1,9 +1,7 @@
 package funarray.state;
 
 import abstractdomain.DomainValue;
-import abstractdomain.TriBool;
 import analysis.common.AnalysisContext;
-import funarray.BoundRelation;
 import funarray.FunArray;
 import funarray.NormalExpression;
 import funarray.varref.Reference;
@@ -51,6 +49,4 @@ public interface State<ElementT extends DomainValue<ElementT>, VariableT extends
   }
 
   State<ElementT, VariableT> forAllArrays(UnaryOperator<FunArray<ElementT>> op);
-
-  TriBool isSatisifed(NormalExpression left, BoundRelation relation, NormalExpression right);
 }

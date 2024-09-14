@@ -5,7 +5,6 @@ import static abstractdomain.sign.value.Sign.SignElement.POSITIVE;
 import static abstractdomain.sign.value.Sign.SignElement.ZERO;
 
 import abstractdomain.Domain;
-import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import abstractdomain.sign.value.Sign;
 import java.util.Set;
@@ -43,35 +42,5 @@ public class SignDomain implements Domain<Sign> {
   @Override
   public Sign getZeroValue() {
     return new Sign(Set.of(ZERO));
-  }
-
-  @Override
-  public ValueRelation<Sign> lessThan() {
-    return null; //TODO
-  }
-
-  @Override
-  public ValueRelation<Sign> lessEqualThan() {
-    return null; //TODO
-  }
-
-  @Override
-  public ValueRelation<Sign> greaterThan() {
-    return null; //TODO
-  }
-
-  @Override
-  public ValueRelation<Sign> greaterEqualThan() {
-    return null; //TODO
-  }
-
-  @Override
-  public ValueRelation<Sign> equalTo() {
-    return null; //TODO
-  }
-
-  @Override
-  public ValueRelation<Sign> unequalTo() {
-    return null; //TODO
   }
 }

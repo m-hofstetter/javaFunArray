@@ -1,10 +1,9 @@
 package analysis.common.condition;
 
-import static funarray.BoundRelation.LESS_EQUAL;
-
 import abstractdomain.DomainValue;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Expression;
+import relation.LessEqual;
 
 public final class LessEqualThan<
         ElementT extends DomainValue<ElementT>,
@@ -13,6 +12,6 @@ public final class LessEqualThan<
   public LessEqualThan(Expression<ElementT, VariableT> left,
                        Expression<ElementT, VariableT> right,
                        AnalysisContext<ElementT, VariableT> context) {
-    super(left, right, context, LESS_EQUAL, context.getVariableDomain().lessEqualThan(), "≤");
+    super(left, right, context, new LessEqual<>(), "≤");
   }
 }

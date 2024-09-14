@@ -1,7 +1,6 @@
 package analysis.common.expression.atom;
 
 import abstractdomain.DomainValue;
-import abstractdomain.ValueRelation;
 import abstractdomain.exception.ConcretizationException;
 import analysis.common.AnalysisContext;
 import analysis.common.expression.Assignable;
@@ -12,6 +11,7 @@ import funarray.varref.Reference;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import relation.Relation;
 
 public record ArrayElement<
         ElementT extends DomainValue<ElementT>,
@@ -53,7 +53,7 @@ public record ArrayElement<
   }
 
   @Override
-  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, ValueRelation<VariableT> relation, State<ElementT, VariableT> state) {
+  public Set<State<ElementT, VariableT>> satisfy(Expression<ElementT, VariableT> comparand, Relation<VariableT> relation, State<ElementT, VariableT> state) {
     var comparandValue = comparand.evaluate(state);
     var currentValue = evaluate(state);
     var satisfiedValue = relation.satisfy(currentValue, comparandValue);

@@ -12,17 +12,4 @@ public interface Domain<T extends DomainValue<T>> {
   T getUnreachable();
 
   T getZeroValue();
-
-  ValueRelation<T> lessThan();
-
-  ValueRelation<T> lessEqualThan();
-
-  ValueRelation<T> greaterThan();
-
-  ValueRelation<T> greaterEqualThan();
-
-  ValueRelation<T> equalTo();
-
-  ValueRelation<T> unequalTo();
-
 }
